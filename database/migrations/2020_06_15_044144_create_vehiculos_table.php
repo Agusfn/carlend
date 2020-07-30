@@ -25,14 +25,12 @@ class CreateVehiculosTable extends Migration
             $table->decimal('costo_mensual_seguro', 10, 2)->nullable();
             $table->integer('dia_del_mes_debito_seguro')->nullable();
             $table->integer('kms_cada_service')->nullable();
+            $table->integer('kms_cada_cambio_bujias')->nullable();
+            $table->integer('kms_cada_rotacion_cubiertas')->nullable();
             $table->integer('kms_cada_cambio_cubiertas')->nullable();
             $table->integer('kms_cada_cambio_correa_distr')->nullable();
-            $table->integer('kms_cada_cambio_correa_altern')->nullable();
-            $table->date('ultima_notif_service')->nullable();
-            $table->date('ultima_notif_cambio_cubiertas')->nullable();
-            $table->date('ultima_notif_cambio_correa_distr')->nullable();
-            $table->date('ultima_notif_cambio_correa_altern')->nullable();
             $table->date('fecha_vto_vtv')->nullable();
+            $table->date('fecha_vto_oblea_gnc')->nullable();
             $table->integer('kilometraje_prediccion_actual');
             $table->timestamps();
 

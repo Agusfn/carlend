@@ -19,6 +19,7 @@ class CreateChoferesTable extends Migration
             $table->string('dni')->nullable();
             $table->string('direccion')->nullable();
             $table->string('telefono')->nullable();
+            $table->date('fecha_vto_licencia')->nullable();
             $table->text('notas')->nullable();
             $table->timestamps();
         });

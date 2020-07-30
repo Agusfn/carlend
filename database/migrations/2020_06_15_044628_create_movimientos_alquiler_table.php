@@ -17,8 +17,9 @@ class CreateMovimientosAlquilerTable extends Migration
             $table->id();
             $table->datetime('fecha_hora');
             $table->foreignId('id_alquiler');
-            $table->string('concepto');
+            $table->string('tipo');
             $table->decimal('monto', 10, 2);
+            $table->decimal('nuevo_saldo', 10, 2);
             $table->string('medio_pago')->nullable();
             $table->string('comentario')->nullable();
             $table->timestamps();
