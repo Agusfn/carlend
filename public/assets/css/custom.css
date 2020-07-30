@@ -1,0 +1,52 @@
+.brand img.logo {
+	width: 112px;
+}
+
+.navbar-default .brand {
+    padding: 8px 45px;
+}
+
+
+
+.underline-dash {
+	text-decoration: underline;
+	text-decoration-style: dotted;
+}
+
+
+
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    /* display: none; <- Crashes Chrome on hover */
+    -webkit-appearance: none;
+    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+
+input[type=number] {
+    -moz-appearance:textfield; /* Firefox */
+}
+
+
+/**
+ * Auth
+ */
+.auth-box {
+	padding: 0 30px;
+	width: 30%;
+}
+/*.auth-box .logo img {
+	height: 50px;
+}*/
+@media screen and (max-width: 1279px) {
+	.auth-box {
+		width: 60%; 
+	} 
+}
+@media screen and (max-width: 640px) {
+	.auth-box {
+		width: 90%; 
+	} 
+}
+
+

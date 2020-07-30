@@ -13,6 +13,37 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+
+// Auth
+// TODO: Eliminar rutas no utilizadas
+Auth::routes();
+
+
+// Inicio
+Route::get('/', 'InicioController@index')->name('inicio');
+
+// Choferes
+Route::resource("choferes", "ChoferesController")->except(["edit"]);
+
+// Proveedores
+Route::resource("proveedores", "ProveedoresController")->except(["edit"]);
+
+// Vehiculos
+Route::resource("vehiculos", "VehiculosController")->except(["edit"]);
+
+// Trabajos de vehiculos
+Route::resource("trabajos-vehiculos", "TrabajosVehiculosController")->except(["edit", "destroy"]);
+
+// Alquileres
+Route::get('alquileres/registrar', 'AlquileresController@create')->name("alquileres.create");
+Route::resource("alquileres", "AlquileresController")->except(["create", "edit", "destroy"]);
+Route::get('alquileres/{id}/registrar-pago', 'AlquileresController@formularioRegistrarPago')->name("alquileres.registrar-pago");
+Route::post('alquileres/{id}/registrar-pago', 'AlquileresController@registrarPago');
+
+// Gastos adicionales
+Route::resource("gastos-adicionales", "GastosAdicionalesController")->except(["edit", "destroy"]);
+
+// Reportes
+Route::get('reportes/balances', 'ReportesController@mostrarBalances')->name("reportes.balances");
+Route::get('reportes/vehiculos', 'ReportesController@mostrarVehiculos')->name("reportes.vehiculos");
+Route::get('reportes/choferes', 'ReportesController@mostrarChoferes')->name("reportes.choferes");
