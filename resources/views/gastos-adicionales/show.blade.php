@@ -6,7 +6,7 @@
 
 @section('content')
 
-					<h3 class="page-title"><a href="index.html">Gastos adicionales</a> / Gasto #5</h3>
+					<h3 class="page-title"><a href="{{ route('gastos-adicionales.index') }}">Gastos adicionales</a> / Gasto #5</h3>
 
 					<div class="panel panel-headline">
 						<div class="panel-body">

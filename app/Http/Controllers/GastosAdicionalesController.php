@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class GastosAdicionalesController extends Controller
+class GastosAdicionalesController extends AdminPanelBaseController
 {
     /**
      * Display a listing of the resource.

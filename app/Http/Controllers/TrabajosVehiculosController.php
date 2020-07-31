@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class TrabajosVehiculosController extends Controller
+class TrabajosVehiculosController extends AdminPanelBaseController
 {
     /**
      * Display a listing of the resource.

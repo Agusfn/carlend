@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ChoferesController extends Controller
+class ChoferesController extends AdminPanelBaseController
 {
     /**
      * Display a listing of the resource.

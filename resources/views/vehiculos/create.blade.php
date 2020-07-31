@@ -10,7 +10,7 @@
 
 @section('content')
 
-					<h3 class="page-title"><a href="index.html">Vehículos</a> / Agregar</h3>
+					<h3 class="page-title"><a href="{{ route('vehiculos.index') }}">Vehículos</a> / Agregar</h3>
 
 
 					<div class="panel panel-headline">

@@ -4,17 +4,17 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class InicioController extends Controller
+class InicioController extends AdminPanelBaseController
 {
     /**
      * Create a new controller instance.
      *
      * @return void
      */
-    public function __construct()
+    /*public function __construct()
     {
-        //$this->middleware('auth');
-    }
+        $this->middleware('auth');
+    }*/
 
     /**
      * Show the application dashboard.

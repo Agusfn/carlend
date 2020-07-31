@@ -10,7 +10,7 @@
 
 @section('content')
 
-					<h3 class="page-title"><a href="index.html">Alquileres</a> / Registrar nuevo alquiler</h3>
+					<h3 class="page-title"><a href="{{ route('alquileres.index') }}">Alquileres</a> / Registrar nuevo alquiler</h3>
 
 					<div class="row">
 						<div class="col-md-6">

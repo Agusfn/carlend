@@ -21,10 +21,17 @@
 							</ul>
 						</li>
 						<li class="dropdown">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><img src="{{ asset('assets/img/user.png') }}" class="img-circle" alt="Avatar"> <span>Samuel</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown"><span>{{ Auth::user()->name }}</span> <i class="icon-submenu lnr lnr-chevron-down"></i></a>
 							<ul class="dropdown-menu">
-								<li><a href="cuenta.html"><i class="lnr lnr-user"></i> <span>Mi cuenta</span></a></li>
-								<li><a href="login.html"><i class="lnr lnr-exit"></i> <span>Cerrar sesión</span></a></li>
+								<li><a href="{{ route('cuenta.detalles') }}"><i class="lnr lnr-user"></i> <span>Mi cuenta</span></a></li>
+								<li>
+									<a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+										<i class="lnr lnr-exit"></i> <span>Cerrar sesión</span>
+									</a>
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+								</li>
 							</ul>
 						</li>
 					</ul>

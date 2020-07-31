@@ -8,7 +8,7 @@
 
 @section('content')
 
-					<h3 class="page-title"><a href="index.html">Choferes</a> / Juan Pérez</h3>
+					<h3 class="page-title"><a href="{{ route('choferes.index') }}">Choferes</a> / Juan Pérez</h3>
 
 					<div class="panel panel-headline">
 						<div class="panel-body">

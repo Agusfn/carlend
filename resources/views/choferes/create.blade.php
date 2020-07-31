@@ -10,7 +10,7 @@
 
 @section('content')
 
-					<h3 class="page-title"><a href="index.html">Choferes</a> / Agregar</h3>
+					<h3 class="page-title"><a href="{{ route('choferes.index') }}">Choferes</a> / Agregar</h3>
 
 					<div class="row">
 						<div class="col-md-6">

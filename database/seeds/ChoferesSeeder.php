@@ -19,6 +19,7 @@ class ChoferesSeeder extends Seeder
 	            'dni' => '31562341',
 	            'direccion' => 'Dr. Penna 650, Pilar',
 	            'telefono' => '11 45631121',
+	            'fecha_vto_licencia' => '2021-02-07',
 	            'notas' => 'Confiable.',
        		],
         	[
@@ -26,6 +27,7 @@ class ChoferesSeeder extends Seeder
 	            'dni' => '29453394',
 	            'direccion' => 'Gral. Lavalle 3620, Garín',
 	            'telefono' => '03484663121',
+	            'fecha_vto_licencia' => '2020-12-21',
 	            'notas' => 'No dejar que se atrase con los pagos.',
        		],
         	[
@@ -33,6 +35,7 @@ class ChoferesSeeder extends Seeder
 	            'dni' => '35664123',
 	            'direccion' => 'Chubut 1154, Pilar',
 	            'telefono' => '1155428742',
+	            'fecha_vto_licencia' => null,
 	            'notas' => 'Recomendado por juan.',
        		]      
 

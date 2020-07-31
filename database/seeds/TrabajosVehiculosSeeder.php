@@ -14,6 +14,7 @@ class TrabajosVehiculosSeeder extends Seeder
 		DB::table('trabajos_vehiculos')->insert([
 
         	[
+        		'es_trabajo_previo' => false,
 	            'fecha_pagado' => '2020-06-10',
 	            'id_vehiculo' => 1,
 	            'kms_vehiculo_estimados' => 84000,
@@ -26,6 +27,7 @@ class TrabajosVehiculosSeeder extends Seeder
        		],
 
         	[
+        		'es_trabajo_previo' => false,
 	            'fecha_pagado' => '2020-06-12',
 	            'id_vehiculo' => 2,
 	            'kms_vehiculo_estimados' => 55000,

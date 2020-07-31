@@ -5,7 +5,7 @@
 
 @section('content')
 
-					<h3 class="page-title"><a href="index.html">Proveedores</a> / Mariano mecánico (ID #4)</h3>
+					<h3 class="page-title"><a href="{{ route('proveedores.index') }}">Proveedores</a> / Mariano mecánico (ID #4)</h3>
 
 						<div class="panel panel-headline">
 							<div class="panel-body">
