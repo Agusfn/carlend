@@ -22,30 +22,49 @@
 
 								<div class="panel-body">
 
-									<form>
-										<div class="form-group">
+									<form action="{{ route('choferes.store') }}" method="POST">
+										@csrf
+										<div class="form-group @error('nombre_y_apellido') has-error @enderror">
 											<label>Nombre y apellido</label>
-											<input type="text" class="form-control">
+											<input type="text" name="nombre_y_apellido" class="form-control" value="{{ old('nombre_y_apellido') }}">
+											@error('nombre_y_apellido')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
-										<div class="form-group">
+										<div class="form-group @error('telefono') has-error @enderror">
 											<label>Teléfono</label>
-											<input type="text" class="form-control">
+											<input type="text" name="telefono" class="form-control" value="{{ old('telefono') }}">
+											@error('telefono')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
-										<div class="form-group">
+										<div class="form-group @error('direccion') has-error @enderror">
 											<label>Dirección</label>
-											<input type="text" class="form-control">
+											<input type="text" name="direccion" class="form-control" value="{{ old('direccion') }}">
+											@error('direccion')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
-										<div class="form-group">
+										<div class="form-group @error('dni') has-error @enderror">
 											<label>DNI</label>
-											<input type="number" class="form-control">
+											<input type="number" name="dni" class="form-control" value="{{ old('dni') }}">
+											@error('dni')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
-										<div class="form-group">
+										<div class="form-group @error('fecha_vto_licencia') has-error @enderror">
 											<label>Fecha de vto. de licencia</label>
-											<input type="number" class="form-control" id="input_fecha_vto_licencia" value="29/07/2022">
+											<input type="text" name="fecha_vto_licencia" class="form-control" id="input_fecha_vto_licencia" value="{{ old('fecha_vto_licencia') }}">
+											@error('fecha_vto_licencia')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
-										<div class="form-group">
+										<div class="form-group @error('notas') has-error @enderror">
 											<label>Notas</label>
-											<textarea class="form-control" style="resize: vertical;"></textarea>
+											<textarea class="form-control" name="notas" style="resize: vertical;">{{ old('notas') }}</textarea>
+											@error('notas')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
 
 										<div style="text-align:right">

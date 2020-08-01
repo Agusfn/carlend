@@ -23,6 +23,7 @@ class CreateGastosAdicionalesTable extends Migration
             $table->string('medio_pago');
             $table->foreignId('id_proveedor')->nullable();
             $table->timestamps();
+            
             $table->foreign('id_vehiculo')->references('id')->on('vehiculos');
             $table->foreign('id_proveedor')->references('id')->on('proveedores');
         });

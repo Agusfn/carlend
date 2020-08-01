@@ -28,7 +28,13 @@ class CreateAlquileresTable extends Migration
 
             $table->foreign('id_chofer')->references('id')->on('choferes');
             $table->foreign('id_vehiculo')->references('id')->on('vehiculos');
+
         });
+
+        Schema::table('vehiculos', function (Blueprint $table) {
+            $table->foreign('id_alquiler_actual')->references('id')->on('alquileres');
+        });
+
     }
 
     /**
@@ -38,6 +44,10 @@ class CreateAlquileresTable extends Migration
      */
     public function down()
     {
+        Schema::table('vehiculos', function (Blueprint $table) {
+            $table->dropForeign('vehiculos_id_alquiler_actual_foreign');
+        });
+
         Schema::dropIfExists('alquileres');
     }
 }

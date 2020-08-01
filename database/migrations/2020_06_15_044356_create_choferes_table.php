@@ -22,6 +22,7 @@ class CreateChoferesTable extends Migration
             $table->date('fecha_vto_licencia')->nullable();
             $table->text('notas')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
+use App\Proveedor;
 
 class ProveedoresController extends AdminPanelBaseController
 {
@@ -13,7 +15,9 @@ class ProveedoresController extends AdminPanelBaseController
      */
     public function index()
     {
-        return view("proveedores.index");
+        $proveedores = Proveedor::all();
+
+        return view("proveedores.index")->with("proveedores", $proveedores);
     }
 
     /**
@@ -34,7 +38,19 @@ class ProveedoresController extends AdminPanelBaseController
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "nombre" => "required",
+            "direccion" => "",
+            "telefono" => "",
+            "categoria" => [
+                "required",
+                Rule::in(array_keys(Proveedor::$nombresCategorias))
+            ]
+        ]);
+
+        Proveedor::create($request->all());
+
+        return redirect()->route("proveedores.index");
     }
 
     /**
@@ -45,7 +61,9 @@ class ProveedoresController extends AdminPanelBaseController
      */
     public function show($id)
     {
-        return view("proveedores.show");
+        $proveedor = Proveedor::findOrFail($id);
+
+        return view("proveedores.show")->with("proveedor", $proveedor);
     }
 
     /**
@@ -57,7 +75,22 @@ class ProveedoresController extends AdminPanelBaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            "nombre" => "required",
+            "direccion" => "",
+            "telefono" => "",
+            "categoria" => [
+                "required",
+                Rule::in(array_keys(Proveedor::$nombresCategorias))
+            ]
+        ]);
+
+        $proveedor = Proveedor::findOrFail($id);
+
+        $proveedor->fill($request->all());
+        $proveedor->save();
+
+        return redirect()->back()->with("success", true);
     }
 
     /**
@@ -68,6 +101,10 @@ class ProveedoresController extends AdminPanelBaseController
      */
     public function destroy($id)
     {
-        //
+        $proveedor = Proveedor::findOrFail($id);
+        
+        $proveedor->delete();
+
+        return redirect()->route("proveedores.index");
     }
 }

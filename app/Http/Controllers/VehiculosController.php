@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Vehiculo;
 
 class VehiculosController extends AdminPanelBaseController
 {
@@ -13,7 +14,9 @@ class VehiculosController extends AdminPanelBaseController
      */
     public function index()
     {
-        return view("vehiculos.index");
+        $vehiculos = Vehiculo::with(["alquilerActual.chofer", "proveedorSeguro"])->get();
+
+        return view("vehiculos.index")->with("vehiculos", $vehiculos);
     }
 
     /**

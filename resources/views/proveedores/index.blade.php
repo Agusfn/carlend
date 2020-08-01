@@ -59,34 +59,16 @@
 									</tr>
 								</thead>
 								<tbody>
+
+									@foreach($proveedores as $proveedor)
 									<tr>
-										<td><a href="{{ route('proveedores.show', 1) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>Mariano mecánico</td>
-										<td>Asunción 1453, Tortuguitas</td>
-										<td>11 54210368</td>
-										<td>Mecánico</td>
+										<td><a href="{{ route('proveedores.show', $proveedor->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+										<td>{{ $proveedor->nombre }}</td>
+										<td>{{ $proveedor->direccion }}</td>
+										<td>{{ $proveedor->telefono }}</td>
+										<td>{{ $proveedor->nombreCategoria() }}</td>
 									</tr>
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>Repuestos José</td>
-										<td>Ruta 26 y Lisandro de la Torre, Del Viso</td>
-										<td>0230-4476654</td>
-										<td>Casa de repuestos</td>
-									</tr>
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>Provincia Seguros</td>
-										<td>Ruta 8 y Las Magnolias, Pilar</td>
-										<td>0230-2123452</td>
-										<td>Compañía de seguros</td>
-									</tr>
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>Jumax</td>
-										<td>Colectora Oeste Ramal Pilar 1441</td>
-										<td>11 69945302</td>
-										<td>Service/Lubricentro</td>
-									</tr>
+									@endforeach
 
 								</tbody>
 							</table>

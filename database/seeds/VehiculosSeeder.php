@@ -16,6 +16,7 @@ class VehiculosSeeder extends Seeder
 		DB::table('vehiculos')->insert([
 
         	[
+        		'id_alquiler_actual' => 2,
 	            'marca' => 'Renault',
 	            'modelo' => 'Megane',
 	            'anio' => 2015,
@@ -36,6 +37,7 @@ class VehiculosSeeder extends Seeder
        		],
 
         	[
+        		'id_alquiler_actual' => 3,
 	            'marca' => 'Renault',
 	            'modelo' => 'Fluence',
 	            'anio' => 2016,

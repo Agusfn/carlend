@@ -12,4 +12,22 @@ class GastoAdicional extends Model
      * @var string
      */
     protected $table = 'gastos_adicionales';
+
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+    
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'fecha',
+    ];
+
+    
 }

@@ -20,6 +20,7 @@ class CreateProveedoresTable extends Migration
             $table->string('telefono')->nullable();
             $table->string('categoria');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

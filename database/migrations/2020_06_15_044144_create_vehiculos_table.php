@@ -15,6 +15,7 @@ class CreateVehiculosTable extends Migration
     {
         Schema::create('vehiculos', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('id_alquiler_actual')->nullable();
             $table->string('marca');
             $table->string('modelo');
             $table->integer('anio');
@@ -33,7 +34,7 @@ class CreateVehiculosTable extends Migration
             $table->date('fecha_vto_oblea_gnc')->nullable();
             $table->integer('kilometraje_prediccion_actual');
             $table->timestamps();
-
+            $table->softDeletes();
 
             $table->foreign('id_proveedor_seguro')->references('id')->on('proveedores');
         });

@@ -50,35 +50,34 @@
 									</tr>
 								</thead>
 								<tbody>
+									@foreach($vehiculos as $vehiculo)
 									<tr>
 										<td>
-											<a href="{{ route('vehiculos.show', 1) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+											<a href="{{ route('vehiculos.show', $vehiculo->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 											<i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" data-toggle="tooltip" data-placement="top" title="Hay trabajos de mantenimiento que realizar en el vehículo." aria-hidden="true"></i>
 										</td>
-										<td>MKA 451</td>
-										<td><span class="label label-success" style="font-size: 14px">Alquilado</td>
-										<td><a href="">Juan Pérez</a></td>
-										<td>Renault</td>
-										<td>Fluence</td>
-										<td>2013</td>
-										<td>Provincia Seguros</td>
-										<td>145.000</td>
-									</tr>
-
-									<tr>
+										<td>{{ $vehiculo->dominio }}</td>
 										<td>
-											<a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-											<i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" data-toggle="tooltip" data-placement="top" title="Se debe informar el kilometraje de julio de este auto." aria-hidden="true"></i>
+											@if($vehiculo->alquilerActual)
+											<span class="label label-success" style="font-size: 14px">Alquilado</span>
+											@else
+											<span class="label label-default" style="font-size: 14px">Sin alquilar</span>
+											@endif
 										</td>
-										<td>NBX 159</td>
-										<td><span class="label label-default" style="font-size: 14px">Sin alquilar</td>
-										<td>-</td>
-										<td>Chevrolet</td>
-										<td>Onix</td>
-										<td>2015</td>
-										<td>-</td>
-										<td>122.000</td>
+										<td>
+											@if($vehiculo->alquilerActual)
+											<a href="{{ route('choferes.show', $vehiculo->alquilerActual->chofer->id) }}">{{ $vehiculo->alquilerActual->chofer->nombre_y_apellido }}</a>
+											@else
+											-
+											@endif
+										</td>
+										<td>{{ $vehiculo->marca }}</td>
+										<td>{{ $vehiculo->modelo }}</td>
+										<td>{{ $vehiculo->anio }}</td>
+										<td>@if($vehiculo->proveedorSeguro) {{ $vehiculo->proveedorSeguro->nombre }} @else - @endif</td>
+										<td>{{ App\Lib\Strings::formatearEntero($vehiculo->kilometraje_prediccion_actual) }}</td>
 									</tr>									
+									@endforeach									
 								</tbody>
 							</table>
 

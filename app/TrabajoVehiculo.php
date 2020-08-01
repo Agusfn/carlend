@@ -14,4 +14,22 @@ class TrabajoVehiculo extends Model
      */
     protected $table = 'trabajos_vehiculos';
 
+    /**
+     * The attributes that aren't mass assignable.
+     *
+     * @var array
+     */
+    protected $guarded = [];
+
+    
+    /**
+     * The attributes that should be mutated to dates.
+     *
+     * @var array
+     */
+    protected $dates = [
+        'fecha_pagado',
+        'fecha_realizado'
+    ];
+
 }

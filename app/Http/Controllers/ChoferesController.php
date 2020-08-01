@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Chofer;
 
 class ChoferesController extends AdminPanelBaseController
 {
@@ -13,7 +15,8 @@ class ChoferesController extends AdminPanelBaseController
      */
     public function index()
     {
-        return view("choferes.index");
+        $choferes = Chofer::all();
+        return view("choferes.index")->with(["choferes" => $choferes]);
     }
 
     /**
@@ -34,7 +37,28 @@ class ChoferesController extends AdminPanelBaseController
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            "nombre_y_apellido" => "required",
+            //"telefono" => "",
+            //"direccion" => "",
+            //"dni" => "",
+            "fecha_vto_licencia" => "nullable|date_format:d/m/Y",
+            //"notas" => ""
+        ]);    
+
+        $chofer = new Chofer();
+
+        $chofer->fill($request->except("fecha_vto_licencia"));
+
+        if($chofer->fecha_vto_licencia) {
+            $chofer->fecha_vto_licencia = Carbon::createFromFormat("d/m/Y", $request->fecha_vto_licencia);
+        }    
+
+        $chofer->save();
+
+
+        return redirect()->route('choferes.index');
+
     }
 
     /**
@@ -45,7 +69,9 @@ class ChoferesController extends AdminPanelBaseController
      */
     public function show($id)
     {
-        return view("choferes.show");
+        $chofer = Chofer::findOrFail($id);
+
+        return view("choferes.show")->with(["chofer" => $chofer]);
     }
 
     /**
@@ -57,8 +83,28 @@ class ChoferesController extends AdminPanelBaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            "nombre_y_apellido" => "required",
+            //"telefono" => "",
+            //"direccion" => "",
+            //"dni" => "",
+            "fecha_vto_licencia" => "nullable|date_format:d/m/Y",
+            //"notas" => ""
+        ]);
+
+        $chofer = Chofer::findOrFail($id);
+
+        $chofer->fill($request->except("fecha_vto_licencia"));
+
+        if($chofer->fecha_vto_licencia) {
+            $chofer->fecha_vto_licencia = Carbon::createFromFormat("d/m/Y", $request->fecha_vto_licencia);
+        }        
+        
+        $chofer->save();
+
+        return redirect()->back()->with("success", true);
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -68,6 +114,10 @@ class ChoferesController extends AdminPanelBaseController
      */
     public function destroy($id)
     {
-        //
+        $chofer = Chofer::findOrFail($id);
+
+        $chofer->delete(); // soft delete
+
+        return redirect()->route('choferes.index');
     }
 }

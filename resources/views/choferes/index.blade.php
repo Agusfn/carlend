@@ -38,26 +38,20 @@
 										<th>DNI</th>
 										<th>Teléfono</th>
 										<th>Dirección</th>
-										<th>Comentarios</th>
+										<th>Notas</th>
 									</tr>
 								</thead>
 								<tbody>
+									@foreach($choferes as $chofer)
 									<tr>
-										<td><a href="{{ route('choferes.show', 1) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>Juan Pérez</td>
-										<td>35554332</td>
-										<td>11 6711 4455</td>
-										<td>Concordia G.C. 1338</td>
-										<td>Recomendado por Marta</td>
+										<td><a href="{{ route('choferes.show', $chofer->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+										<td>{{ $chofer->nombre_y_apellido }}</td>
+										<td>{{ $chofer->dni }}</td>
+										<td>{{ $chofer->telefono }}</td>
+										<td>{{ $chofer->direccion }}</td>
+										<td>{{ Str::limit($chofer->notas, 60, '...') }}</td>
 									</tr>
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>Ignacio Gutierrez</td>
-										<td>31452369</td>
-										<td>11 88756978</td>
-										<td>Tucumán 2456, Pilar</td>
-										<td></td>
-									</tr>
+									@endforeach
 								</tbody>
 							</table>
 
