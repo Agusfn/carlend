@@ -54,5 +54,9 @@ class AlquileresSeeder extends Seeder
 
         ]);
 
+
+        DB::table('vehiculos')->where('id', 1)->update(['id_alquiler_actual' => 2]);
+        DB::table('vehiculos')->where('id', 2)->update(['id_alquiler_actual' => 3]);
+
     }
 }

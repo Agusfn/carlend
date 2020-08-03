@@ -25,6 +25,7 @@ class CreateVehiculosTable extends Migration
             $table->foreignId('id_proveedor_seguro')->nullable();
             $table->decimal('costo_mensual_seguro', 10, 2)->nullable();
             $table->integer('dia_del_mes_debito_seguro')->nullable();
+            $table->date('fecha_vto_poliza_seguro')->nullable();
             $table->integer('kms_cada_service')->nullable();
             $table->integer('kms_cada_cambio_bujias')->nullable();
             $table->integer('kms_cada_rotacion_cubiertas')->nullable();

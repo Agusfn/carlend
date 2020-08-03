@@ -16,7 +16,7 @@ class VehiculosSeeder extends Seeder
 		DB::table('vehiculos')->insert([
 
         	[
-        		'id_alquiler_actual' => 2,
+        		'id_alquiler_actual' => null,
 	            'marca' => 'Renault',
 	            'modelo' => 'Megane',
 	            'anio' => 2015,
@@ -26,6 +26,7 @@ class VehiculosSeeder extends Seeder
 	            'id_proveedor_seguro' => 4,
 	            'costo_mensual_seguro' => 2900,
 	            'dia_del_mes_debito_seguro' => 18,
+	            'fecha_vto_poliza_seguro' => '2020-10-18',
 	            'kms_cada_service' => 10000,
 	            'kms_cada_cambio_bujias' => 10000,
 	            'kms_cada_rotacion_cubiertas' => 10000,
@@ -37,7 +38,7 @@ class VehiculosSeeder extends Seeder
        		],
 
         	[
-        		'id_alquiler_actual' => 3,
+        		'id_alquiler_actual' => null,
 	            'marca' => 'Renault',
 	            'modelo' => 'Fluence',
 	            'anio' => 2016,
@@ -47,6 +48,7 @@ class VehiculosSeeder extends Seeder
 	            'id_proveedor_seguro' => 4,
 	            'costo_mensual_seguro' => 4200,
 	            'dia_del_mes_debito_seguro' => 18,
+	            'fecha_vto_poliza_seguro' => '2020-12-01',
 	            'kms_cada_service' => 10000,
 	            'kms_cada_cambio_bujias' => 10000,
 	            'kms_cada_rotacion_cubiertas' => 10000,
@@ -58,6 +60,7 @@ class VehiculosSeeder extends Seeder
        		],
 
         ]);
+
 
     }
 }

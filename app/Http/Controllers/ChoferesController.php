@@ -50,7 +50,7 @@ class ChoferesController extends AdminPanelBaseController
 
         $chofer->fill($request->except("fecha_vto_licencia"));
 
-        if($chofer->fecha_vto_licencia) {
+        if($request->fecha_vto_licencia) {
             $chofer->fecha_vto_licencia = Carbon::createFromFormat("d/m/Y", $request->fecha_vto_licencia);
         }    
 

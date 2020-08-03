@@ -23,7 +23,8 @@ class Vehiculo extends Model
      */
     protected $dates = [
         'fecha_vto_vtv',
-        'fecha_vto_oblea_gnc'
+        'fecha_vto_oblea_gnc',
+        'fecha_vto_poliza_seguro'
     ];
 
 
@@ -45,6 +46,28 @@ class Vehiculo extends Model
     public function proveedorSeguro()
     {
         return $this->belongsTo("App\Proveedor", "id_proveedor_seguro");
-    }    
+    }
+
+
+
+    /**
+     * Si el vehiculo tiene registrado el débito automático de pago de patentes
+     * @return bool
+     */
+    public function tieneDebitoAutomPatentes()
+    {
+        return ($this->costo_mensual_imp_automotor && $this->dia_del_mes_debito_imp_automotor);
+    } 
+
+    /**
+     * Si el vehiculo tiene registrado el debito automático del pago de seguro
+     * @return bool
+     */
+    public function tieneDebitoAutomSeguro()
+    {
+        return $this->id_proveedor_seguro ? true : false;
+    }   
+
+
 
 }

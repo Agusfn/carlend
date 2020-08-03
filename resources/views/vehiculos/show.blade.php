@@ -19,7 +19,7 @@
 
 @section('content')
 
-					<h3 class="page-title"><a href="{{ route('vehiculos.index') }}">Vehículos</a> / Renault Fluence (MKA 451)</h3>
+					<h3 class="page-title"><a href="{{ route('vehiculos.index') }}">Vehículos</a> / {{ $vehiculo->marca }} {{ $vehiculo->modelo }} ({{ $vehiculo->dominio }})</h3>
 
 					<div class="panel panel-headline">
 						<div class="panel-body">
@@ -30,6 +30,13 @@
 							</div>
 						</div>
 					</div>
+
+					@if(session('success'))
+					<div class="alert alert-success alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						Los datos se actualizaron correctamente.
+					</div>
+					@endif
 
 					<div class="alert alert-warning">
 						<ul>
@@ -233,170 +240,228 @@
 
 						<div class="panel-body">
 
+							<a name="formulario-detalles-vehiculo"></a>
 
-							<div class="row">
-								<div class="col-lg-3">
+							<form action="{{ route('vehiculos.update', $vehiculo->id) }}" method="POST">
+								@method('PUT')
+								@csrf
 
-									<h4 style="margin-bottom: 20px;">Datos del vehículo</h4>
+								<div class="row">
+									<div class="col-lg-3">
 
-									<div class="form-group">
-										<label>Patente</label>
-										<input type="text" class="form-control" value="MKA 451">
-									</div>
+										<h4 style="margin-bottom: 20px;">Datos del vehículo</h4>
 
-									<div class="form-group">
-										<label>Marca</label>
-										<input type="text" class="form-control" value="Renault">
-									</div>
-									<div class="form-group">
-										<label>Modelo</label>
-										<input type="text" class="form-control" value="Fluence">
-									</div>
-									<div class="form-group">
-										<label>Año</label>
-										<input type="number" class="form-control" value="2013">
-									</div>
-
-								</div>
-
-								<div class="col-lg-5">
-									
-									<h4 style="margin-bottom: 20px;">Mantenimiento</h4>
-
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>KMs cada service</label>
-												<input type="number" class="form-control" value="10000">
-											</div>	
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>KMs cada cambio bujías</label>
-												<input type="number" class="form-control" value="15000">
-											</div>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>KMs cada rotación cubiertas</label>
-												<input type="number" class="form-control" value="10000">
-											</div>	
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>KMs cada cambio cubiertas</label>
-												<input type="number" class="form-control" value="60000">
-											</div>
-										</div>
-									</div>
-
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>KMs cada cambio correa distribución</label>
-												<input type="number" class="form-control" value="50000">
-											</div>	
-										</div>
-									</div>
-
-
-
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Fecha vencimiento VTV</label>
-												<input type="text" class="form-control" id="input_fecha_vto_vtv" value="15/01/2021">
-											</div>
+										<div class="form-group @error('dominio') has-error @enderror">
+											<label>Dominio (patente)</label>
+											<input type="text" class="form-control" name="dominio" value="{{ old('dominio') ?: $vehiculo->dominio }}">
+											@error('dominio')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
 
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Fecha vto. oblea GNC</label>
-												<input type="text" class="form-control" id="input_fecha_vto_gnc" value="">
-											</div>
+										<div class="form-group @error('marca') has-error @enderror">
+											<label>Marca</label>
+											<input type="text" class="form-control" name="marca" value="{{ old('marca') ?: $vehiculo->marca }}">
+											@error('marca')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
+										<div class="form-group @error('modelo') has-error @enderror">
+											<label>Modelo</label>
+											<input type="text" class="form-control" name="modelo" value="{{ old('modelo') ?: $vehiculo->modelo }}">
+											@error('modelo')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
+										</div>
+										<div class="form-group @error('anio') has-error @enderror">
+											<label>Año</label>
+											<input type="number" class="form-control" name="anio" min="1990" max="2025" value="{{ old('anio') ?: $vehiculo->anio }}">
+											@error('anio')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
+										</div>
+
 									</div>
 
-								</div>
-
-
-								<div class="col-lg-4">
-									
-									<h4 style="margin-bottom: 20px;">Impuesto de patentes</h4>
-
-									<label class="fancy-checkbox" style="margin-bottom: 10px">
-										<input type="checkbox" id="checkbox_debito_patentes">
-										<span>Débito automático pago de patentes</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Registrar el pago de patentes automáticamente en el registro de gastos adicionales una vez por mes, pagando con tarjeta de crédito."></span>
-									</label>
+									<div class="col-lg-5">
 										
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Costo ($)</label>
-												<input type="number" step="0.01" min="0" class="form-control" id="input_costo_patentes" value="" disabled="">
+										<h4 style="margin-bottom: 20px;">Mantenimiento</h4>
+
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group @error('kms_cada_service') has-error @enderror">
+													<label>KMs cada service</label>
+													<input type="number" class="form-control" name="kms_cada_service" value="{{ old('kms_cada_service') ?: $vehiculo->kms_cada_service }}">
+													@error('kms_cada_service')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>	
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group @error('kms_cada_cambio_bujias') has-error @enderror">
+													<label>KMs cada cambio bujías</label>
+													<input type="number" class="form-control" name="kms_cada_cambio_bujias" value="{{ old('kms_cada_cambio_bujias') ?: $vehiculo->kms_cada_cambio_bujias }}">
+													@error('kms_cada_cambio_bujias')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
 											</div>
 										</div>
 
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Día del mes débito (1-28)</label>
-												<input type="number" class="form-control" id="input_dia_debito_patentes" value="" disabled="">
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group @error('kms_cada_rotacion_cubiertas') has-error @enderror">
+													<label>KMs cada rotación cubiertas</label>
+													<input type="number" class="form-control" name="kms_cada_rotacion_cubiertas" value="{{ old('kms_cada_rotacion_cubiertas') ?: $vehiculo->kms_cada_rotacion_cubiertas }}">
+													@error('kms_cada_rotacion_cubiertas')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>	
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group @error('kms_cada_cambio_cubiertas') has-error @enderror">
+													<label>KMs cada cambio cubiertas</label>
+													<input type="number" class="form-control" name="kms_cada_cambio_cubiertas" value="{{ old('kms_cada_cambio_cubiertas') ?: $vehiculo->kms_cada_cambio_cubiertas }}">
+													@error('kms_cada_cambio_cubiertas')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
 											</div>
 										</div>
+
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group @error('kms_cada_cambio_correa_distr') has-error @enderror">
+													<label>KMs cada cambio correa distribución</label>
+													<input type="number" class="form-control" name="kms_cada_cambio_correa_distr" value="{{ old('kms_cada_cambio_correa_distr') ?: $vehiculo->kms_cada_cambio_correa_distr }}">
+													@error('kms_cada_cambio_correa_distr')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>	
+											</div>
+										</div>
+
+
+
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group @error('fecha_vto_vtv') has-error @enderror">
+													<label>Fecha vencimiento VTV</label>
+													<input type="text" class="form-control" name="fecha_vto_vtv" id="input_fecha_vto_vtv" value="{{ old('fecha_vto_vtv') ?: ($vehiculo->fecha_vto_vtv ? $vehiculo->fecha_vto_vtv->format('d/m/Y') : '') }}">
+													@error('fecha_vto_vtv')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
+											</div>
+
+											<div class="col-sm-6">
+												<div class="form-group @error('fecha_vto_oblea_gnc') has-error @enderror">
+													<label>Fecha vto. oblea GNC</label>
+													<input type="text" class="form-control" name="fecha_vto_oblea_gnc" id="input_fecha_vto_gnc" value="{{ old('fecha_vto_oblea_gnc') ?: ($vehiculo->fecha_vto_oblea_gnc ? $vehiculo->fecha_vto_oblea_gnc->format('d/m/Y') : '') }}">
+													@error('fecha_vto_oblea_gnc')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
+											</div>
+										</div>
+
 									</div>
 
 
-									<h4 style="margin: 25px 0 20px;">Seguro automotor</h4>
+									<div class="col-lg-4">
+										
+										<h4 style="margin-bottom: 20px;">Impuesto de patentes</h4>
 
-									<label class="fancy-checkbox" style="margin-bottom: 10px">
-										<input type="checkbox" id="checkbox_debito_seguro" checked="">
-										<span>Débito automático pago de seguros</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Registrar el pago de seguro automáticamente en el registro de gastos adicionales una vez por mes, pagando con tarjeta de crédito."></span>
-									</label>
-									</label>
+										<label class="fancy-checkbox" style="margin-bottom: 10px">
 
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Proveedor</label>
-												<select class="form-control" id="select_proveedor_seguro">
-													<option>Seleccionar</option>
-													<option selected="">Provincia Seguros</option>
-												</select>
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Fecha vto. póliza</label>
-												<input type="text" class="form-control" id="input_fecha_vto_poliza" value="20/06/2021">
-											</div>
-										</div>
-									</div>
+											<input type="checkbox" name="debito_patentes" id="checkbox_debito_patentes" @if(old('debito_patentes') || $vehiculo->tieneDebitoAutomPatentes()) checked @endif>
 
-									<div class="row">
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Costo ($)</label>
-												<input type="number" step="0.01" min="0" class="form-control" id="input_costo_seguro" value="5500">
+											<span>Débito automático pago de patentes</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Registrar el pago de patentes automáticamente en el registro de gastos adicionales una vez por mes, pagando con tarjeta de crédito."></span>
+										</label>
+											
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group @error('costo_mensual_imp_automotor') has-error @enderror">
+													<label>Costo ($)</label>
+													<input type="number" name="costo_mensual_imp_automotor" step="0.01" min="0" class="form-control" id="input_costo_patentes" value="{{ old('costo_mensual_imp_automotor') ?: $vehiculo->costo_mensual_imp_automotor }}">
+													@error('costo_mensual_imp_automotor')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
+											</div>
+
+											<div class="col-sm-6">
+												<div class="form-group @error('dia_del_mes_debito_imp_automotor') has-error @enderror">
+													<label>Día del mes débito (1-28)</label>
+													<input type="number" name="dia_del_mes_debito_imp_automotor" class="form-control" id="input_dia_debito_patentes" value="{{ old('dia_del_mes_debito_imp_automotor') ?: $vehiculo->dia_del_mes_debito_imp_automotor }}">
+													@error('dia_del_mes_debito_imp_automotor')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
 											</div>
 										</div>
-										<div class="col-sm-6">
-											<div class="form-group">
-												<label>Día del mes débito (1-28)</label>
-												<input type="number" class="form-control" id="input_dia_debito_seguro" value="16">
+
+
+										<h4 style="margin: 25px 0 20px;">Seguro automotor</h4>
+
+										<label class="fancy-checkbox" style="margin-bottom: 10px">
+
+											<input type="checkbox" name="debito_seguro" id="checkbox_debito_seguro" @if(old('debito_seguro') || $vehiculo->tieneDebitoAutomSeguro()) checked @endif>
+
+											<span>Débito automático pago de seguros</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Registrar el pago de seguro automáticamente en el registro de gastos adicionales una vez por mes, pagando con tarjeta de crédito."></span>
+										</label>
+										</label>
+
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group @error('id_proveedor_seguro') has-error @enderror">
+													<label>Proveedor</label>
+													<select class="form-control" name="id_proveedor_seguro" id="select_proveedor_seguro">
+														<option value="">Seleccionar</option>
+														@foreach($proveedoresSeguro as $proveedorSeguro)
+														<option value="{{ $proveedorSeguro->id }}" @if($vehiculo->id_proveedor_seguro == $proveedorSeguro->id) selected @endif>{{ $proveedorSeguro->nombre }}</option>
+														@endforeach
+													</select>
+													@error('id_proveedor_seguro')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group @error('fecha_vto_poliza_seguro') has-error @enderror">
+													<label>Fecha vto. póliza</label>
+													<input type="text" name="fecha_vto_poliza_seguro" class="form-control" id="input_fecha_vto_poliza" value="{{ old('fecha_vto_poliza_seguro') ?: ($vehiculo->fecha_vto_poliza_seguro ? $vehiculo->fecha_vto_poliza_seguro->format('d/m/Y') : '') }}">
+													@error('fecha_vto_poliza_seguro')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
 											</div>
 										</div>
+
+										<div class="row">
+											<div class="col-sm-6">
+												<div class="form-group @error('costo_mensual_seguro') has-error @enderror">
+													<label>Costo ($)</label>
+													<input type="number" name="costo_mensual_seguro" step="0.01" min="0" class="form-control" id="input_costo_seguro" value="{{ old('costo_mensual_seguro') ?: $vehiculo->costo_mensual_seguro }}">
+													@error('costo_mensual_seguro')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
+											</div>
+											<div class="col-sm-6">
+												<div class="form-group @error('dia_del_mes_debito_seguro') has-error @enderror">
+													<label>Día del mes débito (1-28)</label>
+													<input type="number" name="dia_del_mes_debito_seguro" class="form-control" id="input_dia_debito_seguro" value="{{ old('dia_del_mes_debito_seguro') ?: $vehiculo->dia_del_mes_debito_seguro }}">
+													@error('dia_del_mes_debito_seguro')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
+											</div>
+										</div>
+
 									</div>
 
 								</div>
-
-							</div>
-
-
-							<form>
-
 
 								<div style="text-align:right">
 									<button class="btn btn-primary">Guardar</button>
@@ -418,8 +483,9 @@
 	<script>
 	$(function() {
 
-		$('[data-toggle="tooltip"]').tooltip();
 
+		// Config
+		$('[data-toggle="tooltip"]').tooltip();
 
 		$('#input_fecha_vto_vtv, #input_fecha_vto_gnc, #input_fecha_vto_poliza').datepicker({
 			autoclose: true,
@@ -430,6 +496,7 @@
 		});
 
 
+		// Events calls
 		$("#checkbox_debito_patentes").change(function() {
 			$("#input_costo_patentes, #input_dia_debito_patentes").prop("disabled", !$(this).prop("checked"));
 		});
@@ -438,6 +505,16 @@
 			$("#select_proveedor_seguro, #input_costo_seguro, #input_dia_debito_seguro, #input_fecha_vto_poliza").prop("disabled", !$(this).prop("checked"));
 		});
 
+
+
+		// Actions
+		$("#checkbox_debito_patentes").trigger("change");
+		$("#checkbox_debito_seguro").trigger("change");
+
+		@if($errors->any())
+		// Saltar a formulario si hay errores.
+		location.hash = "#formulario-detalles-vehiculo";
+		@endif
 
 
 		// ******Chart*********

@@ -50,6 +50,15 @@ class Proveedor extends Model
     protected $guarded = [];
 
 
+    /**
+     * Obtener lista de proveedores que son compañías de seguros.
+     * @return Illuminate\Database\Eloquent\Collection
+     */
+    public static function aseguradoras()
+    {
+        return self::where("categoria", self::CATEGORIA_COMPANIA_SEGUROS)->get();
+    }
+
 
     /**
      * Obtener nombre completo de la categoría de este proveedor
