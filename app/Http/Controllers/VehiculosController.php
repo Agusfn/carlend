@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+
 use Illuminate\Http\Request;
 use App\Vehiculo;
 use App\Proveedor;
 use Carbon\Carbon;
+use App\Http\Requests\CrearVehiculo;
+use App\Http\Requests\EditarVehiculo;
+
 
 class VehiculosController extends AdminPanelBaseController
 {
@@ -28,7 +32,11 @@ class VehiculosController extends AdminPanelBaseController
      */
     public function create()
     {
-        return view("vehiculos.create");
+        $proveedoresSeguro = Proveedor::aseguradoras();
+
+        return view("vehiculos.create")->with([
+            "proveedoresSeguro" => $proveedoresSeguro
+        ]);
     }
 
     /**
@@ -37,9 +45,34 @@ class VehiculosController extends AdminPanelBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrearVehiculo $request)
     {
-        //
+        
+        // crear vehiculo
+        $vehiculo = new Vehiculo();
+
+        $vehiculo->fill($request->except([
+            "kilometraje_actual",
+            "kms_ult_service",
+            "kms_ult_cambio_bujias",
+            "kms_ult_rotacion_cubiertas",
+            "kms_ult_cambio_cubiertas",
+            "kms_ult_cambio_correa_distr",
+            "debito_seguro", // checkboxes
+            "debito_patentes"
+        ]));
+
+        $vehiculo->kilometraje_prediccion_actual = $request->kilometraje_actual;
+
+        $vehiculo->save();
+
+
+        // crear los trabajos vehiculo iniciales
+
+
+
+
+        return redirect()->route("vehiculos.index");
     }
 
     /**
@@ -67,52 +100,14 @@ class VehiculosController extends AdminPanelBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EditarVehiculo $request, $id)
     {
-        $request->validate([
-            "dominio" => "required|min:5|max:10",
-            "marca" => "required|max:50",
-            "modelo" => "required|max:50",
-            "anio" => "required|integer|min:1990|max:2025",
-            "kms_cada_service" => "nullable|integer",
-            "kms_cada_cambio_bujias" => "nullable|integer",
-            "kms_cada_rotacion_cubiertas" => "nullable|integer",
-            "kms_cada_cambio_cubiertas" => "nullable|integer",
-            "kms_cada_cambio_correa_distr" => "nullable|integer",
-            "fecha_vto_vtv" => "nullable|date_format:d/m/Y",
-            "fecha_vto_oblea_gnc" => "nullable|date_format:d/m/Y",
-
-            "costo_mensual_imp_automotor" => "required_with:debito_patentes",
-            "dia_del_mes_debito_imp_automotor" => "required_with:debito_patentes",
-
-            "id_proveedor_seguro" => "required_with:debito_seguro|exists:proveedores,id",
-            "fecha_vto_poliza_seguro" => "required_with:debito_seguro|date_format:d/m/Y",
-            "costo_mensual_seguro" => "required_with:debito_seguro",
-            "dia_del_mes_debito_seguro" => "required_with:debito_seguro|integer|min:1|max:28"
-        ]);
-
         $vehiculo = Vehiculo::findOrFail($id);
 
-
         $vehiculo->fill($request->except([
-            "debito_seguro",
-            "fecha_vto_vtv", 
-            "fecha_vto_oblea_gnc", 
-            "fecha_vto_poliza_seguro"
+            "debito_seguro", // checkboxes
+            "debito_patentes"
         ]));
-
-        if($request->fecha_vto_vtv) {
-            $vehiculo->fecha_vto_vtv = Carbon::createFromFormat("d/m/Y", $request->fecha_vto_vtv);
-        }
-
-        if($request->fecha_vto_oblea_gnc) {
-            $vehiculo->fecha_vto_oblea_gnc = Carbon::createFromFormat("d/m/Y", $request->fecha_vto_oblea_gnc);
-        }
-
-        if($request->fecha_vto_poliza_seguro) {
-            $vehiculo->fecha_vto_poliza_seguro = Carbon::createFromFormat("d/m/Y", $request->fecha_vto_poliza_seguro);
-        }
-
 
         if(!$request->has("debito_patentes")) {
             $vehiculo->fill([

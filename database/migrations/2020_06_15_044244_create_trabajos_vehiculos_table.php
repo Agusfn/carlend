@@ -15,7 +15,7 @@ class CreateTrabajosVehiculosTable extends Migration
     {
         Schema::create('trabajos_vehiculos', function (Blueprint $table) {
             $table->id();
-            $table->boolean('es_trabajo_previo');
+            $table->boolean('es_trabajo_previo')->default(false);
             $table->date('fecha_pagado');
             $table->foreignId('id_vehiculo');
             $table->integer('kms_vehiculo_estimados')->nullable();

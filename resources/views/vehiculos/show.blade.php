@@ -346,7 +346,7 @@
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group @error('fecha_vto_vtv') has-error @enderror">
-													<label>Fecha vencimiento VTV</label>
+													<label>Fecha vencimiento VTV</label>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Ingresa la fecha para recibir una notificación una semana antes del vencimiento, dejalo vacío para no recibirla."></span>
 													<input type="text" class="form-control" name="fecha_vto_vtv" id="input_fecha_vto_vtv" value="{{ old('fecha_vto_vtv') ?: ($vehiculo->fecha_vto_vtv ? $vehiculo->fecha_vto_vtv->format('d/m/Y') : '') }}">
 													@error('fecha_vto_vtv')
 														<label class="control-label">{{ $message }}</label>
@@ -356,7 +356,7 @@
 
 											<div class="col-sm-6">
 												<div class="form-group @error('fecha_vto_oblea_gnc') has-error @enderror">
-													<label>Fecha vto. oblea GNC</label>
+													<label>Fecha vto. oblea GNC</label>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Ingresa la fecha para recibir una notificación una semana antes del vencimiento, dejalo vacío para no recibirla."></span>
 													<input type="text" class="form-control" name="fecha_vto_oblea_gnc" id="input_fecha_vto_gnc" value="{{ old('fecha_vto_oblea_gnc') ?: ($vehiculo->fecha_vto_oblea_gnc ? $vehiculo->fecha_vto_oblea_gnc->format('d/m/Y') : '') }}">
 													@error('fecha_vto_oblea_gnc')
 														<label class="control-label">{{ $message }}</label>
@@ -373,7 +373,6 @@
 										<h4 style="margin-bottom: 20px;">Impuesto de patentes</h4>
 
 										<label class="fancy-checkbox" style="margin-bottom: 10px">
-
 											<input type="checkbox" name="debito_patentes" id="checkbox_debito_patentes" @if(old('debito_patentes') || $vehiculo->tieneDebitoAutomPatentes()) checked @endif>
 
 											<span>Débito automático pago de patentes</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Registrar el pago de patentes automáticamente en el registro de gastos adicionales una vez por mes, pagando con tarjeta de crédito."></span>
@@ -410,7 +409,7 @@
 
 											<span>Débito automático pago de seguros</span>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Registrar el pago de seguro automáticamente en el registro de gastos adicionales una vez por mes, pagando con tarjeta de crédito."></span>
 										</label>
-										</label>
+										
 
 										<div class="row">
 											<div class="col-sm-6">
