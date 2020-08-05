@@ -25,7 +25,7 @@
 						<div class="panel-body">
 							<div class="btn-group" role="group">
 								<button class="btn btn-primary"><i class="fa fa-wrench" aria-hidden="true"></i> Registrar trabajo</button>
-								<button class="btn btn-default" style="margin-left: 15px" data-toggle="modal" data-target="#myModal"><i class="fa fa-tachometer" aria-hidden="true"></i> Registrar kilometraje</button>
+								<a href="{{ route('vehiculos.registrar-kilometraje', $vehiculo->id) }}" class="btn btn-default" style="margin-left: 15px"><i class="fa fa-tachometer" aria-hidden="true"></i> Registrar kilometraje</a>
 								<button class="btn btn-danger" style="margin-left: 15px"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar vehículo</button>
 							</div>
 						</div>

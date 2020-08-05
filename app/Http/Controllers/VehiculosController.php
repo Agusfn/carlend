@@ -140,4 +140,37 @@ class VehiculosController extends AdminPanelBaseController
     {
         //
     }
+
+
+    /**
+     * Mostrar formulario para registrar kilometraje de auto.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function formularioRegistrarKms($id)
+    {
+        $vehiculo = Vehiculo::findOrFail($id);
+
+        return view("vehiculos.registrar-kilometraje")->with([
+            "vehiculo" => $vehiculo
+        ]);
+    }
+
+
+
+    /**
+     * Registrar el kilometraje nuevo del auto.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function registrarKms(Request $request, $id)
+    {
+        $request->validate(["kilometraje" => "required|integer"]);
+
+        
+
+    }
+
 }

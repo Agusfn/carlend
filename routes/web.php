@@ -36,6 +36,8 @@ Route::resource("proveedores", "ProveedoresController")->except(["edit"]);
 
 // Vehiculos
 Route::resource("vehiculos", "VehiculosController")->except(["edit"]);
+Route::get('vehiculos/{id}/registrar-kilometraje', 'VehiculosController@formularioRegistrarKms')->name("vehiculos.registrar-kilometraje");
+Route::post('vehiculos/{id}/registrar-kilometraje', 'VehiculosController@registrarKms');
 
 // Trabajos de vehiculos
 Route::resource("trabajos-vehiculos", "TrabajosVehiculosController")->except(["edit", "destroy"]);
