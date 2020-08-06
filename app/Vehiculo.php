@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\ActualizacionKmVehiculo;
 use Carbon\Carbon;
-
+use App\Lib\Math;
 
 class Vehiculo extends Model
 {
@@ -237,8 +237,103 @@ class Vehiculo extends Model
             return Carbon::createFromTimestamp($fechaRegistroInicial->timestamp + $intervalosTranscurridos * self::SEGS_ENTRE_CADA_ACTUALIZ_KMS);
         }
 
+    }
+
+    /**
+     * Si hay suficientes registros para calcular una predicción de kilometraje.
+     * @return [type] [description]
+     */
+    public function puedeCalcularPrediccionKms()
+    {
+        return ($this->actualizacionesKms()->count() > 2);
+    }
 
 
+    /**
+     * Calcular regresión lineal en base a los registros existentes de kilometraje y guardar b0 y b1 para predicciones futuras.
+     * @return null
+     */
+    public function calcularPrediccionKilometraje()
+    {
+
+        $registrosKms = $this->actualizacionesKms()->orderBy("fecha", "asc")->take(5)->get();
+
+        if($registrosKms->count() < 2)
+            return false;
+
+        $kilometrajes = $this->crearArrayDeKilometrajes($registrosKms);
+
+        $recta = Math::linearRegression(array_keys($kilometrajes), array_values($kilometrajes));
+
+        $this->b0_prediccion_km = $recta["intercept"];
+        $this->b1_prediccion_km = $recta["slope"];
+
+        $this->save();
+    }
+
+
+    /**
+     * Crear un conjunto de pares X,Y (fecha, kms recorridos) para regresión lineal, a partir de una colección de ActualizacionKmsVehiculo
+     * El conjunto comienza con el primer registro de la colección y termina con el último, con step cada 14 días, y asignando un promedio a los valores faltantes.
+     * @param  Illuminate\Database\Eloquent\Collection $registrosKms
+     * @return array
+     */
+    private function crearArrayDeKilometrajes($registrosKms)
+    {
+
+        $kilometrajes = [];
+        $sum = 0;
+
+        // Ingresamos los valores existentes
+
+        foreach($registrosKms as $registroKms) 
+        {
+            $kilometrajes[$registroKms->fecha->timestamp] = $registroKms->kilometros;
+            $sum += $registroKms->kilometros;
+        }
+
+        $avg = $sum / $registrosKms->count();
+
+
+        // Llenamos los huecos vacíos con el promedio.
+        
+        $fechaRegistro = $registrosKms->first()->fecha;
+
+        
+        while($fechaRegistro <= $registrosKms->last()->fecha)
+        {
+            if(!array_key_exists($fechaRegistro->timestamp, $kilometrajes)) {
+                $kilometrajes[$fechaRegistro->timestamp] = $avg;
+            }
+
+            $fechaRegistro->addDays(self::DIAS_ENTRE_CADA_ACTUALIZ_KMS);
+        }
+
+        ksort($kilometrajes);
+
+        return $kilometrajes;
+    }
+
+
+
+    /**
+     * Si es posible calcular una predicción de kilometraje (si b0 y b1 están definidos)
+     * @return bool
+     */
+    public function puedeEstimarKilometraje()
+    {
+        return $this->b1_prediccion_km && $this->b0_prediccion_km;
+    }
+
+
+    /**
+     * Estimar linealmente kilometraje de una fecha dada con la prediccion existente.
+     * @param  Carbon\Carbon $fecha
+     * @return int kilómetros
+     */
+    public function estimarKilometraje(Carbon $fecha)
+    {
+        return round($fecha->timestamp * $this->b1_prediccion_km + $this->b0_prediccion_km);
     }
 
 
