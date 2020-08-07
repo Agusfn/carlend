@@ -176,11 +176,14 @@
 												<strong>Uso actual estimado:</strong> 12.500 KMs/mes
 											</div>
 
-											<h4>Proyección de kilometraje</h4>
-											<div id="demo-line-chart" class="ct-chart"></div>
-
 										</div>
 									</div>
+
+									<div>
+										<h4>Proyección de kilometraje</h4>
+										<div id="demo-line-chart" class="ct-chart"></div>
+									</div>
+
 
 									<h4>Últimos trabajos realizados<a class="btn btn-xs btn-primary" style="margin-left: 20px">Ver todos</a></h4>
 									<table class="table">
@@ -520,16 +523,26 @@
 
 		var options;
 
-		var data = {
-			labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago'],
-			series: [{
-				name: 'series-real',
-				data: [80000, 97000, 103000, 116000, 136000, 146000],
-			}, {
-				name: 'series-projection',
-				data: [81000, 93500, 106000, 118500, 131000, 143500, 156000, 168500],
-			}]
-		};
+		@if($datosKilometraje)
+
+			var data = {
+				labels: {!! json_encode($datosKilometraje['fechas']) !!},
+				series: [{
+					name: 'series-real',
+					data: {{ json_encode($datosKilometraje['kms_registrados']) }},
+				}, {
+					name: 'series-projection',
+					data: {{ json_encode($datosKilometraje['kms_estimados']) }},
+				}]
+			};
+
+		@else
+
+			var data = null;
+
+		@endif
+		
+
 
 		// line chart
 		options = {

@@ -84,11 +84,11 @@ class VehiculosController extends AdminPanelBaseController
     public function show($id)
     {
         $vehiculo = Vehiculo::findOrFail($id);
-        $proveedoresSeguro = Proveedor::aseguradoras();
-
+        
         return view("vehiculos.show")->with([
             "vehiculo" => $vehiculo,
-            "proveedoresSeguro" => $proveedoresSeguro
+            "proveedoresSeguro" => Proveedor::aseguradoras(),
+            "datosKilometraje" => $vehiculo->estimacionKmsAnualParaGrafico()
         ]);
     }
 

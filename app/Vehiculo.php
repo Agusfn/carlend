@@ -299,7 +299,6 @@ class Vehiculo extends Model
         
         $fechaRegistro = $registrosKms->first()->fecha;
 
-        
         while($fechaRegistro <= $registrosKms->last()->fecha)
         {
             if(!array_key_exists($fechaRegistro->timestamp, $kilometrajes)) {
@@ -336,5 +335,42 @@ class Vehiculo extends Model
         return round($fecha->timestamp * $this->b1_prediccion_km + $this->b0_prediccion_km);
     }
 
+
+
+    /**
+     * Obtener un array con 3 arrays (fechas, kms registrados, kms predecidos) para graficar en html
+     * @return array|false
+     */
+    public function estimacionKmsAnualParaGrafico()
+    {
+
+        if(!$this->puedeEstimarKilometraje())
+            return false;
+
+        // obtener todos los registros de hasta los ultimos 6 meses
+        $registrosKms = $this->actualizacionesKms()->orderBy("fecha", "asc")
+            ->whereDate("fecha", ">=", Carbon::now()->subMonths(6))
+            ->get();
+
+
+        $datosKms = [];
+        $fechaIterada = $registrosKms->first()->fecha; // hasta 6 meses antes a hoy
+        $fechaFinal = Carbon::now()->addMonths(2); // hasta 2 meses posterior a hoy
+
+        while($fechaIterada <= $fechaFinal)
+        {
+            $datosKms["fechas"][] = $fechaIterada->format("d/m");
+
+            $registroKms = $registrosKms->firstWhere("fecha", $fechaIterada);
+            $datosKms["kms_registrados"][] = $registroKms ? $registroKms->kilometros : null;
+
+            $datosKms["kms_estimados"][] = $this->estimarKilometraje($fechaIterada);
+
+            $fechaIterada->addDays(self::DIAS_ENTRE_CADA_ACTUALIZ_KMS);
+        }
+
+        //dump($datosKms);
+        return $datosKms;
+    }
 
 }

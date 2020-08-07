@@ -21,7 +21,7 @@ class ActualizacionKmVehiculosSeeder extends Seeder
 
         	[
 	            'id_vehiculo' => 1,
-	            'fecha' => '2020-06-05',
+	            'fecha' => '2020-06-02',
 	            'kilometros' => 82000
        		],
 
