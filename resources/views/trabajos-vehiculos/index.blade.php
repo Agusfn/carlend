@@ -81,20 +81,24 @@
 								</thead>
 								<tbody>
 
+									@foreach($trabajosVehiculos as $trabajo)
+
 									<tr>
 										<td>
-											<a href="{{ route('trabajos-vehiculos.show', 1) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-											<i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" data-toggle="tooltip" data-placement="top" title="No se ingresó aún la fecha en la que se realizó el trabajo." aria-hidden="true"></i>
+											<a href="{{ route('trabajos-vehiculos.show', $trabajo->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>
 										</td>
-										<td>3 jul 2020</td>
-										<td>Fluence (MKA 451)</td>
-										<td>Otro</td>
+										<td>{{ $trabajo->fecha_pagado->isoFormat('d MMM Y') }}</td>
+										<td>{{ $trabajo->vehiculo->marcaModeloYDominio() }}</td>
+										<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
 										<td>Cambio de bujías</td>
 										<td>-</td>
 										<td>$1.200</td>
 										<td>Tarjeta de crédito</td>
 										<td>-</td>
 									</tr>
+
+									@endforeach
+
 									<tr>
 										<td><a href="detalles2.html" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
 										<td>25 jun 2020</td>

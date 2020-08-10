@@ -2,16 +2,38 @@
 
 namespace App;
 
+use App\TrabajoVehiculo;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use App\ActualizacionKmVehiculo;
-use Carbon\Carbon;
-use App\Lib\Math;
+use App\Lib\Vehiculos\RegistraKilometraje;
 
 class Vehiculo extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, RegistraKilometraje;
     
+
+
+    /**
+     * Cada cuántos días se debe actualizar el kilometraje del auto a partir del primer ingreso.
+     */
+    const DIAS_ENTRE_CADA_ACTUALIZ_KMS = 14;
+
+    /**
+     * Dias mas/menos de tolerancia respecto de la fecha programada en el que se puede hacer el ingreso de KMs
+     */
+    const DIAS_TOLERANCIA_INGRESO_KMS = 3;
+
+
+    /**
+     * Variables de arriba pero en segundos. (no cambiar)
+     */
+    const SEGS_ENTRE_CADA_ACTUALIZ_KMS = self::DIAS_ENTRE_CADA_ACTUALIZ_KMS * 24 * 60 * 60;
+    const SEGS_TOLERANCIA_INGRESO_KMS = self::DIAS_TOLERANCIA_INGRESO_KMS * 24 * 60 * 60;
+
+    
+
+
     /**
      * The attributes that aren't mass assignable.
      *
@@ -72,6 +94,16 @@ class Vehiculo extends Model
 
 
     /**
+     * Obtener las tareas pendientes (notificaciones) relacionadas a este vehículo
+     * @return [type] [description]
+     */
+    public function tareasPendientes()
+    {
+        return $this->hasMany("App\TareaPendiente", "id_vehiculo");
+    }
+
+
+    /**
      * Obtener query builder de trabajos previos (o iniciales) de vehiculo.
      * @return [type] [description]
      */
@@ -100,277 +132,133 @@ class Vehiculo extends Model
     }   
 
 
-
-
     /**
-     * Cada cuántos días se debe actualizar el kilometraje del auto a partir del primer ingreso.
+     * Obtener marca, modelo y dominio. Ej: Ford Focus (MMH 997)
+     * @return string
      */
-    const DIAS_ENTRE_CADA_ACTUALIZ_KMS = 14;
-
-    /**
-     * Dias mas/menos de tolerancia respecto de la fecha programada en el que se puede hacer el ingreso de KMs
-     */
-    const DIAS_TOLERANCIA_INGRESO_KMS = 3;
-
-
-    /**
-     * Variables de arriba pero en segundos. (no cambiar)
-     */
-    const SEGS_ENTRE_CADA_ACTUALIZ_KMS = self::DIAS_ENTRE_CADA_ACTUALIZ_KMS * 24 * 60 * 60;
-    const SEGS_TOLERANCIA_INGRESO_KMS = self::DIAS_TOLERANCIA_INGRESO_KMS * 24 * 60 * 60;
-
-
-
-
-
-
-    /**
-     * Registrar kilometraje a vehiculo
-     * @param  int $kilometros
-     * @return null
-     */
-    public function registrarKilometraje($kilometros)
+    public function marcaModeloYDominio()
     {
-        ActualizacionKmVehiculo::create([
+        return $this->marca." ".$this->modelo." (".$this->dominio.")";
+    }
+
+
+    /**
+     * Crear los trabajos iniciales (que necesitan de una reposicion periódica y tienen notificaciones) de este vehiculo.
+     * @param  [type] $kmsCambioCorrea [description]
+     * @return [type]                  [description]
+     */
+    public function registrarTrabajosIniciales($kmsService, $kmsBujias, $kmsRotacionRuedas, $kmsCambioCubiertas, $kmsCambioCorreaDistr)
+    {
+        $this->registrarTrabajoPrevio($kmsService, TrabajoVehiculo::SERVICE);
+        $this->registrarTrabajoPrevio($kmsBujias, TrabajoVehiculo::CAMBIO_BUJIAS);
+        $this->registrarTrabajoPrevio($kmsRotacionRuedas, TrabajoVehiculo::ROTACION_RUEDAS);
+        $this->registrarTrabajoPrevio($kmsCambioCubiertas, TrabajoVehiculo::CAMBIO_CUBIERTAS);
+        $this->registrarTrabajoPrevio($kmsCambioCorreaDistr, TrabajoVehiculo::CAMBIO_CORREA_DISTR);
+    }
+
+
+    /**
+     * Registrar un trabajo previo sobre un vehiculo (solo se usa para trabajos notificables)
+     * @param  [type] $kilometraje [description]
+     * @param  [type] $tipoTrabajo [description]
+     * @return [type]              [description]
+     */
+    public function registrarTrabajoPrevio($kilometraje, $tipoTrabajo)
+    {
+        TrabajoVehiculo::create([
+            "es_trabajo_previo" => true,
             "id_vehiculo" => $this->id,
-            "fecha" => Carbon::now(),
-            "kilometros" => $kilometros
+            "kms_vehiculo_estimados" => $kilometraje,
+            "tipo" => $tipoTrabajo,
+            "costo_total" => 0,
+            "medio_pago" => "n/a"
         ]);
 
-        $this->kilometraje_prediccion_actual = $kilometros;
-        $this->save();
-    }
-
-
-
-    /**
-     * Obtener la fecha del primer registro de kilometros de este auto (que es la fecha de alta)
-     * @return Carbon\Carbon
-     */
-    public function fechaDePrimeraActualizKms()
-    {
-        return $this->actualizacionesKms()->orderBy("fecha", "asc")->first()->fecha;
+        $this->actualizarNotifsDeTrabajo($tipoTrabajo);
     }
 
 
     /**
-     * Obtener la fecha de la última (más reciente) actualización de kilometraje de este auto.
-     * @return Carbon\Carbon
+     * Registrar un nuevo trabajo (no inicial) para este vehículo.
+     * @param  [type] $params [description]
+     * @return [type]         [description]
      */
-    public function fechaDeUltimaActualizKms()
+    public function registrarTrabajo($params)
     {
-        return $this->actualizacionesKms()->orderBy("fecha", "desc")->first()->fecha;
-    }
-
-
-    /**
-     * Si la fecha actual se encuentra entre las fechas requeridas para registrar kilometraje de este auto.
-     * Las fechas requeridas por defecto son cada 14 días desde la fecha de alta +- 3 días de tolerancia.
-     * No importa si se registró el kilometraje o no.
-     * @return bool
-     */
-    public function enFechaParaRegistrarKilometraje()
-    {
-    
-        $segsDesdePrimerIngreso = Carbon::now()->timestamp - $this->fechaDePrimeraActualizKms()->timestamp;
-
-        $segsPasadosIntervaloActual = $segsDesdePrimerIngreso % self::SEGS_ENTRE_CADA_ACTUALIZ_KMS;
-
-
-        if( $segsPasadosIntervaloActual <= self::SEGS_TOLERANCIA_INGRESO_KMS || 
-            $segsPasadosIntervaloActual >= (self::SEGS_ENTRE_CADA_ACTUALIZ_KMS - self::SEGS_TOLERANCIA_INGRESO_KMS) ) 
-        {
-            return true;
-        }
-        else {
-            return false;
-        }
-
-    }
-
-
-    /**
-     * Si al día de hoy pasaron 14-3=11 días o más de la última fecha de registro de kilometraje.
-     * @return bool
-     */
-    public function adeudaRegistroDeKilometraje()
-    {
-        return $this->fechaDeUltimaActualizKms()
-            ->addDays(self::DIAS_ENTRE_CADA_ACTUALIZ_KMS - self::DIAS_TOLERANCIA_INGRESO_KMS)
-            ->lessThanOrEqualTo(Carbon::now());
-
-    }
-
-
-    /**
-     * Obtener la fecha del siguiente registro de kilometraje programado (si ya se hizo en la fecha actual, arroja la siguiente)
-     * Si se encuentra dentro de la tolerancia, puede dar una fecha anterior a la actual
-     * @return Carbon\Carbon
-     */
-    public function fechaSgteRegistroKilometraje()
-    {
-
-        $fechaProxRegistro = $this->fechaDeUltimaActualizKms()->addDays(self::DIAS_ENTRE_CADA_ACTUALIZ_KMS);
-
-        if($fechaProxRegistro->copy()->addDays(self::DIAS_TOLERANCIA_INGRESO_KMS)->isAfter(Carbon::now()))
-        {
-            return $fechaProxRegistro;
-        }
-        else // se pasó una de las fechas, obtener la próxima
-        {
-            $fechaRegistroInicial = $this->fechaDePrimeraActualizKms();
-
-            $segsDesdePrimerIngreso = Carbon::now()->timestamp - $fechaRegistroInicial->timestamp;
-
-            $segsPasadosIntervaloActual = $segsDesdePrimerIngreso % self::SEGS_ENTRE_CADA_ACTUALIZ_KMS;
-
-
-            $intervalosTranscurridos = $segsDesdePrimerIngreso / self::SEGS_ENTRE_CADA_ACTUALIZ_KMS;
-
-            if( $segsPasadosIntervaloActual <= self::SEGS_TOLERANCIA_INGRESO_KMS)  {
-                $intervalosTranscurridos = floor($intervalosTranscurridos);
-            }
-            else  {
-                $intervalosTranscurridos = ceil($intervalosTranscurridos);
-            }
-
-            return Carbon::createFromTimestamp($fechaRegistroInicial->timestamp + $intervalosTranscurridos * self::SEGS_ENTRE_CADA_ACTUALIZ_KMS);
-        }
-
-    }
-
-    /**
-     * Si hay suficientes registros para calcular una predicción de kilometraje.
-     * @return [type] [description]
-     */
-    public function puedeCalcularPrediccionKms()
-    {
-        return ($this->actualizacionesKms()->count() > 2);
-    }
-
-
-    /**
-     * Calcular regresión lineal en base a los registros existentes de kilometraje y guardar b0 y b1 para predicciones futuras.
-     * @return null
-     */
-    public function calcularPrediccionKilometraje()
-    {
-
-        $registrosKms = $this->actualizacionesKms()->orderBy("fecha", "asc")->take(5)->get();
-
-        if($registrosKms->count() < 2)
-            return false;
-
-        $kilometrajes = $this->crearArrayDeKilometrajes($registrosKms);
-
-        $recta = Math::linearRegression(array_keys($kilometrajes), array_values($kilometrajes));
-
-        $this->b0_prediccion_km = $recta["intercept"];
-        $this->b1_prediccion_km = $recta["slope"];
-
-        $this->save();
-    }
-
-
-    /**
-     * Crear un conjunto de pares X,Y (fecha, kms recorridos) para regresión lineal, a partir de una colección de ActualizacionKmsVehiculo
-     * El conjunto comienza con el primer registro de la colección y termina con el último, con step cada 14 días, y asignando un promedio a los valores faltantes.
-     * @param  Illuminate\Database\Eloquent\Collection $registrosKms
-     * @return array
-     */
-    private function crearArrayDeKilometrajes($registrosKms)
-    {
-
-        $kilometrajes = [];
-        $sum = 0;
-
-        // Ingresamos los valores existentes
-
-        foreach($registrosKms as $registroKms) 
-        {
-            $kilometrajes[$registroKms->fecha->timestamp] = $registroKms->kilometros;
-            $sum += $registroKms->kilometros;
-        }
-
-        $avg = $sum / $registrosKms->count();
-
-
-        // Llenamos los huecos vacíos con el promedio.
+        // crear nuevo trabajo
         
-        $fechaRegistro = $registrosKms->first()->fecha;
-
-        while($fechaRegistro <= $registrosKms->last()->fecha)
-        {
-            if(!array_key_exists($fechaRegistro->timestamp, $kilometrajes)) {
-                $kilometrajes[$fechaRegistro->timestamp] = $avg;
-            }
-
-            $fechaRegistro->addDays(self::DIAS_ENTRE_CADA_ACTUALIZ_KMS);
-        }
-
-        ksort($kilometrajes);
-
-        return $kilometrajes;
-    }
-
-
-
-    /**
-     * Si es posible calcular una predicción de kilometraje (si b0 y b1 están definidos)
-     * @return bool
-     */
-    public function puedeEstimarKilometraje()
-    {
-        return $this->b1_prediccion_km && $this->b0_prediccion_km;
+        // si el trabajo es notificable
+            // actualizar notificaciones de este tipo de trabajo
     }
 
 
     /**
-     * Estimar linealmente kilometraje de una fecha dada con la prediccion existente.
-     * @param  Carbon\Carbon $fecha
-     * @return int kilómetros
+     * Actualizar las tareas (notificaciones) de un tipo de trabajo sobre este vehiculo
+     * Elimina notificación anterior y crea una nueva con la fecha estimada a realizar actualizada.
+     * @param  [type] $tipoTrabajo [description]
+     * @return [type]                [description]
      */
-    public function estimarKilometraje(Carbon $fecha)
+    public function actualizarNotifsDeTrabajo($tipoTrabajo)
     {
-        return round($fecha->timestamp * $this->b1_prediccion_km + $this->b0_prediccion_km);
-    }
+
+        $this->borrarTareasPendientesDeTrabajo($tipoTrabajo);
 
 
+        if(!TrabajoVehiculo::esTrabajoNotificable($tipoTrabajo))
+            return;
 
-    /**
-     * Obtener un array con 3 arrays (fechas, kms registrados, kms predecidos) para graficar en html
-     * @return array|false
-     */
-    public function estimacionKmsAnualParaGrafico()
-    {
+        if(!$frecuenciaKms = $this->frecuenciaKmsPorTipoTrabajo($tipoTrabajo))
+            return;
 
         if(!$this->puedeEstimarKilometraje())
-            return false;
-
-        // obtener todos los registros de hasta los ultimos 6 meses
-        $registrosKms = $this->actualizacionesKms()->orderBy("fecha", "asc")
-            ->whereDate("fecha", ">=", Carbon::now()->subMonths(6))
-            ->get();
+            return;
 
 
-        $datosKms = [];
-        $fechaIterada = $registrosKms->first()->fecha; // hasta 6 meses antes a hoy
-        $fechaFinal = Carbon::now()->addMonths(2); // hasta 2 meses posterior a hoy
+        $ultimoTrabajo = $this->trabajos()->where("tipo", $tipoTrabajo)->last();
 
-        while($fechaIterada <= $fechaFinal)
+        $kmsProxTrabajo = $ultimoTrabajo->kms_vehiculo_estimados + $frecuenciaKms;
+        
+        $fechaEstimada = $this->estimarFechaDesdeKilometraje($kmsProxTrabajo);
+
+
+        TareaPendiente::create([
+            "id_vehiculo" => $this->id,
+            "fecha_a_realizar" => $fechaEstimada,
+            "tipo" => TareaPendiente::TIPO_TRABAJO_VEHICULAR,
+            "tipo_trabajo_vehicular" => $tipoTrabajo,
+            "descripcion" => "",
+            "fecha_a_notificar" => $fechaEstimada->subDays(7),
+            "notificado" => false
+        ]);
+        
+    }
+
+
+
+    /**
+     * Borrar todas las tareas pendientes de este vehiculo
+     * @return null
+     */
+    private function borrarTareasPendientesDeTrabajo($tipoTrabajo)
+    {
+        $tareas = $this->tareasPendientes()->deTrabajoVehicular($tipoTrabajo)->get();
+
+        foreach($tareas as $tarea)
         {
-            $datosKms["fechas"][] = $fechaIterada->format("d/m");
-
-            $registroKms = $registrosKms->firstWhere("fecha", $fechaIterada);
-            $datosKms["kms_registrados"][] = $registroKms ? $registroKms->kilometros : null;
-
-            $datosKms["kms_estimados"][] = $this->estimarKilometraje($fechaIterada);
-
-            $fechaIterada->addDays(self::DIAS_ENTRE_CADA_ACTUALIZ_KMS);
+            $tarea->delete();
         }
+    }
 
-        //dump($datosKms);
-        return $datosKms;
+
+    /**
+     * Obtener la frecuencia en kilómetros de un tipo de trabajo para este vehiculo.
+     * Se obtiene de un atributo del mismo vehiculo.    
+     * @param  string $tipoTrabajo
+     * @return int
+     */
+    public function frecuenciaKmsPorTipoTrabajo($tipoTrabajo)
+    {
+        return $this->{TrabajoVehiculo::$attrsTrabajosNotificables[$tipoTrabajo]};
     }
 
 }

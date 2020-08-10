@@ -19,9 +19,10 @@ class CreateTareasPendientesTable extends Migration
             $table->foreignId('id_chofer')->nullable();
             $table->date('fecha_a_realizar');
             $table->string('tipo');
+            $table->string('tipo_trabajo_vehicular')->nullable(); // solo si tipo = "trabajo_veh_programado"
             $table->string('descripcion');
             $table->date('fecha_a_notificar');
-            $table->boolean('notificado');
+            $table->boolean('notificado')->default(false);
             $table->timestamps();
 
             $table->foreign('id_vehiculo')->references('id')->on('vehiculos');

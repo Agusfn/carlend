@@ -62,14 +62,11 @@ class VehiculosController extends AdminPanelBaseController
             "debito_patentes"
         ]));
 
-        $vehiculo->kilometraje_prediccion_actual = $request->kilometraje_actual;
-
         $vehiculo->save();
 
+        $vehiculo->registrarKilometrajeInicial($request->kilometraje_actual);
 
         // crear los trabajos vehiculo iniciales
-
-
 
 
         return redirect()->route("vehiculos.index");
@@ -87,8 +84,9 @@ class VehiculosController extends AdminPanelBaseController
         
         return view("vehiculos.show")->with([
             "vehiculo" => $vehiculo,
-            "proveedoresSeguro" => Proveedor::aseguradoras(),
-            "datosKilometraje" => $vehiculo->estimacionKmsAnualParaGrafico()
+            "puedeRegistrarKms" => $vehiculo->puedeRegistrarKilometraje(),
+            "datosKilometraje" => $vehiculo->estimacionKmsAnualParaGrafico(),
+            "proveedoresSeguro" => Proveedor::aseguradoras()
         ]);
     }
 
@@ -152,8 +150,12 @@ class VehiculosController extends AdminPanelBaseController
     {
         $vehiculo = Vehiculo::findOrFail($id);
 
+        if(!$vehiculo->puedeRegistrarKilometraje())
+            return redirect()->route("vehiculos.show", $vehiculo->id);
+
         return view("vehiculos.registrar-kilometraje")->with([
-            "vehiculo" => $vehiculo
+            "vehiculo" => $vehiculo,
+            "fechaProgramada" => $vehiculo->fechaSgteRegistroKilometraje()
         ]);
     }
 
@@ -167,10 +169,20 @@ class VehiculosController extends AdminPanelBaseController
      */
     public function registrarKms(Request $request, $id)
     {
-        $request->validate(["kilometraje" => "required|integer"]);
+        $vehiculo = Vehiculo::findOrFail($id);
 
-        
+        if(!$vehiculo->puedeRegistrarKilometraje())
+            return redirect()->route("vehiculos.show", $vehiculo->id);
 
+        $request->validate([
+            "kilometraje" => "required|integer|min:".$vehiculo->ultimoKmIngresado()
+        ]);
+
+        $vehiculo->registrarKilometraje($request->kilometraje);
+
+        $vehiculo->calcularPrediccionKilometraje();
+
+        return redirect()->route("vehiculos.show", $vehiculo->id);
     }
 
 }

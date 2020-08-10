@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\TrabajoVehiculo;
 
 class TrabajosVehiculosController extends AdminPanelBaseController
 {
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +15,9 @@ class TrabajosVehiculosController extends AdminPanelBaseController
      */
     public function index()
     {
-        return view("trabajos-vehiculos.index");
+        $trabajos = TrabajoVehiculo::validos()->with("vehiculo")->get();
+        
+        return view("trabajos-vehiculos.index")->with("trabajosVehiculos", $trabajos);
     }
 
     /**

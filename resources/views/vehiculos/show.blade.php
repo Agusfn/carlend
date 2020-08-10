@@ -24,9 +24,15 @@
 					<div class="panel panel-headline">
 						<div class="panel-body">
 							<div class="btn-group" role="group">
+
 								<button class="btn btn-primary"><i class="fa fa-wrench" aria-hidden="true"></i> Registrar trabajo</button>
+
+								@if($puedeRegistrarKms)
 								<a href="{{ route('vehiculos.registrar-kilometraje', $vehiculo->id) }}" class="btn btn-default" style="margin-left: 15px"><i class="fa fa-tachometer" aria-hidden="true"></i> Registrar kilometraje</a>
+								@endif
+								
 								<button class="btn btn-danger" style="margin-left: 15px"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar vehículo</button>
+
 							</div>
 						</div>
 					</div>
@@ -132,7 +138,36 @@
 						</div>
 
 						<div class="col-lg-6">
-							
+
+
+							<div class="panel panel-headline">
+								<div class="panel-heading">
+									<h3 class="panel-title">Uso del vehículo y proyección</h3>
+								</div>
+
+								<div class="panel-body">
+									
+									@if($vehiculo->puedeEstimarKilometraje())
+									<div class="row" style="margin-bottom: 20px">
+										<div class="col-sm-6">
+											<strong>Kilometraje estimado actual:</strong> {{ App\Lib\Strings::formatearEntero($vehiculo->kilometrajeEstimadoActual()) }}
+										</div>
+										<div class="col-sm-6">
+											<strong>Uso actual estimado:</strong> {{ App\Lib\Strings::formatearEntero($vehiculo->usoKmsMensualEstimado()) }} KMs/mes
+										</div>
+									</div>
+
+									<div id="grafico-uso-vehiculo" class="ct-chart"></div>
+									@else
+
+									No hay información de kilometraje suficiente para mostrar el uso estimado del vehículo.
+
+									@endif
+
+								</div>
+							</div>
+
+						
 							<div class="panel panel-headline">
 								<div class="panel-heading">
 									<h3 class="panel-title">Estado del vehículo</h3>
@@ -165,23 +200,9 @@
 											</div>
 											<div class="form-group">
 												<strong>Revisión GNC:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="15/01/2021">en 6 meses</span>
-											</div>										</div>
-										<div class="col-md-7">
-
-											<div class="form-group">
-												<strong>Kilometraje estimado actual:</strong> 145.000
-											</div>
-
-											<div class="form-group">
-												<strong>Uso actual estimado:</strong> 12.500 KMs/mes
-											</div>
-
+											</div>										
 										</div>
-									</div>
 
-									<div>
-										<h4>Proyección de kilometraje</h4>
-										<div id="demo-line-chart" class="ct-chart"></div>
 									</div>
 
 
@@ -537,9 +558,7 @@
 			};
 
 		@else
-
 			var data = null;
-
 		@endif
 		
 
@@ -551,16 +570,23 @@
 			axisX: {
 				showGrid: false
 			},
+			axisY: {
+				offset: 70,
+			    labelInterpolationFnc: function(value) {
+			      return value/1000 + "mil km";
+			    }
+			},
 			series: {
 				'series-projection': {
 					showPoint: false,
 					color: '#F00'
 				},
 			},
-			lineSmooth: false,
+			lineSmooth: false
+
 		};
 
-		new Chartist.Line('#demo-line-chart', data, options);
+		new Chartist.Line('#grafico-uso-vehiculo', data, options);
 
 
 
