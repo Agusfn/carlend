@@ -35,7 +35,7 @@ class TrabajosVehiculosSeeder extends Seeder
 	            'observaciones' => 'En Norauto Olivos',
 	            'id_proveedor' => null,
 	            'costo_total' => 23000,
-	            'medio_pago' => 'tarjeta',
+	            'medio_pago' => 'tarjeta_credito',
 	            'fecha_realizado' => '2020-06-14'
        		],
         	

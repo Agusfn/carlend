@@ -48,7 +48,6 @@ class VehiculosController extends AdminPanelBaseController
     public function store(CrearVehiculo $request)
     {
         
-        // crear vehiculo
         $vehiculo = new Vehiculo();
 
         $vehiculo->fill($request->except([
@@ -66,7 +65,13 @@ class VehiculosController extends AdminPanelBaseController
 
         $vehiculo->registrarKilometrajeInicial($request->kilometraje_actual);
 
-        // crear los trabajos vehiculo iniciales
+        $vehiculo->registrarTrabajosIniciales(
+            $request->kms_ult_service,
+            $request->kms_ult_cambio_bujias,
+            $request->kms_ult_rotacion_cubiertas,
+            $request->kms_ult_cambio_cubiertas,
+            $request->kms_ult_cambio_correa_distr,
+        );
 
 
         return redirect()->route("vehiculos.index");

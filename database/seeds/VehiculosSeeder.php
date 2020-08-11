@@ -34,7 +34,7 @@ class VehiculosSeeder extends Seeder
 	            'kms_cada_cambio_correa_distr' => 60000,
 	            'fecha_vto_vtv' => '2020-12-15',
 	            'fecha_vto_oblea_gnc' => '2020-11-20',
-	            'kilometraje_prediccion_actual' => 82000,
+	            //'kilometraje_prediccion_actual' => 82000,
        		],
 
         	[
@@ -56,7 +56,7 @@ class VehiculosSeeder extends Seeder
 	            'kms_cada_cambio_correa_distr' => 60000,
 	            'fecha_vto_vtv' => '2020-11-20',
 	            'fecha_vto_oblea_gnc' => '2021-01-15',
-	            'kilometraje_prediccion_actual' => 55000,
+	            //'kilometraje_prediccion_actual' => 55000,
        		],
 
         ]);

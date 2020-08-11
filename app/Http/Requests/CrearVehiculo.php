@@ -53,4 +53,6 @@ class CrearVehiculo extends FormRequest
             "kms_ult_cambio_correa_distr" => "required|integer|lte:kilometraje_actual"
         ];
     }
+
+    // TODO: hacer upper case el dominio
 }

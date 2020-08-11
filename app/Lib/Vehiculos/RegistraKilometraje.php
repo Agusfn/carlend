@@ -19,7 +19,7 @@ trait RegistraKilometraje
      */
     public function registrarKilometrajeInicial($kilometros)
     {
-        $this->registrarKilometrajeEnFecha($kilometros, Cabon::now());
+        $this->registrarKilometrajeEnFecha($kilometros, Carbon::now());
     }
 
 
@@ -48,8 +48,8 @@ trait RegistraKilometraje
             "kilometros" => $kilometros
         ]);
 
-        $this->kilometraje_prediccion_actual = $kilometros;
-        $this->save();
+        /*$this->kilometraje_prediccion_actual = $kilometros;
+        $this->save();*/
     }
 
 

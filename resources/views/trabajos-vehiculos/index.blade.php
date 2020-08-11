@@ -87,52 +87,18 @@
 										<td>
 											<a href="{{ route('trabajos-vehiculos.show', $trabajo->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>
 										</td>
-										<td>{{ $trabajo->fecha_pagado->isoFormat('d MMM Y') }}</td>
+										<td>{{ $trabajo->fecha_pagado->isoFormat('D MMM Y') }}</td>
 										<td>{{ $trabajo->vehiculo->marcaModeloYDominio() }}</td>
 										<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
-										<td>Cambio de bujías</td>
-										<td>-</td>
-										<td>$1.200</td>
-										<td>Tarjeta de crédito</td>
-										<td>-</td>
+										<td>{{ Str::limit($trabajo->observaciones, 25, '...') }}</td>
+										<td>{{ $trabajo->proveedor ? $trabajo->proveedor->nombre : '-' }}</td>
+										<td>{{ $trabajo->costo_total > 0 ? App\Lib\Strings::formatearMoneda($trabajo->costo_total, 0) : '-' }}</td>
+										<td>{{ $trabajo->costo_total > 0 ? __('medios_pago.'.$trabajo->medio_pago) : '-' }}</td>
+										<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM Y') }}</td>
 									</tr>
 
 									@endforeach
 
-									<tr>
-										<td><a href="detalles2.html" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>25 jun 2020</td>
-										<td>Fluence (MKA 451)</td>
-										<td>Reparación</td>
-										<td>Arreglo manguera rota</td>
-										<td>Mariano mecánico</td>
-										<td>$2.000</td>
-										<td>Efectivo</td>
-										<td>25 jun 2020</td>
-									</tr>
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>10 jun 2020</td>
-										<td>Fluence (MKA 451)</td>
-										<td>Cambio de piezas de frenos</td>
-										<td>En Norauto olivos</td>
-										<td>-</td>
-										<td>$3.000</td>
-										<td>Tarjeta de crédito</td>
-										<td>10 jun 2020</td>
-									</tr>
-
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>8 may 2020</td>
-										<td>Fluence (MKA 451)</td>
-										<td>Service</td>
-										<td></td>
-										<td>Jumax</td>
-										<td>$2.500</td>
-										<td>Efectivo</td>
-										<td>8 may 2020</td>
-									</tr>
 								</tbody>
 							</table>
 

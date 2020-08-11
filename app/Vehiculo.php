@@ -143,7 +143,20 @@ class Vehiculo extends Model
 
 
     /**
+     * Ordenar por nombre de marca y modelo ascendiente.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNombreAsc($query)
+    {
+        return $query->orderBy("marca", "ASC")->orderBy("modelo", "ASC");
+    }
+
+
+    /**
      * Crear los trabajos iniciales (que necesitan de una reposicion periódica y tienen notificaciones) de este vehiculo.
+     * Llamado únicamente se da de alta un vehiculo.
      * @param  [type] $kmsCambioCorrea [description]
      * @return [type]                  [description]
      */
@@ -174,7 +187,8 @@ class Vehiculo extends Model
             "medio_pago" => "n/a"
         ]);
 
-        $this->actualizarNotifsDeTrabajo($tipoTrabajo);
+        // No actualizamos las tareas (notificaciones) de este trabajo porque el trabajo previo se registra
+        // cuando se da de alta un vehiculo, y no se puede estimar cuándo será el próximo sin otro ingreso de kilometraje.
     }
 
 

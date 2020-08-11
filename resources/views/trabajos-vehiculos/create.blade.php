@@ -22,80 +22,118 @@
 
 								<div class="panel-body">
 
-									<form>
-										<div class="form-group">
+									<form action="{{ route('trabajos-vehiculos.store') }}" method="POST">
+										@csrf
+										<div class="form-group @error('id_vehiculo') has-error @enderror">
 											<label>Vehículo</label>
-											<select class="form-control">
-												<option>Renault Fluence (MKA 451)</option>
-												<option>Chevrolet Onix (NBX 159)</option>
+											<select class="form-control" name="id_vehiculo">
+												<option value="">Seleccionar</option>
+												@foreach($vehiculos as $vehiculo)
+												<option value="{{ $vehiculo->id }}" @if(old('id_vehiculo') == $vehiculo->id) selected @endif>{{ $vehiculo->marcaModeloYDominio() }}</option>
+												@endforeach
 											</select>
+											@error('id_vehiculo')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
-										<div class="form-group">
+										<div class="form-group @error('tipo') has-error @enderror">
 											<label>Tipo de trabajo</label>
-											<select class="form-control">
-												<option>Seleccionar</option>
-												<option>Cambio de aceite y filtros</option>
-												<option>Cambio de bateria</option>
-												<option>Cambio de piezas de frenos</option>
-												<option>Cambio de correa de distribución</option>
-												<option>Cambio de correa alternador</option>
-												<option>Cambio de cubiertas</option>
-												<option>Reparación</option>
-												<option>Otro</option>
+
+											<select class="form-control" name="tipo">
+												<option value="">Seleccionar</option>
+
+												@foreach(App\TrabajoVehiculo::$tiposTrabajos as $tipoTrabajo)
+												<option value="{{ $tipoTrabajo }}" @if(old('tipo') == $tipoTrabajo) selected @endif>{{ __('tipos_trabajos.'.$tipoTrabajo) }}</option>
+												@endforeach
+
 											</select>
+
+											@error('tipo')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
 
-										<div class="form-group">
+										<div class="form-group @error('observaciones') has-error @enderror">
 											<label>Observaciones</label>
-											<input type="text" class="form-control">
+											<input type="text" name="observaciones" class="form-control" placeholder="Opcional" value="{{ old('observaciones') }}">
+											@error('observaciones')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
 
-										<div class="form-group">
+										<div class="form-group @error('id_proveedor') has-error @enderror">
 											<label>Proveedor</label>
-											<select class="form-control">
-												<option>Seleccionar</option>
-												<option>Repuestos José (Casa de repuestos)</option>
-												<option>Jumax (Service/Lubricentro)</option>
-												<option>Mariano mecánico (Mecánico)</option>
-												<option>Otro proveedor no registrado</option>
+
+											<select class="form-control" name="id_proveedor">
+												<option value="">Ninguno / no registrado</option>
+												
+												@foreach($proveedores as $proveedor)
+												<option value="{{ $proveedor->id }}" @if(old('id_proveedor') == $proveedor->id) selected @endif>{{ $proveedor->nombre }}</option>
+												@endforeach
+												
 											</select>
+
+											@error('id_proveedor')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
 
 										<div class="row">
 											<div class="col-sm-4">
-												<div class="form-group">
+												<div class="form-group @error('fecha_pagado') has-error @enderror">
 													<label>Fecha pagado</label>
-													<input type="text" class="form-control" id="input_fecha_pagado">
+													<input type="text" class="form-control" name="fecha_pagado" id="input_fecha_pagado" value="{{ old('fecha_pagado') }}">
+													@error('fecha_pagado')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
 												</div>
 											</div>
 											<div class="col-sm-4">
-												<div class="form-group">
+												<div class="form-group @error('costo_total') has-error @enderror">
 													<label>Costo total ($)</label>
-													<input type="number" step="0.01" min="0" class="form-control">
+													<input type="number" step="0.01" min="0" class="form-control" name="costo_total" value="{{ old('costo_total') }}">
+													@error('costo_total')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
 												</div>
 											</div>
 											<div class="col-sm-4">
-												<div class="form-group">
+												<div class="form-group @error('medio_pago') has-error @enderror">
 													<label>Medio de pago</label>
-													<select class="form-control">
+													<select class="form-control" name="medio_pago">
 														<option>Seleccionar</option>
-														<option>Efectivo</option>
-														<option>Tarjeta de crédito</option>
-														<option>Transferencia bancaria</option>
+														<option value="efectivo" @if(old('medio_pago') == 'efectivo') selected @endif>Efectivo</option>
+														<option value="tarjeta_credito" @if(old('medio_pago') == 'tarjeta_credito') selected @endif>Tarjeta de crédito</option>
+														<option value="transferencia" @if(old('medio_pago') == 'transferencia') selected @endif>Transferencia bancaria</option>
 													</select>
+													@error('medio_pago')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
 												</div>
 											</div>
 										</div>
 
 										<div class="row">
 											<div class="col-sm-4">
-												<div class="form-group">
+												<div class="form-group @error('fecha_realizado') has-error @enderror">
 													<label>Fecha realizado</label>
-													<label class="fancy-checkbox">
+													<!--label class="fancy-checkbox">
 														<input type="checkbox" id="checkbox_inform_job_date_later">
 														<span>Informar más adelante</span>
-													</label>
-													<input type="text" class="form-control" id="input_fecha_realizado">
+													</label-->
+													<input type="text" class="form-control" name="fecha_realizado" id="input_fecha_realizado" value="{{ old('fecha_realizado') }}">
+													@error('fecha_realizado')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
+												</div>
+											</div>
+											<div class="col-sm-4">
+												<div class="form-group @error('kms_vehiculo_estimados') has-error @enderror">
+													<label>Kms del vehículo (opcional)</label>
+													<input type="number" min="0" class="form-control" name="kms_vehiculo_estimados" value="{{ old('kms_vehiculo_estimados') }}">
+													@error('kms_vehiculo_estimados')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
 												</div>
 											</div>
 										</div>
@@ -132,7 +170,7 @@
 				endDate: 'today'
 			});
 
-			$("#checkbox_inform_job_date_later").change(function() {
+			/*$("#checkbox_inform_job_date_later").change(function() {
 
 				if($(this).prop("checked")) {
 					$("#input_fecha_realizado").val('').prop("disabled", true);
@@ -141,7 +179,7 @@
 					$("#input_fecha_realizado").prop("disabled", false);
 				}
 
-			});
+			});*/
 
 
 		});

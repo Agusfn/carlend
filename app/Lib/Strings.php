@@ -17,4 +17,18 @@ class Strings
 		return number_format($numero, 0, ",", ".");
 	}
 
+
+    /**
+     * Formatear moneda a formato legible prolijo, con numero de decimales variable.
+     * @param float $numero
+     * @param int $decimales
+     * @return string
+     */
+	public static function formatearMoneda($numero, $decimales)
+	{
+		return "$".number_format($numero, $decimales, ",", ".");
+	}
+
+
+
 }

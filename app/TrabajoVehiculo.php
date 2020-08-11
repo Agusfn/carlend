@@ -21,6 +21,23 @@ class TrabajoVehiculo extends Model
 
 
     /**
+     * Tipos de trabajos disponibles
+     * @var array
+     */
+    public static $tiposTrabajos = [
+        self::SERVICE,
+        self::CAMBIO_BUJIAS,
+        self::ROTACION_RUEDAS,
+        self::CAMBIO_CUBIERTAS,
+        self::CAMBIO_CORREA_DISTR,
+        self::CAMBIO_CORREA_ALTERN,
+        self::CAMBIO_BATERIA,
+        self::CAMBIO_FRENOS,
+        self::REPARACION,
+        self::OTROS,
+    ];
+
+    /**
      * Lista de cada tipo de trabajo notificable, y junto a cada uno, el nombre del atributo de Vehiculo que
      * contiene la frecuencia en KMs de dicho trabajo.
      * @var array
@@ -69,6 +86,16 @@ class TrabajoVehiculo extends Model
     public function vehiculo()
     {
         return $this->belongsTo("App\Vehiculo", "id_vehiculo");
+    }   
+
+
+    /**
+     * Obtener proveedor relacionado a este trabajo.
+     * @return App\Proveedor
+     */
+    public function proveedor()
+    {
+        return $this->belongsTo("App\Proveedor", "id_proveedor");
     }    
 
 

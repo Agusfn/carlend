@@ -35,7 +35,7 @@ class CreateVehiculosTable extends Migration
             $table->date('fecha_vto_oblea_gnc')->nullable();
             $table->float('b1_prediccion_km', 13, 10)->nullable();
             $table->float('b0_prediccion_km', 10, 2)->nullable();
-            $table->integer('kilometraje_prediccion_actual');
+            //$table->integer('kilometraje_prediccion_actual');
             $table->timestamps();
             $table->softDeletes();
 

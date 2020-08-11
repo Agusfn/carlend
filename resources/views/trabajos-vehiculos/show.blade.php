@@ -27,38 +27,43 @@
 
 									<form>
 										<div class="form-group">
-											<label>ID de trabajo</label>: #1
+											<label>ID de trabajo</label>: #{{ $trabajo->id }}
 										</div>
 										<div class="form-group">
-											<label>Vehículo</label>: <a href="">Renault Fluence (MKA 451)</a>
+											<label>Vehículo</label>: <a href="{{ route('vehiculos.show', $trabajo->vehiculo->id) }}">{{ $trabajo->vehiculo->marcaModeloYDominio() }}</a>
 										</div>
 										<div class="form-group">
-											<label>Tipo de trabajo</label>: Otro
+											<label>Tipo de trabajo</label>: {{ __('tipos_trabajos.'.$trabajo->tipo) }}
 										</div>
 
 										<div class="form-group">
 											<label>Observaciones</label>
-											<input type="text" class="form-control" value="Cambio de bujías">
+											<input type="text" class="form-control" value="{{ $trabajo->observaciones }}">
 										</div>
 
 										<div class="form-group">
-											<label>Proveedor</label>: -
+											<label>Proveedor</label>: 
+											@if($trabajo->proveedor)
+											<a href="{{ route('proveedores.show', $trabajo->proveedor->id) }}">{{ $trabajo->proveedor->nombre }}</a>
+											@else
+											-
+											@endif
 										</div>
 
 										<div class="row">
 											<div class="col-sm-4">
 												<div class="form-group">
-													<label>Fecha pagado</label>: 3 jul 2020
+													<label>Fecha pagado</label>: {{ $trabajo->fecha_pagado->isoFormat('D MMM Y') }}
 												</div>
 											</div>
 											<div class="col-sm-4">
 												<div class="form-group">
-													<label>Costo total ($)</label>: $1.200
+													<label>Costo total ($)</label>: {{ $trabajo->costo_total > 0 ? App\Lib\Strings::formatearMoneda($trabajo->costo_total, 2) : '-' }}
 												</div>
 											</div>
 											<div class="col-sm-4">
 												<div class="form-group">
-													<label>Medio de pago</label>: Tarjeta de crédito
+													<label>Medio de pago</label>: {{ $trabajo->costo_total > 0 ? __('medios_pago.'.$trabajo->medio_pago) : '-' }}
 												</div>
 											</div>
 										</div>
