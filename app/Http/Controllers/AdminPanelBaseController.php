@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\View;
+use App\Lib\Notificaciones\AdministradorNotificaciones;
+
 
 class AdminPanelBaseController extends Controller
 {
@@ -14,6 +17,9 @@ class AdminPanelBaseController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+
+        $notificaciones = AdministradorNotificaciones::obtenerNotificaciones();
+        View::share("notificaciones", $notificaciones);
     }
 
 }

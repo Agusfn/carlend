@@ -14,6 +14,92 @@ class TrabajosVehiculosSeeder extends Seeder
 		DB::table('trabajos_vehiculos')->insert([
 
         	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 1,
+	            'kms_vehiculo_estimados' => 70000,
+	            'tipo' => 'service',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],
+        	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 1,
+	            'kms_vehiculo_estimados' => 70000,
+	            'tipo' => 'cambio_bujias',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],
+        	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 1,
+	            'kms_vehiculo_estimados' => 70000,
+	            'tipo' => 'rotacion_ruedas',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],
+        	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 1,
+	            'kms_vehiculo_estimados' => 70000,
+	            'tipo' => 'cambio_cubiertas',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],
+        	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 1,
+	            'kms_vehiculo_estimados' => 70000,
+	            'tipo' => 'cambio_correa_distr',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],       		       		       		
+
+
+
+
+        	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 2,
+	            'kms_vehiculo_estimados' => 50000,
+	            'tipo' => 'service',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],
+        	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 2,
+	            'kms_vehiculo_estimados' => 50000,
+	            'tipo' => 'cambio_bujias',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],
+        	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 2,
+	            'kms_vehiculo_estimados' => 50000,
+	            'tipo' => 'rotacion_ruedas',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],
+        	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 2,
+	            'kms_vehiculo_estimados' => 50000,
+	            'tipo' => 'cambio_cubiertas',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],
+        	[
+        		'es_trabajo_previo' => true,
+	            'id_vehiculo' => 2,
+	            'kms_vehiculo_estimados' => 50000,
+	            'tipo' => 'cambio_correa_distr',
+	            'costo_total' => 0,
+	            'medio_pago' => 'n/a',
+       		],       		       		       		
+
+
+        	/*[
         		'es_trabajo_previo' => false,
 	            'fecha_pagado' => '2020-06-10',
 	            'id_vehiculo' => 1,
@@ -37,7 +123,7 @@ class TrabajosVehiculosSeeder extends Seeder
 	            'costo_total' => 23000,
 	            'medio_pago' => 'tarjeta_credito',
 	            'fecha_realizado' => '2020-06-14'
-       		],
+       		],*/
         	
 
         ]);

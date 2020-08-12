@@ -7,6 +7,7 @@ use App\TrabajoVehiculo;
 use App\Proveedor;
 use App\Vehiculo;
 use App\Http\Requests\CrearTrabajoVehiculo;
+use Carbon\Carbon;
 
 
 class TrabajosVehiculosController extends AdminPanelBaseController
@@ -34,7 +35,7 @@ class TrabajosVehiculosController extends AdminPanelBaseController
 
         return view("trabajos-vehiculos.create")->with([
             "vehiculos" => Vehiculo::nombreAsc()->get(),
-            "proveedores" => Proveedor::all() // TODO: alfabeticamente
+            "proveedores" => Proveedor::all() // TODO: alfabeticamente, excluir aseguradoras
         ]);
     }
 
@@ -49,18 +50,17 @@ class TrabajosVehiculosController extends AdminPanelBaseController
 
         $vehiculo = Vehiculo::findOrFail($request->id_vehiculo);
 
-        if(!$request->kms_vehiculo_estimados) {
-            $request->kms_vehiculo_estimados = $vehiculo->estimarKilometraje($request->fecha_realizado);
+        if(!$request->kms_vehiculo_estimados) 
+        {
+            $fechaRealizado = Carbon::create($request->fecha_realizado);
+            $request->merge(["kms_vehiculo_estimados" => $vehiculo->estimarKilometraje($fechaRealizado)]);
         }
 
         $trabajo = TrabajoVehiculo::create($request->all());
 
-        // TODO: actualizar notificaciones
+        $vehiculo->actualizarNotifsDeTrabajo($request->tipo);
 
-        dd($request);
-        
-        
-
+        return redirect()->route("trabajos-vehiculos.index");
     }
 
     /**

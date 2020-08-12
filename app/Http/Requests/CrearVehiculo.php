@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Carbon\Carbon;
+
 
 class CrearVehiculo extends FormRequest
 {
@@ -16,6 +18,21 @@ class CrearVehiculo extends FormRequest
         return true;
     }
 
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $this->afterValidation();
+        });
+    }
+
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +41,7 @@ class CrearVehiculo extends FormRequest
     public function rules()
     {
         return [
-            "dominio" => "required|min:5|max:10",
+            "dominio" => "required|min:5|max:10|unique:vehiculos",
             "marca" => "required|max:50",
             "modelo" => "required|max:50",
             "anio" => "required|integer|min:1990|max:2025",
@@ -54,5 +71,33 @@ class CrearVehiculo extends FormRequest
         ];
     }
 
-    // TODO: hacer upper case el dominio
+
+    /**
+     * Llamado después de la validación
+     * @return null
+     */
+    public function afterValidation()
+    {
+
+        // Convertimos fechas de d/m/Y a Y-m-d antes de que el controller maneje la request porque el fill() de eloquent necesita Y-m-d aparentemente
+        
+        if($this->fecha_vto_vtv) {
+            $this->merge(["fecha_vto_vtv" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_vtv)->format("Y-m-d")]);
+        }
+
+        if($this->fecha_vto_oblea_gnc) {
+            $this->merge(["fecha_vto_oblea_gnc" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_oblea_gnc)->format("Y-m-d")]);
+        }
+
+        if($this->fecha_vto_poliza_seguro) {
+            $this->merge(["fecha_vto_poliza_seguro" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_poliza_seguro)->format("Y-m-d")]);
+        }
+
+
+        $this->merge(["dominio" => strtoupper($this->dominio)]);
+        
+    }
+
+
+
 }

@@ -85,12 +85,13 @@ class VehiculosController extends AdminPanelBaseController
      */
     public function show($id)
     {
-        $vehiculo = Vehiculo::findOrFail($id);
-        
+        $vehiculo = Vehiculo::with("tareasPendientes")->findOrFail($id);
+
         return view("vehiculos.show")->with([
             "vehiculo" => $vehiculo,
             "puedeRegistrarKms" => $vehiculo->puedeRegistrarKilometraje(),
             "datosKilometraje" => $vehiculo->estimacionKmsAnualParaGrafico(),
+            "fechaSgteRegistroKm" => $vehiculo->fechaSgteRegistroKilometraje(),
             "proveedoresSeguro" => Proveedor::aseguradoras()
         ]);
     }
@@ -130,6 +131,8 @@ class VehiculosController extends AdminPanelBaseController
 
         $vehiculo->save();
 
+        $vehiculo->actualizarNotifsTrabajosSiCambiaronFrecuencias();
+
         return redirect()->back()->with("success", true);
     }
 
@@ -167,7 +170,7 @@ class VehiculosController extends AdminPanelBaseController
 
 
     /**
-     * Registrar el kilometraje nuevo del auto.
+     * Registrar un nuevo kilometraje del auto. Luego se recalcula la recta de predicción.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
@@ -186,6 +189,8 @@ class VehiculosController extends AdminPanelBaseController
         $vehiculo->registrarKilometraje($request->kilometraje);
 
         $vehiculo->calcularPrediccionKilometraje();
+
+        $vehiculo->actualizarNotifsDeTodosLosTrabajos();
 
         return redirect()->route("vehiculos.show", $vehiculo->id);
     }

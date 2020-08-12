@@ -116,7 +116,7 @@
 										<div class="row">
 											<div class="col-sm-4">
 												<div class="form-group @error('fecha_realizado') has-error @enderror">
-													<label>Fecha realizado</label>
+													<label>Fecha realizado el trabajo</label>
 													<!--label class="fancy-checkbox">
 														<input type="checkbox" id="checkbox_inform_job_date_later">
 														<span>Informar más adelante</span>
@@ -129,7 +129,7 @@
 											</div>
 											<div class="col-sm-4">
 												<div class="form-group @error('kms_vehiculo_estimados') has-error @enderror">
-													<label>Kms del vehículo (opcional)</label>
+													<label>Kms del vehículo&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Este campo es opcional sólo si el vehículo seleccionado ya tiene curva de predicción de kilometraje. Pero se aconseja ingresar el kilometraje real para mayor precisión."></span></label>
 													<input type="number" min="0" class="form-control" name="kms_vehiculo_estimados" value="{{ old('kms_vehiculo_estimados') }}">
 													@error('kms_vehiculo_estimados')
 														<label class="control-label">{{ $message }}</label>
@@ -161,6 +161,8 @@
 	<script src="../assets/vendor/bootstrap-datepicker-1.9.0/locales/bootstrap-datepicker.es.min.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
+
+			$('[data-toggle="tooltip"]').tooltip();
 
 			$('#input_fecha_pagado, #input_fecha_realizado').datepicker({
 				autoclose: true,

@@ -1,6 +1,6 @@
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="brand">
-				<a href="index.html"><img src="{{ asset('assets/img/carlend-logo.png') }}" alt="Carlend Logo" class="img-responsive logo"></a>
+				<a href="{{ route('inicio') }}"><img src="{{ asset('assets/img/carlend-logo.png') }}" alt="Carlend Logo" class="img-responsive logo"></a>
 			</div>
 			<div class="container-fluid">
 				<div class="navbar-btn">
@@ -11,13 +11,24 @@
 						<li class="dropdown">
 							<a href="#" class="dropdown-toggle icon-menu" data-toggle="dropdown">
 								<i class="lnr lnr-alarm"></i>
-								<span class="badge bg-danger">4</span>
+								@if(sizeof($notificaciones) > 0)
+								<span class="badge bg-danger">{{ sizeof($notificaciones) }}</span>
+								@endif
 							</a>
 							<ul class="dropdown-menu notifications">
-								<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Informá el kilometraje de julio del Renault Fluence</a></li>
-								<li><a href="#" class="notification-item"><span class="dot bg-warning"></span>Hay trabajos que realizar en el Renault Fluence</a></li>
-								<li><a href="#" class="notification-item"><span class="dot bg-success"></span>Informá el kilometraje de julio del Chevrolet Onix</a></li>
-								<li><a href="#" class="notification-item"><span class="dot bg-warning"></span>El alquiler #2 tiene $4.200 pendientes de pago</a></li>
+							
+
+								@if(sizeof($notificaciones) > 0)
+
+									@foreach($notificaciones as $notificacion)
+
+										<li><a href="{{ $notificacion->url }}" class="notification-item"><span class="dot bg-success"></span>{{ $notificacion->texto }}</a></li>
+
+									@endforeach
+
+								@else
+									<li><a href="javascript:void(0);" class="notification-item">No hay notificaciones o tareas pendientes</a></li>
+								@endif
 							</ul>
 						</li>
 						<li class="dropdown">

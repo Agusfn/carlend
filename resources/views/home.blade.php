@@ -82,7 +82,7 @@
                                 </div>
                                 <div class="panel-body">
                                     
-                                    <table class="table">
+                                    <table class="table table-striped">
                                         <thead>
                                             <tr>
                                                 <th>Fecha estimada</th>

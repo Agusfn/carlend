@@ -99,7 +99,7 @@ class Vehiculo extends Model
      */
     public function tareasPendientes()
     {
-        return $this->hasMany("App\TareaPendiente", "id_vehiculo");
+        return $this->hasMany("App\TareaPendiente", "id_vehiculo")->orderBy("fecha_a_realizar", "ASC");
     }
 
 
@@ -139,6 +139,16 @@ class Vehiculo extends Model
     public function marcaModeloYDominio()
     {
         return $this->marca." ".$this->modelo." (".$this->dominio.")";
+    }
+
+
+    /**
+     * Obtener marca y modelo. Ej: Ford Focus
+     * @return string
+     */
+    public function marcaYModelo()
+    {
+        return $this->marca." ".$this->modelo;
     }
 
 
@@ -207,6 +217,36 @@ class Vehiculo extends Model
 
 
     /**
+     * Actualizar las tareas pendientes (notifs) de los trabajos notificables sólo de aquellos atributos de frecuencia que fueron modificados.
+     * @return null
+     */
+    public function actualizarNotifsTrabajosSiCambiaronFrecuencias()
+    {
+        foreach(TrabajoVehiculo::$attrsTrabajosNotificables as $tipoTrabajo => $attrFrecuenciaTrabajo)
+        {
+            if($this->wasChanged($attrFrecuenciaTrabajo)) 
+            {
+                $this->actualizarNotifsDeTrabajo($tipoTrabajo);
+            }
+        }
+    }
+
+
+    /**
+     * Actualizar las tareas pendientes (notificaciones) de los tipos de trabajo notificables (los trabajos programados por kilometraje)
+     * @return null
+     */
+    public function actualizarNotifsDeTodosLosTrabajos()
+    {
+        $this->actualizarNotifsDeTrabajo(TrabajoVehiculo::SERVICE);
+        $this->actualizarNotifsDeTrabajo(TrabajoVehiculo::CAMBIO_BUJIAS);
+        $this->actualizarNotifsDeTrabajo(TrabajoVehiculo::ROTACION_RUEDAS);
+        $this->actualizarNotifsDeTrabajo(TrabajoVehiculo::CAMBIO_CUBIERTAS);
+        $this->actualizarNotifsDeTrabajo(TrabajoVehiculo::CAMBIO_CORREA_DISTR);
+    }
+
+
+    /**
      * Actualizar las tareas (notificaciones) de un tipo de trabajo sobre este vehiculo
      * Elimina notificación anterior y crea una nueva con la fecha estimada a realizar actualizada.
      * @param  [type] $tipoTrabajo [description]
@@ -228,22 +268,20 @@ class Vehiculo extends Model
             return;
 
 
-        $ultimoTrabajo = $this->trabajos()->where("tipo", $tipoTrabajo)->last();
+        $ultimoTrabajo = $this->trabajos()->where("tipo", $tipoTrabajo)->get()->last();
 
         $kmsProxTrabajo = $ultimoTrabajo->kms_vehiculo_estimados + $frecuenciaKms;
         
-        $fechaEstimada = $this->estimarFechaDesdeKilometraje($kmsProxTrabajo);
+        $fechaProxTrabajo = $this->estimarFechaDesdeKilometraje($kmsProxTrabajo);
 
-
-        TareaPendiente::create([
-            "id_vehiculo" => $this->id,
-            "fecha_a_realizar" => $fechaEstimada,
-            "tipo" => TareaPendiente::TIPO_TRABAJO_VEHICULAR,
-            "tipo_trabajo_vehicular" => $tipoTrabajo,
-            "descripcion" => "",
-            "fecha_a_notificar" => $fechaEstimada->subDays(7),
-            "notificado" => false
-        ]);
+        TareaPendiente::crear(
+            $this->id,
+            null,
+            $fechaProxTrabajo,
+            TareaPendiente::TIPO_TRABAJO_VEHICULAR,
+            $tipoTrabajo,
+            $kmsProxTrabajo,
+        );
         
     }
 

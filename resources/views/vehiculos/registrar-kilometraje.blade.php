@@ -20,7 +20,7 @@
 									<form action="{{ route('vehiculos.registrar-kilometraje', $vehiculo->id) }}" method="POST">
 										@csrf
 										<div class="form-group @error('kilometraje') has-error @enderror">
-											<label>Kilometraje al {{ $fechaProgramada->isoFormat('d MMM') }}</label>
+											<label>Kilometraje al {{ $fechaProgramada->isoFormat('D MMM') }}</label>
 											<input type="number" min="0" name="kilometraje" class="form-control">
 											@error('kilometraje')
 												<label class="control-label">{{ $message }}</label>

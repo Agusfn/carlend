@@ -15,19 +15,19 @@ class ActualizacionKmVehiculosSeeder extends Seeder
 
         	[
 	            'id_vehiculo' => 1,
-	            'fecha' => '2020-05-05',
+	            'fecha' => '2020-07-15',
 	            'kilometros' => 75000
        		],
 
         	[
 	            'id_vehiculo' => 1,
-	            'fecha' => '2020-06-02',
+	            'fecha' => '2020-07-29',
 	            'kilometros' => 82000
        		],
 
         	[
 	            'id_vehiculo' => 2,
-	            'fecha' => '2020-06-10',
+	            'fecha' => '2020-07-15',
 	            'kilometros' => 55000
        		]
 

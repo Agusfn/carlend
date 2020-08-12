@@ -20,7 +20,7 @@ class CreateTareasPendientesTable extends Migration
             $table->date('fecha_a_realizar');
             $table->string('tipo');
             $table->string('tipo_trabajo_vehicular')->nullable(); // solo si tipo = "trabajo_veh_programado"
-            $table->string('descripcion');
+            $table->integer("kilometraje_estimado")->nullable(); // solo si tipo = "trabajo_veh_programado"
             $table->date('fecha_a_notificar');
             $table->boolean('notificado')->default(false);
             $table->timestamps();

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Carbon\Carbon;
+use App\Vehiculo;
 
 
 class EditarVehiculo extends FormRequest
@@ -41,8 +42,10 @@ class EditarVehiculo extends FormRequest
      */
     public function rules()
     {
+        $vehiculo = Vehiculo::findOrFail(\Route::current()->parameters()["vehiculo"]);
+
         return [
-            "dominio" => "required|min:5|max:10",
+            "dominio" => "required|min:5|max:10|unique:vehiculos,dominio,".$vehiculo->id,
             "marca" => "required|max:50",
             "modelo" => "required|max:50",
             "anio" => "required|integer|min:1990|max:2025",
@@ -86,6 +89,8 @@ class EditarVehiculo extends FormRequest
         if($this->fecha_vto_poliza_seguro) {
             $this->merge(["fecha_vto_poliza_seguro" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_poliza_seguro)->format("Y-m-d")]);
         }
+
+        $this->merge(["dominio" => strtoupper($this->dominio)]);
         
     }
 

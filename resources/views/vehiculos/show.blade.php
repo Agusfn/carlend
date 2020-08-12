@@ -54,7 +54,7 @@
 					<div class="row">
 						<div class="col-lg-6">
 
-							<div class="panel panel-headline">
+							<div class="panel">
 								<div class="panel-heading">
 									<h3 class="panel-title">Alquiler del vehículo</h3>
 								</div>
@@ -104,7 +104,7 @@
 
 									<h4>Alquileres anteriores (finalizados)</h4>
 
-									<table class="table">
+									<table class="table table-striped">
 										<thead>
 											<tr>
 												<th></th>
@@ -135,79 +135,16 @@
 								</div>
 							</div>
 
-						</div>
 
-						<div class="col-lg-6">
-
-
-							<div class="panel panel-headline">
+							<div class="panel">
 								<div class="panel-heading">
-									<h3 class="panel-title">Uso del vehículo y proyección</h3>
+									<h3 class="panel-title">Últimos trabajos realizados</h3>
+									<div class="right"><a class="btn btn-xs btn-primary" style="margin-left: 20px">Ver todos</a></div>
 								</div>
 
 								<div class="panel-body">
 									
-									@if($vehiculo->puedeEstimarKilometraje())
-									<div class="row" style="margin-bottom: 20px">
-										<div class="col-sm-6">
-											<strong>Kilometraje estimado actual:</strong> {{ App\Lib\Strings::formatearEntero($vehiculo->kilometrajeEstimadoActual()) }}
-										</div>
-										<div class="col-sm-6">
-											<strong>Uso actual estimado:</strong> {{ App\Lib\Strings::formatearEntero($vehiculo->usoKmsMensualEstimado()) }} KMs/mes
-										</div>
-									</div>
-
-									<div id="grafico-uso-vehiculo" class="ct-chart"></div>
-									@else
-
-									No hay información de kilometraje suficiente para mostrar el uso estimado del vehículo.
-
-									@endif
-
-								</div>
-							</div>
-
-						
-							<div class="panel panel-headline">
-								<div class="panel-heading">
-									<h3 class="panel-title">Estado del vehículo</h3>
-								</div>
-
-								<div class="panel-body">
-
-									<div class="row">
-										<div class="col-md-5">
-
-											<h4 style="margin-bottom: 20px">Próximos trabajos estimados</h4>
-
-											<div class="form-group">
-												<i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" aria-hidden="true"></i> <strong>Service:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="148.000 km">en 1 semana</span>
-											</div>
-											<div class="form-group">
-												<strong>Cambio de bujías:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="182.500 km">en 3 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Rotación de cubiertas:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="182.500 km">en 3 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Cambio de cubiertas:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="182.500 km">en 3 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Correa de distribución:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="195.000 km">en 4 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Revisión VTV:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="15/01/2021">en 6 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Revisión GNC:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="15/01/2021">en 6 meses</span>
-											</div>										
-										</div>
-
-									</div>
-
-
-									<h4>Últimos trabajos realizados<a class="btn btn-xs btn-primary" style="margin-left: 20px">Ver todos</a></h4>
-									<table class="table">
+									<table class="table table-striped">
 										<thead>
 											<tr>
 												<th>Fecha pagado</th>
@@ -250,6 +187,122 @@
 											</tr>
 										</tbody>
 									</table>
+
+
+								</div>
+							</div>
+
+
+						</div>
+
+						<div class="col-lg-6">
+
+
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">Uso del vehículo y proyección</h3>
+								</div>
+
+								<div class="panel-body">
+									
+									@if($vehiculo->puedeEstimarKilometraje())
+									<div class="row" style="margin-bottom: 20px">
+										<div class="col-sm-6">
+											<strong>Kilometraje estimado actual:</strong> {{ App\Lib\Strings::formatearEntero($vehiculo->kilometrajeEstimadoActual()) }}
+										</div>
+										<div class="col-sm-6">
+											<strong>Uso actual estimado:</strong> {{ App\Lib\Strings::formatearEntero($vehiculo->usoKmsMensualEstimado()) }} KMs/mes
+										</div>
+									</div>
+
+									<div id="grafico-uso-vehiculo" class="ct-chart"></div>
+									@else
+
+									Debés ingresar al menos un registro de kilometraje para calcular el uso estimado del vehículo, las notificaciones de trabajos de mantenimiento programados no se mostrarán hasta entonces.<br/><br/>
+									La fecha del próximo ingreso de kilometraje es: {{ $fechaSgteRegistroKm->isoFormat('D MMM Y') }}
+
+									@endif
+
+								</div>
+							</div>
+
+						
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">Próximos trabajos o tareas estimadas</h3>
+								</div>
+
+								<div class="panel-body">
+
+
+									<table class="table">
+										<thead>
+											<tr>
+												<th></th>
+												<th>Descripción</th>
+												<th>Fecha a realizar</th>
+												<th>Kms estim.</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach($vehiculo->tareasPendientes as $tareaPendiente)
+											<tr>
+												<td></td>
+												<td>
+													@if($tareaPendiente->esDeTrabajoVehicular())
+
+														{{ __('tipos_trabajos.'.$tareaPendiente->tipo_trabajo_vehicular) }}
+
+													@else
+
+														@if($tareaPendiente->tipo == App\TareaPendiente::TIPO_RENOV_VTV)
+														Renovación de VTV
+														@elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_VERIF_GNC)
+														Verificación de GNC
+														@elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_RENOV_SEGURO)
+														Renovación de póliza de seguro
+														@endif
+
+													@endif
+												</td>
+
+												<td><span class="underline-dash" data-toggle="tooltip" data-placement="top" title="{{ $tareaPendiente->fecha_a_realizar->isoFormat('D MMM') }}">{{ $tareaPendiente->fecha_a_realizar->diffForHumans() }}</span></td>
+
+												<td>{{ $tareaPendiente->kilometraje_estimado ? App\Lib\Strings::formatearEntero($tareaPendiente->kilometraje_estimado) : '' }}</td>
+											</tr>
+											@endforeach
+										</tbody>
+									</table>
+
+									<div class="row">
+										<div class="col-md-5">
+
+
+
+											<div class="form-group">
+												<i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" aria-hidden="true"></i> <strong>Service:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="148.000 km">en 1 semana</span>
+											</div>
+											<div class="form-group">
+												<strong>Cambio de bujías:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="182.500 km">en 3 meses</span>
+											</div>
+											<div class="form-group">
+												<strong>Rotación de cubiertas:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="182.500 km">en 3 meses</span>
+											</div>
+											<div class="form-group">
+												<strong>Cambio de cubiertas:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="182.500 km">en 3 meses</span>
+											</div>
+											<div class="form-group">
+												<strong>Correa de distribución:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="195.000 km">en 4 meses</span>
+											</div>
+											<div class="form-group">
+												<strong>Revisión VTV:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="15/01/2021">en 6 meses</span>
+											</div>
+											<div class="form-group">
+												<strong>Revisión GNC:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="15/01/2021">en 6 meses</span>
+											</div>										
+										</div>
+
+									</div>									
 
 								</div>
 							</div>
@@ -309,7 +362,7 @@
 
 									<div class="col-lg-5">
 										
-										<h4 style="margin-bottom: 20px;">Mantenimiento</h4>
+										<h4 style="margin-bottom: 20px;">Mantenimiento programado &nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Ingresá la frecuencia en kms de algún tipo de trabajo para activar las notificaciones cuando se aproxime la fecha estimada. Dejala vacía para desactivar las notificaciones."></span></h4>
 
 										<div class="row">
 											<div class="col-sm-6">
@@ -365,12 +418,13 @@
 											</div>
 										</div>
 
+										<h4 style="margin-bottom: 20px;">Verificaciones&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Ingresa la fecha para recibir una notificación una semana antes del vencimiento, dejalo vacío para no recibirla."></span></h4>
 
 
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group @error('fecha_vto_vtv') has-error @enderror">
-													<label>Fecha vencimiento VTV</label>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Ingresa la fecha para recibir una notificación una semana antes del vencimiento, dejalo vacío para no recibirla."></span>
+													<label>Fecha vencimiento VTV</label>
 													<input type="text" class="form-control" name="fecha_vto_vtv" id="input_fecha_vto_vtv" value="{{ old('fecha_vto_vtv') ?: ($vehiculo->fecha_vto_vtv ? $vehiculo->fecha_vto_vtv->format('d/m/Y') : '') }}">
 													@error('fecha_vto_vtv')
 														<label class="control-label">{{ $message }}</label>
@@ -380,7 +434,7 @@
 
 											<div class="col-sm-6">
 												<div class="form-group @error('fecha_vto_oblea_gnc') has-error @enderror">
-													<label>Fecha vto. oblea GNC</label>&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Ingresa la fecha para recibir una notificación una semana antes del vencimiento, dejalo vacío para no recibirla."></span>
+													<label>Fecha vto. oblea GNC</label>
 													<input type="text" class="form-control" name="fecha_vto_oblea_gnc" id="input_fecha_vto_gnc" value="{{ old('fecha_vto_oblea_gnc') ?: ($vehiculo->fecha_vto_oblea_gnc ? $vehiculo->fecha_vto_oblea_gnc->format('d/m/Y') : '') }}">
 													@error('fecha_vto_oblea_gnc')
 														<label class="control-label">{{ $message }}</label>
