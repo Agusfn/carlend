@@ -20,7 +20,7 @@ class TrabajosVehiculosController extends AdminPanelBaseController
      */
     public function index()
     {
-        $trabajos = TrabajoVehiculo::validos()->with(["vehiculo", "proveedor"])->orderByDesc("fecha_pagado")->get();
+        $trabajos = TrabajoVehiculo::validos()->with(["vehiculo", "proveedor"])->orderByDesc("id")->get();
         
         return view("trabajos-vehiculos.index")->with("trabajosVehiculos", $trabajos);
     }
@@ -35,7 +35,7 @@ class TrabajosVehiculosController extends AdminPanelBaseController
 
         return view("trabajos-vehiculos.create")->with([
             "vehiculos" => Vehiculo::nombreAsc()->get(),
-            "proveedores" => Proveedor::all() // TODO: alfabeticamente, excluir aseguradoras
+            "proveedores" => Proveedor::excluirAseguradoras()->get() // TODO: alfabeticamente
         ]);
     }
 

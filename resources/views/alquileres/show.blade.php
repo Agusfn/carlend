@@ -5,7 +5,7 @@
 
 @section('content')
 
-					<h3 class="page-title"><a href="{{ route('alquileres.index') }}">Alquileres</a> / Alquiler #4</h3>
+					<h3 class="page-title"><a href="{{ route('alquileres.index') }}">Alquileres</a> / Alquiler #{{ $alquiler->id }}</h3>
 
 						<div class="panel panel-headline">
 							<div class="panel-body">
@@ -27,38 +27,49 @@
 
 									<div class="row" style="margin-bottom: 30px">
 										<div class="col-md-4">
-											<label>Estado:</label>&nbsp;&nbsp;&nbsp;<span class="label label-success" style="font-size: 14px;">Activo</span>
+											<label>Estado:</label>&nbsp;&nbsp;&nbsp;
+											@if($alquiler->estaEnCurso())
+											<span class="label label-primary" style="font-size: 14px;">En curso</span>
+											@elseif($alquiler->estaFinalizado())
+											<span class="label label-default" style="font-size: 14px;">Finalizado</span>
+											@endif
 										</div>
 										<div class="col-md-4">
-											<label>Fecha inicio:</label> 1 jul 2020
+											<label>Fecha inicio:</label> {{ $alquiler->fecha_inicio->isoFormat('D MMM Y') }}
 										</div>
 										<div class="col-md-4">
-											<label>Fecha fin:</label> No definida
+											<label>Fecha fin:</label> 
+											@if($alquiler->fecha_fin)
+											{{ $alquiler->fecha_fin->isoFormat('D MMM Y') }}
+											@else
+											No definida
+											@endif
 										</div>
 									</div>
 
 									<div class="row" style="margin-bottom: 30px">
 										<div class="col-md-6">
-											<label>Chofer:</label> <a href="">Juan Pérez</a>
+											<label>Chofer:</label> <a href="{{ route('choferes.show', $alquiler->chofer->id) }}">{{ $alquiler->chofer->nombre_y_apellido }}</a>
 										</div>
 										<div class="col-md-6">
-											<label>Vehículo:</label> <a href="">Renault Fluence (MKA 451)</a>
+											<label>Vehículo:</label> <a href="{{ route('vehiculos.show', $alquiler->vehiculo->id) }}">{{ $alquiler->vehiculo->marcaModeloYDominio() }}</a>
 										</div>
 									</div>
 
 									<div class="row" style="margin-bottom: 30px">
 										<div class="col-md-6">
-											<label>Precio diario:</label> $2.000
+											<label>Precio diario:</label> {{ App\Lib\Strings::formatearMoneda($alquiler->precio_diario, 2) }}
 										</div>
 										<div class="col-md-6">
-											<label>Descuento semanal:</label> Sí&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Si se omite el cobro diario en los días domingo."></span>
+											<label>Descuento semanal:</label> @if($alquiler->descuento_semanal) Sí @else No @endif
+											&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Si se omite el cobro diario en los días domingo."></span>
 										</div>
 									</div>
 
 									<form>
 										<div class="form-group">
 											<label>Notas</label>
-											<textarea class="form-control" style="resize: vertical;">Paga en efectivo dia por medio</textarea>
+											<textarea class="form-control" style="resize: vertical;">{{ $alquiler->notas }}</textarea>
 										</div>
 
 										<div style="text-align:right">
@@ -80,10 +91,15 @@
 
 									<div class="row">
 										<div class="col-sm-6">
-											<div style="font-size: 17px"><label>Saldo:</label> <span style="color: #B00;">-$4.200</span></div>
+											<div style="font-size: 17px">
+												<label>Saldo:</label> 
+												<span @if($alquiler->saldo_actual < 0) style="color: #B00;" @endif>
+													{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 2) }}
+												</span>
+											</div>
 										</div>
 										<div class="col-sm-6">
-											<div style="font-size: 17px"><label>Ingresos totales:</label> $2.800</div>
+											<div style="font-size: 17px"><label>Ingresos totales:</label> {{ App\Lib\Strings::formatearMoneda($ingresos, 2) }}</div>
 										</div>
 									</div>
 									
@@ -102,62 +118,42 @@
 											</tr>
 										</thead>
 										<tbody>
+											@foreach($movimientosSaldo as $movimiento)
 											<tr>
-												<td>5 jul 2020</td>
-												<td>Pago de chofer</td>
-												<td>$800</td>
-												<td><span style="color: #B00;">-$4.200</span></td>
-												<td>Transferencia</td>
-												<td></td>
+												<td>{{ $movimiento->fecha_hora->isoFormat('D MMM Y') }}</td>
+												<td>
+													@if($movimiento->esCobroDeAlquiler())
+													Cobro de alquiler
+													@elseif($movimiento->esPagoDeChofer())
+													Pago de chofer
+													@elseif($movimiento->esDescuento())
+													Descuento
+													@endif
+												</td>
+												<td><span @if($movimiento->monto < 0) style="color: #B00;" @endif>
+													{{ App\Lib\Strings::formatearMoneda($movimiento->monto, 2) }}
+												</span></td>
+												<td><span @if($movimiento->nuevo_saldo < 0) style="color: #B00;" @endif>
+													{{ App\Lib\Strings::formatearMoneda($movimiento->nuevo_saldo, 2) }}
+												</span></td>
+												<td>
+													@if($movimiento->esPagoDeChofer())
+														@if($movimiento->esPorMercadopago())
+														Mercadopago
+														@elseif($movimiento->esEnEfectivo())
+														Efectivo
+														@elseif($movimiento->esPorTransferencia())
+														Transferencia/depósito
+														@endif
+													@endif
+												</td>
+												<td>
+													@if($movimiento->comentario)
+													<span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="{{ $movimiento->comentario }}"></span>
+													@endif
+												</td>
 											</tr>
-											<tr>
-												<td>5 jul 2020</td>
-												<td>Cobro día de alquiler</td>
-												<td><span style="color: #B00;">-$2.000</span></td>
-												<td><span style="color: #B00;">-$5.000</span></td>
-												<td>-</td>
-												<td></td>
-											</tr>
-											<tr>
-												<td>4 jul 2020</td>
-												<td>Cobro día de alquiler</td>
-												<td><span style="color: #B00;">-$2.000</span></td>
-												<td><span style="color: #B00;">-$3.000</span></td>
-												<td>-</td>
-												<td></td>
-											</tr>
-											<tr>
-												<td>3 jul 2020</td>
-												<td>Descuento</td>
-												<td>$1.000</td>
-												<td><span style="color: #B00;">-$1.000</span></td>
-												<td>-</td>
-												<td><span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="Descuento por visita taller 03/07"></span></td>
-											</tr>
-											<tr>
-												<td>3 jul 2020</td>
-												<td>Cobro día de alquiler</td>
-												<td><span style="color: #B00;">-$2.000</span></td>
-												<td><span style="color: #B00;">-$2.000</span></td>
-												<td>-</td>
-												<td></td>
-											</tr>
-											<tr>
-												<td>2 jul 2020</td>
-												<td>Pago de chofer</td>
-												<td>$2.000</td>
-												<td>$ -</td>
-												<td>Efectivo</td>
-												<td></td>
-											</tr>
-											<tr>
-												<td>2 jul 2020</td>
-												<td>Cobro día de alquiler</td>
-												<td><span style="color: #B00;">-$2.000</span></td>
-												<td><span style="color: #B00;">-$2.000</span></td>
-												<td>-</td>
-												<td></td>
-											</tr>
+											@endforeach
 										</tbody>
 									</table>	
 

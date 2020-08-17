@@ -69,58 +69,35 @@
 									</tr>
 								</thead>
 								<tbody>
+									
+									@foreach($alquileres as $alquiler)
 									<tr>
-										<td><a href="{{ route('alquileres.show', 1) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>4</td>
-										<td><span class="label label-primary" style="font-size: 14px">En curso</span></td>
-										<td>1 jul 2020</td>
-										<td>-</td>
-										<td>Juan Pérez</td>
-										<td>Renault Fluence (MKA 451)</td>
-										<td>$2.000</td>
-										<td><span style="color: #B00">-$4.200</td>
+										<td><a href="{{ route('alquileres.show', $alquiler->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+										<td>{{ $alquiler->id }}</td>
+										<td>
+											@if($alquiler->estaEnCurso())
+											<span class="label label-primary" style="font-size: 14px">En curso</span>
+											@elseif($alquiler->estaFinalizado())
+											<span class="label label-default" style="font-size: 14px">Finalizado</span>
+											@endif
+										</td>
+										<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM Y') }}</td>
+										<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM Y') : '-' }}</td>
+										<td>{{ $alquiler->chofer->nombre_y_apellido }}</td>
+										<td>{{ $alquiler->vehiculo->marcaModeloYDominio() }}</td>
+										<td>{{ App\Lib\Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
+										<td><span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
+											{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
+										</span></td>
 										<td>$2.800</td>
-										<td><span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="Paga en efectivo dia por medio"></span></td>
+										<td>
+											@if($alquiler->notas)
+											<span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="{{ $alquiler->notas }}"></span>
+											@endif
+										</td>
 									</tr>
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>3</td>
-										<td><span class="label label-default" style="font-size: 14px">Finalizado</span></td>
-										<td>25 jun 2020</td>
-										<td>7 jul 2020</td>
-										<td>Ignacio Gutierrez</td>
-										<td>Chevrolet Onix (NBX 159)</td>
-										<td>$1.900</td>
-										<td><span style="color: #B00">-$50</td>
-										<td>$24.700</td>
-										<td></td>
-									</tr>
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>2</td>
-										<td><span class="label label-default" style="font-size: 14px">Finalizado</span></td>
-										<td>20 jun 2020</td>
-										<td>29 jun 2020</td>
-										<td>Juan Pérez</td>
-										<td>Renault Fluence (MKA 451)</td>
-										<td>$2.000</td>
-										<td><span>$&nbsp;-</td>
-										<td>$18.000</td>
-										<td><span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="Averiguar tema siniestro 25/06"></span></td>
-									</tr>
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>1</td>
-										<td><span class="label label-default" style="font-size: 14px">Finalizado</span></td>
-										<td>2 jun 2020</td>
-										<td>19 jun 2020</td>
-										<td>Ignacio Gutierrez</td>
-										<td>Chevrolet Onix (NBX 159)</td>
-										<td>$1.800</td>
-										<td><span>$&nbsp;-</td>
-										<td>$30.600</td>
-										<td></td>
-									</tr>
+									@endforeach
+
 								</tbody>
 							</table>
 

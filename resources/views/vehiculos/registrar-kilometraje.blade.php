@@ -21,7 +21,7 @@
 										@csrf
 										<div class="form-group @error('kilometraje') has-error @enderror">
 											<label>Kilometraje al {{ $fechaProgramada->isoFormat('D MMM') }}</label>
-											<input type="number" min="0" name="kilometraje" class="form-control">
+											<input type="number" min="{{ $ultimoKmIngresado }}" name="kilometraje" class="form-control" value="{{ old('kilometraje') }}">
 											@error('kilometraje')
 												<label class="control-label">{{ $message }}</label>
 											@enderror

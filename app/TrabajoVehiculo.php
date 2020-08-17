@@ -112,7 +112,6 @@ class TrabajoVehiculo extends Model
     }
 
 
-
     /**
      * Si el tipo de trabajo es notificable.
      * @param  string $tipoTrabajo

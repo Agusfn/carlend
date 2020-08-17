@@ -54,8 +54,8 @@ class EditarVehiculo extends FormRequest
             "kms_cada_rotacion_cubiertas" => "nullable|integer",
             "kms_cada_cambio_cubiertas" => "nullable|integer",
             "kms_cada_cambio_correa_distr" => "nullable|integer",
-            "fecha_vto_vtv" => "nullable|date_format:d/m/Y",
-            "fecha_vto_oblea_gnc" => "nullable|date_format:d/m/Y",
+            "fecha_vto_vtv" => "nullable|date_format:d/m/Y|after:today",
+            "fecha_vto_oblea_gnc" => "nullable|date_format:d/m/Y|after:today",
 
             "costo_mensual_imp_automotor" => "required_with:debito_patentes",
             "dia_del_mes_debito_imp_automotor" => "required_with:debito_patentes",

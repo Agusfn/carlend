@@ -18,6 +18,8 @@ class Strings
 	}
 
 
+    // TODO: eliminar ceros si no tiene decimal, signo pesos a la derecha del menos, si es negativo
+
     /**
      * Formatear moneda a formato legible prolijo, con numero de decimales variable.
      * @param float $numero

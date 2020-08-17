@@ -104,6 +104,29 @@ class Vehiculo extends Model
 
 
     /**
+     * Obtener los alquileres de este vehículo
+     * @return [type] [description]
+     */
+    public function alquileres()
+    {
+        return $this->hasMany("App\Alquiler", "id_vehiculo");
+    }
+
+
+
+    /**
+     * Ordenar por nombre de marca y modelo ascendiente.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeNombreAsc($query)
+    {
+        return $query->orderBy("marca", "ASC")->orderBy("modelo", "ASC");
+    }
+
+    
+    /**
      * Obtener query builder de trabajos previos (o iniciales) de vehiculo.
      * @return [type] [description]
      */
@@ -153,22 +176,27 @@ class Vehiculo extends Model
 
 
     /**
-     * Ordenar por nombre de marca y modelo ascendiente.
-     *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * Obtener la frecuencia en kilómetros de un tipo de trabajo para este vehiculo.
+     * Se obtiene de un atributo del mismo vehiculo.    
+     * @param  string $tipoTrabajo
+     * @return int
      */
-    public function scopeNombreAsc($query)
+    public function frecuenciaKmsPorTipoTrabajo($tipoTrabajo)
     {
-        return $query->orderBy("marca", "ASC")->orderBy("modelo", "ASC");
+        return $this->{TrabajoVehiculo::$attrsTrabajosNotificables[$tipoTrabajo]};
     }
+
 
 
     /**
      * Crear los trabajos iniciales (que necesitan de una reposicion periódica y tienen notificaciones) de este vehiculo.
      * Llamado únicamente se da de alta un vehiculo.
-     * @param  [type] $kmsCambioCorrea [description]
-     * @return [type]                  [description]
+     * @param  int $kmsService
+     * @param  int $kmsBujias
+     * @param  int $kmsRotacionRuedas
+     * @param  int $kmsCambioCubiertas
+     * @param  int $kmsCambioCorreaDistr
+     * @return null
      */
     public function registrarTrabajosIniciales($kmsService, $kmsBujias, $kmsRotacionRuedas, $kmsCambioCubiertas, $kmsCambioCorreaDistr)
     {
@@ -182,9 +210,9 @@ class Vehiculo extends Model
 
     /**
      * Registrar un trabajo previo sobre un vehiculo (solo se usa para trabajos notificables)
-     * @param  [type] $kilometraje [description]
-     * @param  [type] $tipoTrabajo [description]
-     * @return [type]              [description]
+     * @param  int $kilometraje
+     * @param  string $tipoTrabajo
+     * @return null
      */
     public function registrarTrabajoPrevio($kilometraje, $tipoTrabajo)
     {
@@ -197,22 +225,8 @@ class Vehiculo extends Model
             "medio_pago" => "n/a"
         ]);
 
-        // No actualizamos las tareas (notificaciones) de este trabajo porque el trabajo previo se registra
+        // No actualizamos las tareas (notificaciones) de este trabajo porque necesitamos estimar la fecha del prox kilometraje, y el trabajo previo se registra
         // cuando se da de alta un vehiculo, y no se puede estimar cuándo será el próximo sin otro ingreso de kilometraje.
-    }
-
-
-    /**
-     * Registrar un nuevo trabajo (no inicial) para este vehículo.
-     * @param  [type] $params [description]
-     * @return [type]         [description]
-     */
-    public function registrarTrabajo($params)
-    {
-        // crear nuevo trabajo
-        
-        // si el trabajo es notificable
-            // actualizar notificaciones de este tipo de trabajo
     }
 
 
@@ -249,13 +263,14 @@ class Vehiculo extends Model
     /**
      * Actualizar las tareas (notificaciones) de un tipo de trabajo sobre este vehiculo
      * Elimina notificación anterior y crea una nueva con la fecha estimada a realizar actualizada.
-     * @param  [type] $tipoTrabajo [description]
-     * @return [type]                [description]
+     * 
+     * @param  string $tipoTrabajo
+     * @return null
      */
     public function actualizarNotifsDeTrabajo($tipoTrabajo)
     {
 
-        $this->borrarTareasPendientesDeTrabajo($tipoTrabajo);
+        $this->tareasPendientes()->deTrabajoVehicular($tipoTrabajo)->delete();
 
 
         if(!TrabajoVehiculo::esTrabajoNotificable($tipoTrabajo))
@@ -287,30 +302,74 @@ class Vehiculo extends Model
 
 
 
+
+
+
     /**
-     * Borrar todas las tareas pendientes de este vehiculo
+     * Registrar las tareas pendientes (notificaciones) de los vencimientos con fecha de este vehiculo (vtv, gnc, y seguro) si están configurados
+     * Se realiza sólo al dar el alta el vehiculo, luego se debe usar actualizarNotifsVtosSiCambiaronFechas()
      * @return null
      */
-    private function borrarTareasPendientesDeTrabajo($tipoTrabajo)
+    public function registrarNotifsDeVencimientos()
     {
-        $tareas = $this->tareasPendientes()->deTrabajoVehicular($tipoTrabajo)->get();
 
-        foreach($tareas as $tarea)
-        {
+        /*$tareas = $this->tareasPendientes()->deVencimientoVehicular()->get();
+
+        foreach($tareas as $tarea) {
             $tarea->delete();
+        } */       
+
+        if($this->fecha_vto_vtv) { 
+            TareaPendiente::crear($this->id, null, $this->fecha_vto_vtv, TareaPendiente::TIPO_RENOV_VTV, null, null);
+        }
+
+        if($this->fecha_vto_oblea_gnc) {
+            TareaPendiente::crear($this->id, null, $this->fecha_vto_oblea_gnc, TareaPendiente::TIPO_VERIF_GNC, null, null);
+        }
+
+        if($this->fecha_vto_poliza_seguro) {
+            TareaPendiente::crear($this->id, null, $this->fecha_vto_poliza_seguro, TareaPendiente::TIPO_RENOV_SEGURO, null, null);
         }
     }
 
 
     /**
-     * Obtener la frecuencia en kilómetros de un tipo de trabajo para este vehiculo.
-     * Se obtiene de un atributo del mismo vehiculo.    
-     * @param  string $tipoTrabajo
-     * @return int
+     * Actualizar las tareas pendientes (notificaciones) de los vencimientos de este vehiculo (vtv, gnc, y seguro) si están configurados
+     * Se actualizan SOLO si se modificaron estos valores desde que se cargó el modelo, de manera que quede intacta la notificacion si no se modifica 
+     * (sino habria que actualizar todo siempre y se perdería el información de si fue enviada la notif por email)
+     * 
+     * @return null
      */
-    public function frecuenciaKmsPorTipoTrabajo($tipoTrabajo)
+    public function actualizarNotifsVtosSiCambiaronFechas()
     {
-        return $this->{TrabajoVehiculo::$attrsTrabajosNotificables[$tipoTrabajo]};
+        
+        if($this->wasChanged("fecha_vto_vtv")) 
+        {
+            $this->tareasPendientes()->where("tipo", TareaPendiente::TIPO_RENOV_VTV)->delete();    
+            
+            if($this->fecha_vto_vtv) { 
+                TareaPendiente::crear($this->id, null, $this->fecha_vto_vtv, TareaPendiente::TIPO_RENOV_VTV, null, null);
+            }
+        }
+
+        if($this->wasChanged("fecha_vto_oblea_gnc")) 
+        {
+            $this->tareasPendientes()->where("tipo", TareaPendiente::TIPO_VERIF_GNC)->delete();
+
+            if($this->fecha_vto_oblea_gnc) {
+                TareaPendiente::crear($this->id, null, $this->fecha_vto_oblea_gnc, TareaPendiente::TIPO_VERIF_GNC, null, null);
+            }
+        }
+
+        if($this->wasChanged("fecha_vto_poliza_seguro")) 
+        {
+            $this->tareasPendientes()->where("tipo", TareaPendiente::TIPO_RENOV_SEGURO)->delete();
+
+            if($this->fecha_vto_poliza_seguro) {
+                TareaPendiente::crear($this->id, null, $this->fecha_vto_poliza_seguro, TareaPendiente::TIPO_RENOV_SEGURO, null, null);
+            }
+        }
+
     }
 
 }

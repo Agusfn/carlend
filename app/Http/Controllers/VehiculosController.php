@@ -73,6 +73,7 @@ class VehiculosController extends AdminPanelBaseController
             $request->kms_ult_cambio_correa_distr,
         );
 
+        $vehiculo->registrarNotifsDeVencimientos();
 
         return redirect()->route("vehiculos.index");
     }
@@ -89,6 +90,7 @@ class VehiculosController extends AdminPanelBaseController
 
         return view("vehiculos.show")->with([
             "vehiculo" => $vehiculo,
+            "trabajos" => $vehiculo->trabajos()->with("proveedor")->validos()->limit(5)->get(),
             "puedeRegistrarKms" => $vehiculo->puedeRegistrarKilometraje(),
             "datosKilometraje" => $vehiculo->estimacionKmsAnualParaGrafico(),
             "fechaSgteRegistroKm" => $vehiculo->fechaSgteRegistroKilometraje(),
@@ -133,6 +135,8 @@ class VehiculosController extends AdminPanelBaseController
 
         $vehiculo->actualizarNotifsTrabajosSiCambiaronFrecuencias();
 
+        $vehiculo->actualizarNotifsVtosSiCambiaronFechas();
+
         return redirect()->back()->with("success", true);
     }
 
@@ -163,6 +167,7 @@ class VehiculosController extends AdminPanelBaseController
 
         return view("vehiculos.registrar-kilometraje")->with([
             "vehiculo" => $vehiculo,
+            "ultimoKmIngresado" => $vehiculo->ultimoKmIngresado(),
             "fechaProgramada" => $vehiculo->fechaSgteRegistroKilometraje()
         ]);
     }

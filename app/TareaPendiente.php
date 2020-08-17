@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\TrabajoVehiculo;
+use Carbon\Carbon;
 
 class TareaPendiente extends Model
 {
@@ -13,7 +14,7 @@ class TareaPendiente extends Model
     const TIPO_RENOV_VTV = "renov_vtv";
     const TIPO_VERIF_GNC = "verif_gnc";
     const TIPO_RENOV_SEGURO = "renovacion_seguro";
-    const TIPO_ACTUALIZ_KMS = "actualizacion_kms";
+    //const TIPO_ACTUALIZ_KMS = "actualizacion_kms";
 
 
 
@@ -155,6 +156,20 @@ class TareaPendiente extends Model
 
 
     /**
+     * Crear query scope para filtrar por tareas relacionadas a vencimientos con fecha, de vehiculo. (vtv, gnc y seguro)
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDeVencimientoVehicular($query)
+    {
+        return $query->whereIn("tipo", [self::TIPO_RENOV_VTV, self::TIPO_VERIF_GNC, self::TIPO_RENOV_SEGURO]);
+    }
+
+
+
+    /**
      * Si esta tarea es de un vehiculo.
      * @return bool
      */
@@ -196,6 +211,29 @@ class TareaPendiente extends Model
         else if($this->id_chofer) {
             return route("choferes.show", $this->id_chofer);
         }
+    }
+
+
+    /**
+     * Si la tarea está en período de notificacion, pero antes que pase.
+     * @return bool
+     */
+    public function enPeriodoDeNotificacion()
+    {
+        $today = Carbon::today();
+        
+         return ($this->fecha_a_notificar->lessThanOrEqualTo($today) &&
+            $this->fecha_a_realizar->greaterThanOrEqualTo($today));
+    }
+
+
+    /**
+     * Si la tarea ya pasó su fecha de realización.
+     * @return bool
+     */
+    public function estaVencida()
+    {
+        return $this->fecha_a_realizar->isPast();
     }
 
 

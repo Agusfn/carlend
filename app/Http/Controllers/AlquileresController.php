@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Alquiler;
 
 class AlquileresController extends AdminPanelBaseController
 {
@@ -13,7 +14,12 @@ class AlquileresController extends AdminPanelBaseController
      */
     public function index()
     {
-        return view("alquileres.index");
+        $alquileres = Alquiler::with(["chofer", "vehiculo"])->orderByDesc("id")->get();
+
+        return view("alquileres.index")->with([
+            "alquileres" => $alquileres
+        ]);
+
     }
 
     /**
@@ -45,7 +51,16 @@ class AlquileresController extends AdminPanelBaseController
      */
     public function show($id)
     {
-        return view("alquileres.show");
+        
+        $alquiler = Alquiler::with(["chofer", "vehiculo"])->findOrFail($id);
+        $movimientos = $alquiler->movimientosSaldo()->orderByDesc("id")->get();
+
+        return view("alquileres.show")->with([
+            "alquiler" => $alquiler,
+            "ingresos" => $alquiler->calcularIngresosTotales(),
+            "movimientosSaldo" => $movimientos,
+
+        ]);
     }
 
     /**

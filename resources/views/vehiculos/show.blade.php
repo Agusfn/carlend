@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'Detalles de vehiculo')
+@section('title', $vehiculo->marcaModeloYDominio())
 
 @section('custom-css')
 	<link rel="stylesheet" href="{{ asset('assets/vendor/bootstrap-datepicker-1.9.0/css/bootstrap-datepicker.min.css') }}">
@@ -25,7 +25,7 @@
 						<div class="panel-body">
 							<div class="btn-group" role="group">
 
-								<button class="btn btn-primary"><i class="fa fa-wrench" aria-hidden="true"></i> Registrar trabajo</button>
+								<a href="{{ route('trabajos-vehiculos.create').'?veh_id='.$vehiculo->id }}" class="btn btn-primary"><i class="fa fa-wrench" aria-hidden="true"></i> Registrar trabajo</a>
 
 								@if($puedeRegistrarKms)
 								<a href="{{ route('vehiculos.registrar-kilometraje', $vehiculo->id) }}" class="btn btn-default" style="margin-left: 15px"><i class="fa fa-tachometer" aria-hidden="true"></i> Registrar kilometraje</a>
@@ -139,7 +139,7 @@
 							<div class="panel">
 								<div class="panel-heading">
 									<h3 class="panel-title">Últimos trabajos realizados</h3>
-									<div class="right"><a class="btn btn-xs btn-primary" style="margin-left: 20px">Ver todos</a></div>
+									<div class="right"><a href="{{ route('trabajos-vehiculos.index') }}" class="btn btn-xs btn-primary" style="margin-left: 20px">Ver todos</a></div>
 								</div>
 
 								<div class="panel-body">
@@ -155,36 +155,15 @@
 											</tr>
 										</thead>
 										<tbody>
-
+											@foreach($trabajos as $trabajo)
 											<tr>
-												<td>3 jul 2020</td>
-												<td>-</td>
-												<td>Otro</td>
-												<td>-</td>
-												<td>$1.200</td>
+												<td>{{ $trabajo->fecha_pagado->isoFormat('D MMM') }}</td>
+												<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM') }}</td>
+												<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
+												<td>{{ $trabajo->proveedor ? $trabajo->proveedor->nombre : '-' }}</td>
+												<td>{{ App\Lib\Strings::formatearMoneda($trabajo->costo, 0) }}</td>
 											</tr>
-											<tr>
-												<td>25 jun 2020</td>
-												<td>25 jun 2020</td>
-												<td>Reparación</td>
-												<td>Mariano mecánico</td>
-												<td>$2.000</td>
-											</tr>
-											<tr>
-												<td>10 jun 2020</td>
-												<td>10 jun 2020</td>
-												<td>Cambio de frenos</td>
-												<td>-</td>
-												<td>$3.000</td>
-											</tr>
-
-											<tr>
-												<td>8 may 2020</td>
-												<td>8 may 2020</td>
-												<td>Service</td>
-												<td>Jumax</td>
-												<td>$2.500</td>
-											</tr>
+											@endforeach
 										</tbody>
 									</table>
 
@@ -247,7 +226,13 @@
 										<tbody>
 											@foreach($vehiculo->tareasPendientes as $tareaPendiente)
 											<tr>
-												<td></td>
+												<td>
+													@if($tareaPendiente->enPeriodoDeNotificacion())
+													<i class="fa fa-info-circle" style="color: #41b7e6;font-size: 17px;" aria-hidden="true"></i>
+													@elseif($tareaPendiente->estaVencida())
+													<i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" aria-hidden="true"></i>
+													@endif
+												</td>
 												<td>
 													@if($tareaPendiente->esDeTrabajoVehicular())
 
@@ -271,38 +256,12 @@
 												<td>{{ $tareaPendiente->kilometraje_estimado ? App\Lib\Strings::formatearEntero($tareaPendiente->kilometraje_estimado) : '' }}</td>
 											</tr>
 											@endforeach
+
+											@if($vehiculo->tareasPendientes->count() == 0)
+											<tr><td colspan="4" style="text-align: center;">No se encontraron tareas pendientes próximas para este vehículo.</td></tr>
+											@endif
 										</tbody>
 									</table>
-
-									<div class="row">
-										<div class="col-md-5">
-
-
-
-											<div class="form-group">
-												<i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" aria-hidden="true"></i> <strong>Service:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="148.000 km">en 1 semana</span>
-											</div>
-											<div class="form-group">
-												<strong>Cambio de bujías:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="182.500 km">en 3 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Rotación de cubiertas:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="182.500 km">en 3 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Cambio de cubiertas:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="182.500 km">en 3 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Correa de distribución:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="195.000 km">en 4 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Revisión VTV:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="15/01/2021">en 6 meses</span>
-											</div>
-											<div class="form-group">
-												<strong>Revisión GNC:</strong> <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="15/01/2021">en 6 meses</span>
-											</div>										
-										</div>
-
-									</div>									
 
 								</div>
 							</div>

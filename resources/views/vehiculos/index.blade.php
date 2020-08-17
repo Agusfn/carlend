@@ -40,10 +40,10 @@
 									<tr>
 										<th></th>
 										<th>Patente</th>
-										<th>Estado</th>
-										<th>Chofer</th>
 										<th>Marca</th>
 										<th>Modelo</th>
+										<th>Estado</th>
+										<th>Chofer</th>
 										<th>Año</th>
 										<th>Proveedor seguro</th>
 										<th>KMs actuales est.</th>
@@ -57,6 +57,8 @@
 											<i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" data-toggle="tooltip" data-placement="top" title="Hay trabajos de mantenimiento que realizar en el vehículo." aria-hidden="true"></i>
 										</td>
 										<td>{{ $vehiculo->dominio }}</td>
+										<td>{{ $vehiculo->marca }}</td>
+										<td>{{ $vehiculo->modelo }}</td>
 										<td>
 											@if($vehiculo->alquilerActual)
 											<span class="label label-success" style="font-size: 14px">Alquilado</span>
@@ -71,8 +73,6 @@
 											-
 											@endif
 										</td>
-										<td>{{ $vehiculo->marca }}</td>
-										<td>{{ $vehiculo->modelo }}</td>
 										<td>{{ $vehiculo->anio }}</td>
 										<td>@if($vehiculo->proveedorSeguro) {{ $vehiculo->proveedorSeguro->nombre }} @else - @endif</td>
 										<td>{{ App\Lib\Strings::formatearEntero($vehiculo->kilometraje_prediccion_actual) }}</td>

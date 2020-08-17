@@ -90,15 +90,6 @@ class CrearTrabajoVehiculo extends FormRequest
             }
 
         }
-        else {
-
-            $ultKmIngresado = $vehiculo->ultimoKmIngresado();
-            
-            if($this->kms_vehiculo_estimados < $ultKmIngresado) {
-                $validator->errors()->add("kms_vehiculo_estimados", "Este kilometraje es inferior al último informado de este vehículo (".$ultKmIngresado.").");
-            }
-
-        }
  
     }
 

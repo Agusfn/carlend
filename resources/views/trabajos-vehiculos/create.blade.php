@@ -29,7 +29,7 @@
 											<select class="form-control" name="id_vehiculo">
 												<option value="">Seleccionar</option>
 												@foreach($vehiculos as $vehiculo)
-												<option value="{{ $vehiculo->id }}" @if(old('id_vehiculo') == $vehiculo->id) selected @endif>{{ $vehiculo->marcaModeloYDominio() }}</option>
+												<option value="{{ $vehiculo->id }}" @if(old('id_vehiculo') == $vehiculo->id || request()->input('veh_id') == $vehiculo->id) selected @endif>{{ $vehiculo->marcaModeloYDominio() }}</option>
 												@endforeach
 											</select>
 											@error('id_vehiculo')

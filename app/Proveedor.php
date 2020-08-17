@@ -23,15 +23,15 @@ class Proveedor extends Model
 
 
     public static $nombresCategorias = [
-        "repuestos" => "Casa de repuestos",
-        "mecanico" => "Mecánico",
-        "chapista" => "Chapista",
-        "gomeria" => "Gomería",
-        "service" => "Lubricentro/service",
-        "cerrajero" => "Cerrajero",
-        "gas" => "Técnico de gas",
-        "electronica" => "Electrónica",
-        "aseguradora" => "Compañía de seguros"
+        self::CATEGORIA_CASA_REPUESTOS => "Casa de repuestos",
+        self::CATEGORIA_MECANICO => "Mecánico",
+        self::CATEGORIA_CHAPISTA => "Chapista",
+        self::CATEGORIA_GOMERIA => "Gomería",
+        self::CATEGORIA_SERVICE => "Lubricentro/service",
+        self::CATEGORIA_CERRAJERO => "Cerrajero",
+        self::CATEGORIA_TECNICO_GAS => "Técnico de gas",
+        self::CATEGORIA_ELECTRONICA => "Electrónica",
+        self::CATEGORIA_COMPANIA_SEGUROS => "Compañía de seguros"
     ];
 
 
@@ -57,6 +57,19 @@ class Proveedor extends Model
     public static function aseguradoras()
     {
         return self::where("categoria", self::CATEGORIA_COMPANIA_SEGUROS)->get();
+    }
+
+
+    /**
+     * Query scope para filtrar omitiendo las aseguradoras.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeExcluirAseguradoras($query)
+    {
+        return $query->where("categoria", "!=", self::CATEGORIA_COMPANIA_SEGUROS);
     }
 
 
