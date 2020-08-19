@@ -113,6 +113,20 @@ class TrabajoVehiculo extends Model
 
 
     /**
+     * Ordenar por fecha de pago de más reciente a más antigua
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFechaDesc($query)
+    {
+        return $query->orderBy("fecha_pagado", "DESC")->orderBy("id", "DESC");
+    }
+
+
+
+    /**
      * Si el tipo de trabajo es notificable.
      * @param  string $tipoTrabajo
      * @return bool

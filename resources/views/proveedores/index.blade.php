@@ -55,7 +55,7 @@
 										<th>Nombre</th>
 										<th>Dirección</th>
 										<th>Teléfono</th>
-										<th>Categoría</th>
+										<th>Categoría/tipo proveedor</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -69,6 +69,10 @@
 										<td>{{ $proveedor->nombreCategoria() }}</td>
 									</tr>
 									@endforeach
+
+									@if($proveedores->count() == 0)
+									<tr><td colspan="5" style="text-align: center;">No se encontraron proveedores.</td></tr>
+									@endif
 
 								</tbody>
 							</table>

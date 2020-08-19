@@ -70,6 +70,44 @@ class Alquiler extends Model
     }
 
 
+    /**
+     * Ordenamiento de más reciente a más antiguo
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFechaDesc($query)
+    {
+        return $query->orderBy("fecha_inicio", "DESC")->orderBy("id", "DESC");
+    }
+
+
+
+    /**
+     * Filtramos por alquileres finalizados.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFinalizados($query)
+    {
+        return $query->where("estado", self::ESTADO_FINALIZADO);
+    }
+
+
+
+    /**
+     * Filtramos por alquileres en curso.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeEnCurso($query)
+    {
+        return $query->where("estado", self::ESTADO_EN_CURSO);
+    }
+
+
 
     /**
      * Si el alquiler está en curso.
@@ -91,33 +129,96 @@ class Alquiler extends Model
     }
 
 
+    /**
+     * Si puede registrar movimientos. Debe estar activo el alquiler o haber terminado hace 7 días o menos.
+     * @return bool
+     */
+    public function puedeRegistrarMovimientos()
+    {
+        if($this->estaEnCurso() || $this->fecha_fin->copy()->addDays(7)->isFuture()) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
 
     /**
-     * Agregar nuevo movimiento a este alquiler.
+     * Agregar nuevo movimiento retroactivo (o no) a este alquiler.
+     * @param Carbon $fecha
      * @param  string $tipo       
      * @param  float $monto      
      * @param  string $medioPago  
      * @param  string $comentario 
      * @return null             
      */
-    public function agregarMovimiento($tipoMovimiento, $monto, $medioPago, $comentario)
+    public function agregarMovimientoRetroactivo($fecha, $tipoMovimiento, $monto, $medioPago, $comentario)
+    {
+        if($fecha->isFuture() || $fecha->copy()->addDays(7)->isPast()) {
+            throw new \Exception("La fecha del movimiento retroactivo debe ser hasta 7 días antes y no puede ser futura.");
+        }
+        
+        MovimientoAlquiler::create([
+            "fecha_hora" => $fecha,
+            "id_alquiler" => $this->id,
+            "tipo" => $tipoMovimiento,
+            "monto" => $monto,
+            "nuevo_saldo" => 0,
+            "medio_pago" => $medioPago,
+            "comentario" => $comentario
+        ]);
+
+        $nuevoSaldo = $this->recalcularSaldosDeMovimientos();
+
+        $this->saldo_actual = $nuevoSaldo;
+        $this->save();
+    }
+
+
+    /**
+     * Agregar nuevo cobro a este alquiler
+     * @param  float $monto monto a cobrar (debe ser un valor positivo)   
+     * @return null             
+     */
+    public function restarCobroDeCuenta($monto)
     {
         
-        $nuevoSaldo = $this->calcularSaldoActual() + $monto;
+        $nuevoSaldo = $this->calcularSaldoActual() - $monto;
 
         MovimientoAlquiler::create([
             "fecha_hora" => Carbon::now(),
             "id_alquiler" => $this->id,
-            "tipo" => $tipoMovimiento,
-            "monto" => $monto,
-            "nuevo_saldo" => $nuevoSaldo,
-            "medio_pago" => $medioPago,
-            "comentario" => $comentario
+            "tipo" => MovimientoAlquiler::TIPO_COBRO_ALQUILER,
+            "monto" => (-1)*$monto,
+            "nuevo_saldo" => $nuevoSaldo
         ]);
 
         $this->saldo_actual = $nuevoSaldo;
         $this->save();
     }
+
+
+    /**
+     * Recalcular el valor de 'saldo_actual' de cada movimiento debido a haber agregado un movimiento retroactivo
+     * @return float
+     */
+    private function recalcularSaldosDeMovimientos()
+    {
+        $movimientos = $this->movimientosSaldo()->fechaAsc()->get();
+
+        $saldoAcumulado = 0;
+        foreach($movimientos as $movimiento)
+        {
+            $saldoAcumulado += $movimiento->monto;
+
+            $movimiento->nuevo_saldo = $saldoAcumulado;
+            $movimiento->save();
+        }
+
+        return $saldoAcumulado;
+    }
+
 
 
     /**

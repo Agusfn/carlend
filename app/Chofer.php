@@ -33,6 +33,25 @@ class Chofer extends Model
     ];
 
 
+
+    /**
+     * Obtener alquiler actual del chofer.
+     * @return App\Alquiler|null
+     */
+    public function alquilerActual()
+    {
+        return $this->belongsTo("App\Alquiler", "id_alquiler_actual");
+    }    
+
+    /**
+     * Obtener los alquileres de este chofer
+     * @return [type] [description]
+     */
+    public function alquileres()
+    {
+        return $this->hasMany("App\Alquiler", "id_chofer");
+    }
+
     /**
      * Choferes que no estén alquilando un vehículo actualmente.
      *

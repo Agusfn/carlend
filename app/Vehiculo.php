@@ -331,18 +331,12 @@ class Vehiculo extends Model
 
     /**
      * Registrar las tareas pendientes (notificaciones) de los vencimientos con fecha de este vehiculo (vtv, gnc, y seguro) si están configurados
-     * Se realiza sólo al dar el alta el vehiculo, luego se debe usar actualizarNotifsVtosSiCambiaronFechas()
+     * Se realiza sólo al dar el alta el vehiculo, luego se debe usar al editar el vehiculo actualizarNotifsVtosSiCambiaronFechas()
      * @return null
      */
     public function registrarNotifsDeVencimientos()
-    {
-
-        /*$tareas = $this->tareasPendientes()->deVencimientoVehicular()->get();
-
-        foreach($tareas as $tarea) {
-            $tarea->delete();
-        } */       
-
+    { 
+        
         if($this->fecha_vto_vtv) { 
             TareaPendiente::crear($this->id, null, $this->fecha_vto_vtv, TareaPendiente::TIPO_RENOV_VTV, null, null);
         }

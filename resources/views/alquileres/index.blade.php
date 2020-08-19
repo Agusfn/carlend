@@ -58,13 +58,12 @@
 										<th></th>
 										<th>ID #</th>
 										<th>Estado</th>
+										<th>Vehículo</th>
 										<th>Fecha inicio</th>
 										<th>Fecha fin</th>
 										<th>Chofer</th>
-										<th>Vehículo</th>
 										<th>Monto diario</th>
 										<th>Saldo</th>
-										<th>Ingresos a hoy</th>
 										<th>Notas</th>
 									</tr>
 								</thead>
@@ -81,15 +80,14 @@
 											<span class="label label-default" style="font-size: 14px">Finalizado</span>
 											@endif
 										</td>
+										<td>{{ $alquiler->vehiculo->marcaModeloYDominio() }}</td>
 										<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM Y') }}</td>
 										<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM Y') : '-' }}</td>
 										<td>{{ $alquiler->chofer->nombre_y_apellido }}</td>
-										<td>{{ $alquiler->vehiculo->marcaModeloYDominio() }}</td>
 										<td>{{ App\Lib\Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
 										<td><span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
 											{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
 										</span></td>
-										<td>$2.800</td>
 										<td>
 											@if($alquiler->notas)
 											<span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="{{ $alquiler->notas }}"></span>
@@ -97,6 +95,10 @@
 										</td>
 									</tr>
 									@endforeach
+
+									@if($alquileres->count() == 0)
+									<tr><td colspan="10" style="text-align: center;">No se encontraron alquileres.</td></tr>
+									@endif
 
 								</tbody>
 							</table>

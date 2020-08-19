@@ -10,7 +10,7 @@
 
 
 @section('content')
-					<h3 class="page-title"><a href="{{ route('alquileres.index') }}">Alquileres</a> / <a href="detalles.html">Alquiler #4</a> / Registrar pago o movimiento</h3>
+					<h3 class="page-title"><a href="{{ route('alquileres.index') }}">Alquileres</a> / <a href="{{ route('alquileres.show', $alquiler->id) }}">Alquiler #4</a> / Registrar pago o movimiento</h3>
 
 
 					<div class="row">
@@ -22,13 +22,13 @@
 
 								<div class="panel-body">
 
-									<form action="{{ route('alquileres.registrar-pago', $alquiler->id) }}" method="POST">
+									<form action="{{ route('alquileres.registrar-pago', $alquiler->id) }}" method="POST" id="pago_form">
 										@csrf
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group @error('fecha') has-error @enderror">
 													<label>Fecha del movimiento</label>
-													<input type="text" name="fecha" class="form-control" id="input_fecha_movimiento">
+													<input type="text" name="fecha" class="form-control" id="input_fecha_movimiento" value="{{ old('fecha') }}">
 													@error('fecha')
 														<label class="control-label">{{ $message }}</label>
 													@enderror
@@ -39,8 +39,8 @@
 													<label>Tipo de movimiento</label>
 													<select class="form-control" name="tipo" id="select_tipo_movimiento">
 														<option value="">Seleccionar</option>
-														<option value="{{ App\MovimientoAlquiler::TIPO_PAGO_DE_CHOFER }}">Pago de chofer</option>
-														<option value="{{ App\MovimientoAlquiler::TIPO_DESCUENTO }}">Descuento</option>
+														<option value="pago_de_chofer" @if(old('tipo') == 'pago_de_chofer') selected @endif>Pago de chofer</option>
+														<option value="descuento" @if(old('tipo') == 'descuento') selected @endif>Descuento</option>
 													</select>
 													@error('tipo')
 														<label class="control-label">{{ $message }}</label>
@@ -53,7 +53,7 @@
 											<div class="col-sm-6">
 												<div class="form-group @error('monto') has-error @enderror">
 													<label>Monto ($)</label>
-													<input type="number" step="0.01" min="0" name="monto" class="form-control">
+													<input type="number" step="0.01" min="0" name="monto" class="form-control" value="{{ old('monto') }}">
 													@error('monto')
 														<label class="control-label">{{ $message }}</label>
 													@enderror
@@ -64,9 +64,9 @@
 													<label>Medio de pago</label>
 													<select class="form-control" name="medio_pago" id="select_medio_pago">
 														<option value="">Seleccionar</option>
-														<option value="{{ App\MovimientoAlquiler::MEDIO_PAGO_EFECTIVO }}">Efectivo</option>
-														<option value="{{ App\MovimientoAlquiler::MEDIO_PAGO_TRANSFERENCIA }}">Transferencia/depósito</option>
-														<option value="{{ App\MovimientoAlquiler::MEDIO_PAGO_MERCADOPAGO }}">Mercadopago</option>
+														<option value="efectivo" @if(old('medio_pago') == 'efectivo') selected @endif>Efectivo</option>
+														<option value="transferencia" @if(old('medio_pago') == 'transferencia') selected @endif>Transferencia/depósito</option>
+														<option value="mercadopago" @if(old('medio_pago') == 'mercadopago') selected @endif>Mercadopago</option>
 													</select>
 													@error('medio_pago')
 														<label class="control-label">{{ $message }}</label>
@@ -77,14 +77,14 @@
 	
 										<div class="form-group @error('comentario') has-error @enderror">
 											<label>Comentarios</label>
-											<input type="text" class="form-control" name="comentario">
+											<input type="text" class="form-control" name="comentario" value="{{ old('comentario') }}">
 											@error('comentario')
 												<label class="control-label">{{ $message }}</label>
 											@enderror
 										</div>	
 
 										<div style="text-align:right">
-											<button class="btn btn-primary">Registrar movimiento</button>
+											<button class="btn btn-primary" onclick="event.preventDefault();if(confirm('¿Registrar pago? No se puede deshacer.')) $('#pago_form').submit();">Registrar movimiento</button>
 										</div>
 									</form>
 

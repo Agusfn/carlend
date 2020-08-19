@@ -95,9 +95,9 @@
 						</div>
 
 						<div class="col-lg-6">
-							<div class="panel panel-headline">
+							<div class="panel">
 								<div class="panel-heading">
-									<h3 class="panel-title">Alquileres con este chofer</h3>
+									<h3 class="panel-title">Alquileres recientes con este chofer</h3>
 								</div>
 
 								<div class="panel-body">
@@ -116,26 +116,31 @@
 											</tr>
 										</thead>
 										<tbody>
+											@foreach($ultimosAlquileres as $alquiler)
 											<tr>
-												<td><a href="detalles.html" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-												<td>4</td>
-												<td><span class="label label-primary" style="font-size: 12px">En curso</span></td>
-												<td>1 jul 2020</td>
-												<td>-</td>
-												<td>Renault Fluence (MKA 451)</td>
-												<td>$2.000</td>
-												<td><span style="color: #B00">-$4.200</td>
+												<td><a href="{{ route('alquileres.show', $alquiler->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+												<td>{{ $alquiler->id }}</td>
+												<td>
+												@if($alquiler->estaEnCurso())
+												<span class="label label-primary" style="font-size: 12px">En curso</span>
+												@elseif($alquiler->estaFinalizado())
+												<span class="label label-default" style="font-size: 12px">Finalizado</span>
+												@endif
+												</td>
+												<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM') }}</td>
+												<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM') : '-' }}</td>
+												<td>{{ $alquiler->vehiculo->marcaYModelo() }}</td>
+												<td>{{ App\Lib\Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
+												<td><span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
+												{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
+												</span></td>
 											</tr>
-											<tr>
-												<td><a href="" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-												<td>2</td>
-												<td><span class="label label-default" style="font-size: 12px">Finalizado</span></td>
-												<td>20 jun 2020</td>
-												<td>29 jun 2020</td>
-												<td>Renault Fluence (MKA 451)</td>
-												<td>$2.000</td>
-												<td><span>$&nbsp;-</td>
-											</tr>
+											@endforeach
+
+											@if($ultimosAlquileres->count() == 0)
+											<tr><td colspan="8" style="text-align: center;">No se encontraron alquileres.</td></tr>
+											@endif
+
 										</tbody>
 									</table>
 

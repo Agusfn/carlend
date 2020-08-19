@@ -61,7 +61,6 @@ class AlquileresController extends AdminPanelBaseController
         $alquiler->fill([
             "estado" => Alquiler::ESTADO_EN_CURSO,
             "fecha_inicio" => Carbon::today(),
-            "saldo_actual" => 0, // default 0, borrar cuando se aplique migration
             "descuento_semanal" => $request->has("descuento_semanal")
         ]);
 
@@ -90,13 +89,12 @@ class AlquileresController extends AdminPanelBaseController
     {
         
         $alquiler = Alquiler::with(["chofer", "vehiculo"])->findOrFail($id);
-        $movimientos = $alquiler->movimientosSaldo()->orderByDesc("id")->get();
+        $movimientos = $alquiler->movimientosSaldo()->fechaDesc()->get();
 
         return view("alquileres.show")->with([
             "alquiler" => $alquiler,
             "ingresos" => $alquiler->calcularIngresosTotales(),
-            "movimientosSaldo" => $movimientos,
-
+            "movimientosSaldo" => $movimientos
         ]);
     }
 
@@ -109,7 +107,14 @@ class AlquileresController extends AdminPanelBaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate(["notas" => "nullable|max:200"]);
+
+        $alquiler = Alquiler::findOrFail($id);
+
+        $alquiler->notas = $request->notas;
+        $alquiler->save();
+
+        return redirect()->route("alquileres.show", $alquiler->id);
     }
 
 
@@ -154,18 +159,30 @@ class AlquileresController extends AdminPanelBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function registrarPago(Request $request)
+    public function registrarPago(Request $request, $id)
     {
         
         $request->validate([
             "fecha" => "required|date_format:d/m/Y|after_or_equal:-7day|before_or_equal:today",
-            "tipo" => "",
-            "monto" => "",
-            "medio_pago" => "",
-            "comentario" => ""
+            "tipo" => "required|in:pago_de_chofer,descuento",
+            "monto" => "required|numeric|min:0",
+            "medio_pago" => "required_if:tipo,pago_de_chofer|in:efectivo,transferencia,mercadopago",
+            "comentario" => "nullable|max:191"
         ]);
 
-        dd($request);
+        $alquiler = Alquiler::findOrFail($id);
+
+        $fecha = Carbon::createFromFormat("d/m/Y", $request->fecha);
+
+        $alquiler->agregarMovimientoRetroactivo(
+            $fecha->isToday() ? Carbon::now() : $fecha,
+            $request->tipo,
+            $request->monto,
+            $request->medio_pago,
+            $request->comentario
+        );
+
+        return redirect()->route("alquileres.show", $alquiler->id);
     }
 
 

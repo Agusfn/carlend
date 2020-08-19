@@ -51,6 +51,15 @@ class Proveedor extends Model
 
 
     /**
+     * Trabajos relacionados a este proveedor
+     */
+    public function trabajosVehiculos()
+    {
+        return $this->hasMany("App\TrabajoVehiculo", "id_proveedor");
+    }
+
+
+    /**
      * Obtener lista de proveedores que son compañías de seguros.
      * @return Illuminate\Database\Eloquent\Collection
      */

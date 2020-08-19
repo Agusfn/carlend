@@ -62,8 +62,17 @@ class ProveedoresController extends AdminPanelBaseController
     public function show($id)
     {
         $proveedor = Proveedor::findOrFail($id);
+        
+        $ultimosTrabajos = $proveedor->trabajosVehiculos()
+            ->validos()
+            ->with("vehiculo")
+            ->fechaDesc()
+            ->limit(8)->get();
 
-        return view("proveedores.show")->with("proveedor", $proveedor);
+        return view("proveedores.show")->with([
+            "proveedor" => $proveedor,
+            "ultimosTrabajos" => $ultimosTrabajos
+        ]);
     }
 
     /**

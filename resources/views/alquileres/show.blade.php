@@ -7,11 +7,14 @@
 
 					<h3 class="page-title"><a href="{{ route('alquileres.index') }}">Alquileres</a> / Alquiler #{{ $alquiler->id }}</h3>
 
+						@if($alquiler->puedeRegistrarMovimientos() || $alquiler->estaEnCurso())
 						<div class="panel panel-headline">
 							<div class="panel-body">
 								<div class="btn-group">
 									
-									<a href="{{ route('alquileres.registrar-pago', 1) }}" class="btn btn-primary"><span class="glyphicon glyphicon-usd"></span> Registrar pago de chofer</a>
+									@if($alquiler->puedeRegistrarMovimientos())
+									<a href="{{ route('alquileres.registrar-pago', 1) }}" class="btn btn-primary"><span class="glyphicon glyphicon-usd"></span> Registrar pago o dto.</a>
+									@endif
 
 									@if($alquiler->estaEnCurso())
 									<button class="btn btn-default" style="margin-left: 15px" onclick="if(confirm('¿Deseás terminar el alquiler? Una vez terminado no se podrá reanudar.')) $('#terminar-alq-form').submit();">Terminar alquiler</button>
@@ -24,6 +27,7 @@
 								</div>
 							</div>
 						</div>
+						@endif
 
 					<div class="row">
 						<div class="col-lg-6">
@@ -75,10 +79,21 @@
 										</div>
 									</div>
 
-									<form>
-										<div class="form-group">
+									<div class="row" style="margin-bottom: 30px">
+										<div class="col-md-6">
+											<label>Pagos de chofer totales:</label> {{ App\Lib\Strings::formatearMoneda($alquiler->calcularIngresosTotales(), 2) }}
+										</div>
+									</div>
+
+									<form method="POST" action="{{ route('alquileres.update', $alquiler->id) }}">
+										@csrf
+										@method('PUT')
+										<div class="form-group @error('notas') has-error @enderror">
 											<label>Notas</label>
-											<textarea class="form-control" style="resize: vertical;">{{ $alquiler->notas }}</textarea>
+											<textarea class="form-control" style="resize: vertical;" name="notas">{{ $alquiler->notas }}</textarea>
+											@error('notas')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
 
 										<div style="text-align:right">
@@ -94,24 +109,17 @@
 							<div class="panel panel-headline">
 								<div class="panel-heading">
 									<h3 class="panel-title">Cuenta corriente</h3>
-								</div>
-
-								<div class="panel-body">
-
-									<div class="row">
-										<div class="col-sm-6">
-											<div style="font-size: 17px">
-												<label>Saldo:</label> 
-												<span @if($alquiler->saldo_actual < 0) style="color: #B00;" @endif>
-													{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 2) }}
-												</span>
-											</div>
-										</div>
-										<div class="col-sm-6">
-											<div style="font-size: 17px"><label>Ingresos totales:</label> {{ App\Lib\Strings::formatearMoneda($ingresos, 2) }}</div>
+									<div class="right">
+										<div style="font-size: 19px">
+											<label>Saldo</label> 
+											<span @if($alquiler->saldo_actual < 0) style="color: #B00;" @endif>
+												{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 2) }}
+											</span>
 										</div>
 									</div>
-									
+								</div>
+
+								<div class="panel-body">			
 
 									<h4>Movimientos</h4>
 

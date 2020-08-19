@@ -53,8 +53,11 @@
 									@foreach($vehiculos as $vehiculo)
 									<tr>
 										<td>
-											<a href="{{ route('vehiculos.show', $vehiculo->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
-											<i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" data-toggle="tooltip" data-placement="top" title="Hay trabajos de mantenimiento que realizar en el vehículo." aria-hidden="true"></i>
+											<a href="{{ route('vehiculos.show', $vehiculo->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>
+											@if($vehiculo->en_fecha_registro_kms)
+											&nbsp;&nbsp;&nbsp;&nbsp;
+											<i class="fa fa-info-circle" style="color: #41b7e6;font-size: 20px;" data-toggle="tooltip" data-placement="top" title="Se debe actualizar el kilometraje del vehículo." aria-hidden="true"></i>
+											@endif
 										</td>
 										<td>{{ $vehiculo->dominio }}</td>
 										<td>{{ $vehiculo->marca }}</td>
@@ -75,9 +78,21 @@
 										</td>
 										<td>{{ $vehiculo->anio }}</td>
 										<td>@if($vehiculo->proveedorSeguro) {{ $vehiculo->proveedorSeguro->nombre }} @else - @endif</td>
-										<td>{{ App\Lib\Strings::formatearEntero($vehiculo->kilometraje_prediccion_actual) }}</td>
+										<td>
+											@if($vehiculo->puedeEstimarKilometraje())
+											{{ App\Lib\Strings::formatearEntero($vehiculo->estimarKilometraje(Carbon\Carbon::today())) }}
+											@else
+											-
+											@endif
+										</td>
 									</tr>									
-									@endforeach									
+									@endforeach		
+
+									@if($vehiculos->count() == 0)
+									<tr><td colspan="9" style="text-align: center;">No se encontraron vehículos.</td></tr>
+									@endif
+
+
 								</tbody>
 							</table>
 

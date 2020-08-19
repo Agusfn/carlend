@@ -22,7 +22,9 @@
 
 									@foreach($notificaciones as $notificacion)
 
-										<li><a href="{{ $notificacion->url }}" class="notification-item"><span class="dot bg-success"></span>{{ $notificacion->texto }}</a></li>
+										<li>
+											<a href="{{ $notificacion->url }}" class="notification-item"><i class="{{ $notificacion->icono }}" style="color: {{ $notificacion->colorIcono  }};" aria-hidden="true"></i>{{ $notificacion->texto }}</a>
+										</li>
 
 									@endforeach
 

@@ -49,6 +49,30 @@ class MovimientoAlquiler extends Model
     ];
 
 
+
+    /**
+     * Ordenamiento de más antiguo a más reciente.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFechaAsc($query)
+    {
+        return $query->orderBy("fecha_hora", "ASC")->orderBy("id", "ASC");
+    }
+
+    /**
+     * Ordenamiento de más reciente a más antiguo
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFechaDesc($query)
+    {
+        return $query->orderBy("fecha_hora", "DESC")->orderBy("id", "DESC");
+    }
+
+
     /**
      * Si este movimiento es por un cobro de alquiler al chofer.
      * @return bool

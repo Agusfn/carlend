@@ -44,12 +44,9 @@
 					</div>
 					@endif
 
-					<div class="alert alert-warning">
-						<ul>
-							<li>Se debe registrar el kilometraje correspondiente al mes de julio para actualizar la proyección.</li>
-							<li>Se aproxima la fecha para realizar el service al vehículo. Registra el trabajo una vez realizado.</li>
-						</ul>
-					</div>
+					@if($puedeRegistrarKms)
+					<div class="alert alert-warning">Se debe registrar el kilometraje correspondiente al mes de julio para actualizar la proyección</div>
+					@endif
 
 					<div class="row">
 						<div class="col-lg-6">
@@ -62,17 +59,17 @@
 								<div class="panel-body">
 
 
+									@if($vehiculo->alquilerActual)
+
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
 												<label>Estado actual</label>:&nbsp;&nbsp;&nbsp;<span class="label label-success" style="font-size: 15px">Alquilado</span>
-
-
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Alquilado a:</label> <a href="">Juan Pérez</a>
+												<label>Alquilado a:</label> <a href="{{ route('choferes.show', $vehiculo->alquilerActual->chofer->id) }}">{{ $vehiculo->alquilerActual->chofer->nombre_y_apellido }}</a>
 											</div>
 										</div>
 									</div>
@@ -80,12 +77,17 @@
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Fecha de inicio:</label> 1 jul 2020
+												<label>Fecha de inicio:</label> {{ $vehiculo->alquilerActual->fecha_inicio->isoFormat('D MMM Y') }}
 											</div>
 										</div>
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Fecha de finalización:</label> No definida
+												<label>Fecha de finalización:</label> 
+												@if($vehiculo->alquilerActual->fecha_fin)
+												{{ $vehiculo->alquilerActual->fecha_fin->isoFormat('D MMM Y') }}
+												@else
+												No definida
+												@endif
 											</div>
 										</div>
 									</div>
@@ -93,14 +95,25 @@
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Monto diario:</label> $2.000
+												<label>Monto diario:</label> {{ App\Lib\Strings::formatearMoneda($vehiculo->alquilerActual->precio_diario, 2) }}
 											</div>
 										</div>
 										<div class="col-sm-6">
-											<a href="../alquileres/detalles.html" class="btn btn-xs btn-primary">Ver detalles del alquiler</a>
+											<a href="{{ route('alquileres.show', $vehiculo->alquilerActual->id) }}" class="btn btn-xs btn-primary">Ver detalles del alquiler</a>
 										</div>
 									</div>
 
+									@else
+
+									<div class="row">
+										<div class="col-sm-6">
+											<div class="form-group">
+												<label>Estado actual</label>:&nbsp;&nbsp;&nbsp;<span class="label label-default" style="font-size: 15px">Sin alquilar</span>
+											</div>
+										</div>
+									</div>
+
+									@endif
 
 									<h4>Alquileres anteriores (finalizados)</h4>
 
@@ -114,20 +127,28 @@
 												<th>Chofer</th>
 												<th>Monto diario</th>
 												<th>Saldo</th>
-												<th>Ingreso total</th>
 											</tr>
 										</thead>
 										<tbody>
+											@foreach($ultimosAlquileres as $alquiler)
 											<tr>
-												<td><a href="" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-												<td>2</td>
-												<td>20 jun 2020</td>
-												<td>29 jun 2020</td>
-												<td>Juan Pérez</td>
-												<td>$2.000</td>
-												<td><span>$&nbsp;-</td>
-												<td>$18.000</td>
+												<td><a href="{{ route('alquileres.show', $alquiler->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+												<td>{{ $alquiler->id }}</td>
+												<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM') }}</td>
+												<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM') : '-' }}</td>
+												<td>{{ $alquiler->chofer->nombre_y_apellido }}</td>
+												<td>{{ App\Lib\Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
+												<td>
+													<span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
+														{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
+													</span>
+												</td>
 											</tr>
+											@endforeach
+
+											@if($ultimosAlquileres->count() == 0)
+											<tr><td colspan="7" style="text-align: center;">No se encontraron alquileres anteriores.</td></tr>
+											@endif
 										</tbody>
 									</table>
 
@@ -155,7 +176,7 @@
 											</tr>
 										</thead>
 										<tbody>
-											@foreach($trabajos as $trabajo)
+											@foreach($ultimosTrabajos as $trabajo)
 											<tr>
 												<td>{{ $trabajo->fecha_pagado->isoFormat('D MMM') }}</td>
 												<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM') }}</td>
@@ -164,6 +185,10 @@
 												<td>{{ App\Lib\Strings::formatearMoneda($trabajo->costo, 0) }}</td>
 											</tr>
 											@endforeach
+
+											@if($ultimosTrabajos->count() == 0)
+											<tr><td colspan="5" style="text-align: center;">No se encontraron trabajos.</td></tr>
+											@endif
 										</tbody>
 									</table>
 
@@ -198,10 +223,10 @@
 									@else
 
 									Debés ingresar al menos un registro de kilometraje para calcular el uso estimado del vehículo, las notificaciones de trabajos de mantenimiento programados no se mostrarán hasta entonces.<br/><br/>
-									La fecha del próximo ingreso de kilometraje es: {{ $fechaSgteRegistroKm->isoFormat('D MMM Y') }}
-
+									
 									@endif
 
+									La fecha del próximo ingreso de kilometraje es: {{ $fechaSgteRegistroKm->isoFormat('D MMM Y') }}
 								</div>
 							</div>
 

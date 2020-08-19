@@ -99,6 +99,10 @@
 
 									@endforeach
 
+									@if($trabajosVehiculos->count() == 0)
+									<tr><td colspan="9" style="text-align: center;">No se encontraron trabajos.</td></tr>
+									@endif
+
 								</tbody>
 							</table>
 

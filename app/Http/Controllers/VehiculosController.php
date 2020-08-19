@@ -86,14 +86,20 @@ class VehiculosController extends AdminPanelBaseController
      */
     public function show($id)
     {
-        $vehiculo = Vehiculo::with("tareasPendientes")->findOrFail($id);
+        $vehiculo = Vehiculo::with([
+            "tareasPendientes",
+            "alquilerActual.chofer"
+        ])->findOrFail($id);
 
         return view("vehiculos.show")->with([
             "vehiculo" => $vehiculo,
-            "trabajos" => $vehiculo->trabajos()->with("proveedor")->validos()->limit(5)->get(),
+            "ultimosAlquileres" => $vehiculo->alquileres()->finalizados()->with("chofer")->fechaDesc()->limit(5)->get(),
+            "ultimosTrabajos" => $vehiculo->trabajos()->validos()->with("proveedor")->fechaDesc()->limit(5)->get(),
+
             "puedeRegistrarKms" => $vehiculo->puedeRegistrarKilometraje(),
             "datosKilometraje" => $vehiculo->estimacionKmsAnualParaGrafico(),
             "fechaSgteRegistroKm" => $vehiculo->fechaSgteRegistroKilometraje(),
+
             "proveedoresSeguro" => Proveedor::aseguradoras()
         ]);
     }

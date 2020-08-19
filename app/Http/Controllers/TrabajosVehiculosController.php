@@ -20,7 +20,10 @@ class TrabajosVehiculosController extends AdminPanelBaseController
      */
     public function index()
     {
-        $trabajos = TrabajoVehiculo::validos()->with(["vehiculo", "proveedor"])->orderByDesc("id")->get();
+        $trabajos = TrabajoVehiculo::validos()
+            ->with(["vehiculo", "proveedor"])
+            ->fechaDesc()
+            ->get();
         
         return view("trabajos-vehiculos.index")->with("trabajosVehiculos", $trabajos);
     }
@@ -85,6 +88,12 @@ class TrabajosVehiculosController extends AdminPanelBaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate(["observaciones" => "nullable|max:191"]);
+
+        $trabajo = TrabajoVehiculo::findOrFail($id);
+        $trabajo->observaciones = $request->observaciones;
+        $trabajo->save();
+
+        return redirect()->back()->with("success", true);
     }
 }

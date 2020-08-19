@@ -10,6 +10,12 @@
 
 					<h3 class="page-title"><a href="{{ route('trabajos-vehiculos.index') }}">Trabajos sobre vehículos</a> / Detalles del trabajo</h3>
 
+					@if(session('success'))
+					<div class="alert alert-success alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						Los datos se actualizaron correctamente.
+					</div>
+					@endif
 
 					<div class="row">
 						<div class="col-md-6">
@@ -20,12 +26,10 @@
 
 								<div class="panel-body">
 
+									<form action="{{ route('trabajos-vehiculos.update', $trabajo->id) }}" method="POST">
+										@csrf
+										@method('PUT')
 
-									<div class="alert alert-warning">
-										Ingresa la fecha de realización de este trabajo.
-									</div>
-
-									<form>
 										<div class="form-group">
 											<label>ID de trabajo</label>: #{{ $trabajo->id }}
 										</div>
@@ -36,9 +40,12 @@
 											<label>Tipo de trabajo</label>: {{ __('tipos_trabajos.'.$trabajo->tipo) }}
 										</div>
 
-										<div class="form-group">
+										<div class="form-group @error('observaciones') has-error @enderror">
 											<label>Observaciones</label>
-											<input type="text" class="form-control" value="{{ $trabajo->observaciones }}">
+											<input type="text" class="form-control" value="{{ $trabajo->observaciones }}" name="observaciones">
+											@error('observaciones')
+												<label class="control-label">{{ $message }}</label>
+											@enderror
 										</div>
 
 										<div class="form-group">
@@ -71,8 +78,7 @@
 										<div class="row">
 											<div class="col-sm-4">
 												<div class="form-group">
-													<label>Fecha realizado</label>
-													<input type="text" class="form-control" id="input_fecha_realizado">
+													<label>Fecha realizado</label>: {{ $trabajo->fecha_realizado->isoFormat('D MMM Y') }}
 												</div>
 											</div>
 										</div>

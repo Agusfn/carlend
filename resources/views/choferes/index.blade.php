@@ -38,6 +38,8 @@
 										<th>DNI</th>
 										<th>Teléfono</th>
 										<th>Dirección</th>
+										<th>Estado</th>
+										<th>Vehiculo alquilado</th>
 										<th>Notas</th>
 									</tr>
 								</thead>
@@ -49,9 +51,28 @@
 										<td>{{ $chofer->dni }}</td>
 										<td>{{ $chofer->telefono }}</td>
 										<td>{{ $chofer->direccion }}</td>
+										<td>
+											@if($chofer->alquilerActual)
+											<span class="label label-success" style="font-size: 13px">Alquilando</span>
+											@else
+											<span class="label label-default" style="font-size: 13px">Disponible</span>
+											@endif
+										</td>
+										<td>
+											@if($chofer->alquilerActual)
+											{{ $chofer->alquilerActual->vehiculo->marcaYModelo() }}
+											@else
+											-
+											@endif
+										</td>
 										<td>{{ Str::limit($chofer->notas, 60, '...') }}</td>
 									</tr>
 									@endforeach
+
+									@if($choferes->count() == 0)
+									<tr><td colspan="6" style="text-align: center;">No se encontraron choferes.</td></tr>
+									@endif
+
 								</tbody>
 							</table>
 

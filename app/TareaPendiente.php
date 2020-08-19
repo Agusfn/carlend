@@ -51,7 +51,7 @@ class TareaPendiente extends Model
      * @param  Carbon\Carbon $fechaARealizar
      * @param  string $tipoTarea
      * @param  string $tipoTrabajo
-     * @param  int $kmEstimado
+     * @param  int|null $kmEstimado
      * @return App\Tarea
      */
     public static function crear($idVehiculo, $idChofer, $fechaARealizar, $tipoTarea, $tipoTrabajo, $kmEstimado)

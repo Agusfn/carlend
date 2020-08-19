@@ -86,9 +86,9 @@
 						</div>
 
 						<div class="col-md-6">
-							<div class="panel panel-headline">
+							<div class="panel">
 								<div class="panel-heading">
-									<h3 class="panel-title">Trabajos recientes</h3>
+									<h3 class="panel-title">Trabajos recientes con este proveedor</h3>
 								</div>
 
 								<div class="panel-body">
@@ -106,15 +106,21 @@
 											</tr>
 										</thead>
 										<tbody>
+											@foreach($ultimosTrabajos as $trabajo)
 											<tr>
-												<td><a href="detalles2.html" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-												<td>25 jun 2020</td>
-												<td>Fluence (MKA 451)</td>
-												<td>Reparación</td>
-												<td>$2.000</td>
-												<td>Efectivo</td>
-												<td>25 jun 2020</td>
+												<td><a href="{{ route('trabajos-vehiculos.show', $trabajo->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+												<td>{{ $trabajo->fecha_pagado->isoFormat('D MMM') }}</td>
+												<td>{{ $trabajo->vehiculo->marcaYModelo() }}</td>
+												<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
+												<td>{{ $trabajo->costo_total > 0 ? App\Lib\Strings::formatearMoneda($trabajo->costo_total, 0) : '-' }}</td>
+												<td>{{ $trabajo->costo_total > 0 ? __('medios_pago.'.$trabajo->medio_pago) : '-' }}</td>
+												<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM') }}</td>
 											</tr>
+											@endforeach
+
+											@if($ultimosTrabajos->count() == 0)
+											<tr><td colspan="7" style="text-align: center;">No se encontraron trabajos.</td></tr>
+											@endif
 										</tbody>
 									</table>
 

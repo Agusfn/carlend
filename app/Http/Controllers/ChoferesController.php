@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\CrearChofer;
 use Carbon\Carbon;
 use App\Chofer;
 
@@ -15,7 +16,8 @@ class ChoferesController extends AdminPanelBaseController
      */
     public function index()
     {
-        $choferes = Chofer::all();
+        $choferes = Chofer::with("alquilerActual.vehiculo")->get();
+
         return view("choferes.index")->with(["choferes" => $choferes]);
     }
 
@@ -35,17 +37,8 @@ class ChoferesController extends AdminPanelBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrearChofer $request)
     {
-        $request->validate([
-            "nombre_y_apellido" => "required",
-            //"telefono" => "",
-            //"direccion" => "",
-            //"dni" => "",
-            "fecha_vto_licencia" => "nullable|date_format:d/m/Y",
-            //"notas" => ""
-        ]);    
-
         $chofer = new Chofer();
 
         $chofer->fill($request->except("fecha_vto_licencia"));
@@ -70,8 +63,12 @@ class ChoferesController extends AdminPanelBaseController
     public function show($id)
     {
         $chofer = Chofer::findOrFail($id);
+        $ultimosAlquileres = $chofer->alquileres()->with("vehiculo")->fechaDesc()->limit(8)->get();
 
-        return view("choferes.show")->with(["chofer" => $chofer]);
+        return view("choferes.show")->with([
+            "chofer" => $chofer,
+            "ultimosAlquileres" => $ultimosAlquileres
+        ]);
     }
 
     /**
@@ -81,17 +78,8 @@ class ChoferesController extends AdminPanelBaseController
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(CrearChofer $request, $id)
     {
-        $request->validate([
-            "nombre_y_apellido" => "required",
-            //"telefono" => "",
-            //"direccion" => "",
-            //"dni" => "",
-            "fecha_vto_licencia" => "nullable|date_format:d/m/Y",
-            //"notas" => ""
-        ]);
-
         $chofer = Chofer::findOrFail($id);
 
         $chofer->fill($request->except("fecha_vto_licencia"));
