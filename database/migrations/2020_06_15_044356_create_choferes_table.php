@@ -21,6 +21,7 @@ class CreateChoferesTable extends Migration
             $table->string('telefono')->nullable();
             $table->date('fecha_vto_licencia')->nullable();
             $table->text('notas')->nullable();
+            $table->foreignId('id_alquiler_actual')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

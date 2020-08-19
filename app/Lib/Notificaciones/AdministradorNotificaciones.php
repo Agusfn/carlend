@@ -29,7 +29,7 @@ class AdministradorNotificaciones
 	 */
 	private static function obtenerNotificacionesTareasPendientes()
 	{
-		$notifiaciones = [];
+		$notificaciones = [];
 
 		$tareasPendientes = TareaPendiente::aNotificar()
 			->with(["chofer", "vehiculo"])

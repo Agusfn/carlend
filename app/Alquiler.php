@@ -142,4 +142,23 @@ class Alquiler extends Model
     }
 
 
+
+    /**
+     * Terminar el alquiler.
+     * @return null
+     */
+    public function terminar()
+    {
+        if($this->estaFinalizado())
+            return;
+
+        $this->chofer->asignarAlquilerActual(null);
+        $this->vehiculo->asignarAlquilerActual(null);
+
+        $this->fecha_fin = Carbon::today();
+        $this->estado = self::ESTADO_FINALIZADO;
+        $this->save();
+    }
+
+
 }

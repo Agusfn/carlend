@@ -28,7 +28,7 @@ class CrearVehiculo extends FormRequest
     public function withValidator($validator)
     {
         $validator->after(function ($validator) {
-            $this->afterValidation();
+            $this->afterValidation($validator);
         });
     }
 
@@ -76,25 +76,30 @@ class CrearVehiculo extends FormRequest
      * Llamado después de la validación
      * @return null
      */
-    public function afterValidation()
+    public function afterValidation($validator)
     {
 
-        // Convertimos fechas de d/m/Y a Y-m-d antes de que el controller maneje la request porque el fill() de eloquent necesita Y-m-d aparentemente
-        
-        if($this->fecha_vto_vtv) {
-            $this->merge(["fecha_vto_vtv" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_vtv)->format("Y-m-d")]);
+
+        if(!$validator->failed())
+        {
+
+            // Convertimos fechas de d/m/Y a Y-m-d antes de que el controller maneje la request porque el fill() de eloquent necesita Y-m-d aparentemente
+            if($this->fecha_vto_vtv) {
+                $this->merge(["fecha_vto_vtv" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_vtv)->format("Y-m-d")]);
+            }
+
+            if($this->fecha_vto_oblea_gnc) {
+                $this->merge(["fecha_vto_oblea_gnc" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_oblea_gnc)->format("Y-m-d")]);
+            }
+
+            if($this->fecha_vto_poliza_seguro) {
+                $this->merge(["fecha_vto_poliza_seguro" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_poliza_seguro)->format("Y-m-d")]);
+            }
+
+            // Mayusculas para patente del vehiculo
+            $this->merge(["dominio" => strtoupper($this->dominio)]);
         }
 
-        if($this->fecha_vto_oblea_gnc) {
-            $this->merge(["fecha_vto_oblea_gnc" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_oblea_gnc)->format("Y-m-d")]);
-        }
-
-        if($this->fecha_vto_poliza_seguro) {
-            $this->merge(["fecha_vto_poliza_seguro" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_poliza_seguro)->format("Y-m-d")]);
-        }
-
-
-        $this->merge(["dominio" => strtoupper($this->dominio)]);
         
     }
 

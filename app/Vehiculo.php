@@ -127,6 +127,18 @@ class Vehiculo extends Model
 
     
     /**
+     * Vehiculos que no estén siendo alquilados actualmente.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDisponibles($query)
+    {
+        return $query->where("id_alquiler_actual", null);
+    }
+
+
+    /**
      * Obtener query builder de trabajos previos (o iniciales) de vehiculo.
      * @return [type] [description]
      */
@@ -184,6 +196,18 @@ class Vehiculo extends Model
     public function frecuenciaKmsPorTipoTrabajo($tipoTrabajo)
     {
         return $this->{TrabajoVehiculo::$attrsTrabajosNotificables[$tipoTrabajo]};
+    }
+
+
+    /**
+     * Vincular a este vehiculo un alquiler actual.
+     * @param  int|null $idAlquiler
+     * @return null
+     */
+    public function asignarAlquilerActual($idAlquiler)
+    {
+        $this->id_alquiler_actual = $idAlquiler;
+        $this->save();
     }
 
 

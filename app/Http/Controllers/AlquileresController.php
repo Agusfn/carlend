@@ -3,7 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Http\Requests\CrearAlquiler;
 use App\Alquiler;
+use App\Chofer;
+use App\Vehiculo;
+use Carbon\Carbon;
 
 class AlquileresController extends AdminPanelBaseController
 {
@@ -29,7 +33,12 @@ class AlquileresController extends AdminPanelBaseController
      */
     public function create()
     {
-        return view("alquileres.create");
+
+        return view("alquileres.create")->with([
+            "choferesDisponibles" => Chofer::disponibles()->get(),
+            "vehiculosDisponibles" => Vehiculo::disponibles()->get(),
+        ]);
+
     }
 
     /**
@@ -38,10 +47,38 @@ class AlquileresController extends AdminPanelBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrearAlquiler $request)
     {
-        //
+
+        
+        $alquiler = new Alquiler();
+
+        $alquiler->fill($request->except([
+            "alquiler_indefinido",
+            "descuento_semanal"
+        ]));
+
+        $alquiler->fill([
+            "estado" => Alquiler::ESTADO_EN_CURSO,
+            "fecha_inicio" => Carbon::today(),
+            "saldo_actual" => 0, // default 0, borrar cuando se aplique migration
+            "descuento_semanal" => $request->has("descuento_semanal")
+        ]);
+
+        $alquiler->save();
+
+
+        $chofer = Chofer::findOrFail($request->id_chofer);
+        $chofer->asignarAlquilerActual($alquiler->id);
+
+        $vehiculo = Vehiculo::findOrFail($request->id_vehiculo);
+        $vehiculo->asignarAlquilerActual($alquiler->id);
+
+
+        return redirect()->route("alquileres.index");
     }
+
+
 
     /**
      * Display the specified resource.
@@ -77,14 +114,37 @@ class AlquileresController extends AdminPanelBaseController
 
 
     /**
+     * Terminar el alquiler
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function terminar(Request $request, $id)
+    {
+        
+        $alquiler = Alquiler::findOrFail($id);
+
+        if($alquiler->estaEnCurso()) {
+            $alquiler->terminar();
+        }
+
+        return redirect()->route("alquileres.show", $alquiler->id);
+    }
+
+
+
+    /**
      * Mostrar formulario para registrar nuevo pago
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function formularioRegistrarPago()
+    public function formularioRegistrarPago(Request $request, $id)
     {
-        return view("alquileres.registrar-pago");
+        $alquiler = Alquiler::findOrFail($id);
+
+        return view("alquileres.registrar-pago")->with("alquiler", $alquiler);
     }
 
 
@@ -96,7 +156,16 @@ class AlquileresController extends AdminPanelBaseController
      */
     public function registrarPago(Request $request)
     {
-        //
+        
+        $request->validate([
+            "fecha" => "required|date_format:d/m/Y|after_or_equal:-7day|before_or_equal:today",
+            "tipo" => "",
+            "monto" => "",
+            "medio_pago" => "",
+            "comentario" => ""
+        ]);
+
+        dd($request);
     }
 
 

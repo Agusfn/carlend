@@ -21,6 +21,7 @@ class ChoferesSeeder extends Seeder
 	            'telefono' => '11 45631121',
 	            'fecha_vto_licencia' => '2021-02-07',
 	            'notas' => 'Confiable.',
+	            'id_alquiler_actual' => null
        		],
         	[
 	            'nombre_y_apellido' => 'Julian Fosatti',
@@ -29,6 +30,7 @@ class ChoferesSeeder extends Seeder
 	            'telefono' => '03484663121',
 	            'fecha_vto_licencia' => '2020-12-21',
 	            'notas' => 'No dejar que se atrase con los pagos.',
+	            'id_alquiler_actual' => null
        		],
         	[
 	            'nombre_y_apellido' => 'Alberto Rodriguez',
@@ -37,6 +39,7 @@ class ChoferesSeeder extends Seeder
 	            'telefono' => '1155428742',
 	            'fecha_vto_licencia' => null,
 	            'notas' => 'Recomendado por juan.',
+	            'id_alquiler_actual' => null
        		]      
 
         ]);

@@ -19,7 +19,7 @@ class CreateAlquileresTable extends Migration
             $table->date('fecha_inicio');
             $table->date('fecha_fin')->nullable();
             $table->decimal('precio_diario', 10, 2);
-            $table->decimal('saldo_actual', 10, 2);
+            $table->decimal('saldo_actual', 10, 2)->default(0);
             $table->foreignId('id_chofer');
             $table->foreignId('id_vehiculo');
             $table->boolean('descuento_semanal');
@@ -35,6 +35,9 @@ class CreateAlquileresTable extends Migration
             $table->foreign('id_alquiler_actual')->references('id')->on('alquileres');
         });
 
+        Schema::table('choferes', function (Blueprint $table) {
+            $table->foreign('id_alquiler_actual')->references('id')->on('alquileres');
+        });
     }
 
     /**
@@ -47,6 +50,11 @@ class CreateAlquileresTable extends Migration
         Schema::table('vehiculos', function (Blueprint $table) {
             $table->dropForeign('vehiculos_id_alquiler_actual_foreign');
         });
+
+        Schema::table('choferes', function (Blueprint $table) {
+            $table->dropForeign('choferes_id_alquiler_actual_foreign');
+        });
+
 
         Schema::dropIfExists('alquileres');
     }

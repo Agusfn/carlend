@@ -515,7 +515,7 @@
 @section('custom-js')
 	<script src="{{ asset('assets/vendor/bootstrap-datepicker-1.9.0/js/bootstrap-datepicker.min.js') }}"></script>
 	<script src="{{ asset('assets/vendor/bootstrap-datepicker-1.9.0/locales/bootstrap-datepicker.es.min.js') }}"></script>
-	<script src="../assets/vendor/chartist/js/chartist.min.js"></script>	
+	<script src="{{ asset('assets/vendor/chartist/js/chartist.min.js') }}"></script>	
 	<script>
 	$(function() {
 

@@ -71,9 +71,24 @@ class CrearTrabajoVehiculo extends FormRequest
     public function afterValidation($validator)
     {
 
+        // Validación adicional
+
+        if(!$validator->errors()->has("id_vehiculo"))
+        {
+            $vehiculo = Vehiculo::findOrFail($this->id_vehiculo);
+
+            if(!$this->kms_vehiculo_estimados) {
+
+                if(!$vehiculo->puedeEstimarKilometraje()) {
+                    $validator->errors()->add("kms_vehiculo_estimados", "Se debe ingresar el kilometraje porque el vehiculo no puede estimarlo.");
+                }
+
+            }
+        }
+
+
         // Convertimos fechas de d/m/Y a Y-m-d antes de que el controller maneje la request porque el fill() de eloquent necesita Y-m-d aparentemente
-        
-        if($this->fecha_pagado && $this->fecha_realizado)
+        if(!$validator->failed())
         {
             $this->merge([
                 "fecha_pagado" => Carbon::createFromFormat("d/m/Y", $this->fecha_pagado)->format("Y-m-d"),
@@ -81,16 +96,7 @@ class CrearTrabajoVehiculo extends FormRequest
             ]);
         }
 
-        $vehiculo = Vehiculo::findOrFail($this->id_vehiculo);
 
-        if(!$this->kms_vehiculo_estimados) {
-
-            if(!$vehiculo->puedeEstimarKilometraje()) {
-                $validator->errors()->add("kms_vehiculo_estimados", "Se debe ingresar el kilometraje porque el vehiculo no puede estimarlo.");
-            }
-
-        }
- 
     }
 
 

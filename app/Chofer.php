@@ -32,4 +32,29 @@ class Chofer extends Model
         'fecha_vto_licencia',
     ];
 
+
+    /**
+     * Choferes que no estén alquilando un vehículo actualmente.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeDisponibles($query)
+    {
+        return $query->where("id_alquiler_actual", null);
+    }
+
+
+    /**
+     * Vincular a este chofer un alquiler actual.
+     * @param  int|null $idAlquiler
+     * @return null
+     */
+    public function asignarAlquilerActual($idAlquiler)
+    {
+        $this->id_alquiler_actual = $idAlquiler;
+        $this->save();
+    }
+
+
 }

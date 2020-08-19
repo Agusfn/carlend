@@ -10,8 +10,17 @@
 						<div class="panel panel-headline">
 							<div class="panel-body">
 								<div class="btn-group">
+									
 									<a href="{{ route('alquileres.registrar-pago', 1) }}" class="btn btn-primary"><span class="glyphicon glyphicon-usd"></span> Registrar pago de chofer</a>
-									<button class="btn btn-default" style="margin-left: 15px">Terminar alquiler</button>
+
+									@if($alquiler->estaEnCurso())
+									<button class="btn btn-default" style="margin-left: 15px" onclick="if(confirm('¿Deseás terminar el alquiler? Una vez terminado no se podrá reanudar.')) $('#terminar-alq-form').submit();">Terminar alquiler</button>
+
+									<form id="terminar-alq-form" action="{{ route('alquileres.terminar', $alquiler->id) }}" method="POST" style="display: none;">
+                                        @csrf
+                                    </form>
+                                    @endif
+                                    
 								</div>
 							</div>
 						</div>
@@ -154,6 +163,10 @@
 												</td>
 											</tr>
 											@endforeach
+
+											@if($movimientosSaldo->count() == 0)
+											<tr><td colspan="6" style="text-align: center;">No se encontraron movimientos.</td></tr>
+											@endif
 										</tbody>
 									</table>	
 
