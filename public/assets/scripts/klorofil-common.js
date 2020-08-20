@@ -203,6 +203,20 @@ $(document).ready(function() {
 			toastr['info']($message);
 		});
 	}
+
+
+	/*-----------------------------------/
+	/* CUSTOM
+	/*----------------------------------*/
+
+	$('[data-toggle="tooltip"]').tooltip();
+
+
+
+
+ 
+
+
 });
 
 // toggle function

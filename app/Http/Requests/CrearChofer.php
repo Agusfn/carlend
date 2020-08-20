@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Carbon\Carbon;
 
 class CrearChofer extends FormRequest
 {
@@ -15,6 +16,22 @@ class CrearChofer extends FormRequest
     {
         return true;
     }
+
+
+    /**
+     * Configure the validator instance.
+     *
+     * @param  \Illuminate\Validation\Validator  $validator
+     * @return void
+     */
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            $this->afterValidation($validator);
+        });
+    }
+
+
 
     /**
      * Get the validation rules that apply to the request.
@@ -32,4 +49,26 @@ class CrearChofer extends FormRequest
             "notas" => "nullable|max:200"
         ];
     }
+
+
+
+    /**
+     * Llamado después de la validación
+     * @return null
+     */
+    public function afterValidation($validator)
+    {
+
+        if(!$validator->failed())
+        {            
+            if($this->fecha_vto_licencia) 
+            {
+                $this->merge([
+                    "fecha_vto_licencia" => Carbon::createFromFormat("d/m/Y", $this->fecha_vto_licencia)->format("Y-m-d")
+                ]);
+            }
+        }
+        
+    }
+
 }

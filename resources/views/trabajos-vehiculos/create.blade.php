@@ -162,8 +162,6 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 
-			$('[data-toggle="tooltip"]').tooltip();
-
 			$('#input_fecha_pagado, #input_fecha_realizado').datepicker({
 				autoclose: true,
 				language: 'es-ES',

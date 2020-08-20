@@ -14,8 +14,6 @@ class TareaPendiente extends Model
     const TIPO_RENOV_VTV = "renov_vtv";
     const TIPO_VERIF_GNC = "verif_gnc";
     const TIPO_RENOV_SEGURO = "renovacion_seguro";
-    //const TIPO_ACTUALIZ_KMS = "actualizacion_kms";
-
 
 
     /**

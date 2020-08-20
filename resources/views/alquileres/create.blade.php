@@ -151,9 +151,7 @@
 		$(document).ready(function() 
 		{
 
-
 			// Config
-			$('[data-toggle="tooltip"]').tooltip();
 
 			$('#input_fecha_fin_alquiler').datepicker({
 				autoclose: true,

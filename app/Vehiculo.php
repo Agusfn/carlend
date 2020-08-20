@@ -326,9 +326,6 @@ class Vehiculo extends Model
 
 
 
-
-
-
     /**
      * Registrar las tareas pendientes (notificaciones) de los vencimientos con fecha de este vehiculo (vtv, gnc, y seguro) si están configurados
      * Se realiza sólo al dar el alta el vehiculo, luego se debe usar al editar el vehiculo actualizarNotifsVtosSiCambiaronFechas()

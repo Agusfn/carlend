@@ -40,15 +40,10 @@ class ChoferesController extends AdminPanelBaseController
     public function store(CrearChofer $request)
     {
         $chofer = new Chofer();
-
-        $chofer->fill($request->except("fecha_vto_licencia"));
-
-        if($request->fecha_vto_licencia) {
-            $chofer->fecha_vto_licencia = Carbon::createFromFormat("d/m/Y", $request->fecha_vto_licencia);
-        }    
-
+        $chofer->fill($request->all());
         $chofer->save();
 
+        $chofer->registrarNotifDeVtoLicencia();
 
         return redirect()->route('choferes.index');
 
@@ -81,14 +76,10 @@ class ChoferesController extends AdminPanelBaseController
     public function update(CrearChofer $request, $id)
     {
         $chofer = Chofer::findOrFail($id);
-
-        $chofer->fill($request->except("fecha_vto_licencia"));
-
-        if($chofer->fecha_vto_licencia) {
-            $chofer->fecha_vto_licencia = Carbon::createFromFormat("d/m/Y", $request->fecha_vto_licencia);
-        }        
-        
+        $chofer->fill($request->all());
         $chofer->save();
+
+        $chofer->actualizarNotifVtoLicenciaSiCambio();
 
         return redirect()->back()->with("success", true);
     }

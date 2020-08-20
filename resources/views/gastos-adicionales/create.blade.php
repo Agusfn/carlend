@@ -119,7 +119,6 @@
 	<script type="text/javascript">
 		$(document).ready(function() 
 		{
-			$('[data-toggle="tooltip"]').tooltip();
 
 			$('#input_fecha_gasto').datepicker({
 				autoclose: true,

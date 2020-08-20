@@ -68,10 +68,11 @@ class AdministradorNotificaciones
 	 */
 	private static function obtenerTextoNotificacionTareaPendiente($tareaPendiente)
 	{
-		$mensaje = "Se debe ";
+		$mensaje = "";
 
 		if($tareaPendiente->esDeVehiculo()) 
 		{
+			$mensaje .= "Se debe ";
 
 			if($tareaPendiente->esDeTrabajoVehicular())
 			{
@@ -102,19 +103,16 @@ class AdministradorNotificaciones
 				else if($tareaPendiente->tipo == TareaPendiente::TIPO_RENOV_SEGURO) {
 					$mensaje .= "renovar el seguro";
 				}
-				else if($tareaPendiente->tipo == TareaPendiente::TIPO_ACTUALIZ_KMS) {
-					$mensaje .= "actualizar los KMs";
-				}
 			}
-
 
 			$mensaje .= " del ".$tareaPendiente->vehiculo->marcaYModelo()." para el ".$tareaPendiente->fecha_a_realizar->isoFormat("D MMM");
 		}
 		else if($tareaPendiente->esDeChofer())
 		{
-			
-			$mensaje .= "del chofer ".$tareaPendiente->chofer->nombre;
 
+			if($tareaPendiente->tipo == TareaPendiente::TIPO_RENOV_LICENCIA_CHOFER) {
+				$mensaje .= "La licencia de manejo de ".$tareaPendiente->chofer->nombre_y_apellido." vence el ".$tareaPendiente->fecha_a_realizar->isoFormat("D MMM");
+			}
 		}
 
 		return $mensaje;

@@ -106,8 +106,6 @@
 		$(document).ready(function() 
 		{
 
-			$('[data-toggle="tooltip"]').tooltip();
-
 			$('#input_fecha_movimiento').datepicker({
 				autoclose: true,
 				language: 'es-ES',

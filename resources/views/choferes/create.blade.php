@@ -53,7 +53,9 @@
 											@enderror
 										</div>
 										<div class="form-group @error('fecha_vto_licencia') has-error @enderror">
-											<label>Fecha de vto. de licencia</label>
+											
+											<label>Fecha de vto. de licencia <span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="Ingresá la fecha para que se te notifique por email y por el sitio 10 días antes del vencimiento, sino dejalo vacío."></span></label>
+
 											<input type="text" name="fecha_vto_licencia" class="form-control" id="input_fecha_vto_licencia" value="{{ old('fecha_vto_licencia') }}">
 											@error('fecha_vto_licencia')
 												<label class="control-label">{{ $message }}</label>

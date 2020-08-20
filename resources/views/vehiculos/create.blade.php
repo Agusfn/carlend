@@ -327,8 +327,6 @@
 		$(document).ready(function() {
 
 			// Config
-			$('[data-toggle="tooltip"]').tooltip();
-
 			$('#input_fecha_vto_vtv, #input_fecha_vto_gnc, #input_fecha_vto_poliza').datepicker({
 				autoclose: true,
 				language: 'es-ES',

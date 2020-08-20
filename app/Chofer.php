@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\TareaPendiente;
 
 class Chofer extends Model
 {
@@ -52,6 +53,18 @@ class Chofer extends Model
         return $this->hasMany("App\Alquiler", "id_chofer");
     }
 
+
+
+    /**
+     * Obtener las tareas pendientes (notificaciones) relacionadas a este chofer
+     * @return [type] [description]
+     */
+    public function tareasPendientes()
+    {
+        return $this->hasMany("App\TareaPendiente", "id_chofer");
+    }
+
+
     /**
      * Choferes que no estén alquilando un vehículo actualmente.
      *
@@ -75,5 +88,34 @@ class Chofer extends Model
         $this->save();
     }
 
+
+    /**
+     * Registrar las tareas pendientes (notificaciones) del vencimiento de la licencia del chofer. Sólo cuando se da de alta el chofer.
+     * @return null
+     */
+    public function registrarNotifDeVtoLicencia()
+    { 
+        if($this->fecha_vto_licencia) { 
+            TareaPendiente::crear(null, $this->id, $this->fecha_vto_licencia, TareaPendiente::TIPO_RENOV_LICENCIA_CHOFER, null, null);
+        }
+    }
+
+
+
+    /**
+     * Actualizar las tareas pendientes (notificaciones) del vto del registro del chofer.
+     * Sólo se llama cuando se modifica la entidad.
+     * 
+     * @return null
+     */
+    public function actualizarNotifVtoLicenciaSiCambio()
+    {
+        
+        if($this->wasChanged("fecha_vto_licencia")) 
+        {
+            $this->tareasPendientes()->where("tipo", TareaPendiente::TIPO_RENOV_LICENCIA_CHOFER)->delete();    
+            $this->registrarNotifDeVtoLicencia();
+        }
+    }
 
 }
