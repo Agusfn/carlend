@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CrearGastoAdicional;
 use Illuminate\Http\Request;
+use App\GastoAdicional;
+use App\Vehiculo;
+use App\Proveedor;
 
 class GastosAdicionalesController extends AdminPanelBaseController
 {
@@ -13,7 +17,9 @@ class GastosAdicionalesController extends AdminPanelBaseController
      */
     public function index()
     {
-        return view("gastos-adicionales.index");
+        $gastosAdicionales = GastoAdicional::with(["vehiculo", "proveedor"])->orderBy("fecha", "DESC")->get();
+
+        return view("gastos-adicionales.index")->with("gastosAdicionales", $gastosAdicionales);
     }
 
     /**
@@ -23,7 +29,10 @@ class GastosAdicionalesController extends AdminPanelBaseController
      */
     public function create()
     {
-        return view("gastos-adicionales.create");
+        return view("gastos-adicionales.create")->with([
+            "vehiculos" => Vehiculo::nombreAsc()->get(),
+            "proveedores" => Proveedor::all()
+        ]);
     }
 
     /**
@@ -32,9 +41,11 @@ class GastosAdicionalesController extends AdminPanelBaseController
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CrearGastoAdicional $request)
     {
-        //
+        GastoAdicional::create($request->all());
+
+        return redirect()->route("gastos-adicionales.index");
     }
 
     /**
@@ -45,7 +56,9 @@ class GastosAdicionalesController extends AdminPanelBaseController
      */
     public function show($id)
     {
-        return view("gastos-adicionales.show");
+        $gastoAdicional = GastoAdicional::with(["vehiculo", "proveedor"])->findOrFail($id);
+
+        return view("gastos-adicionales.show")->with("gastoAdicional", $gastoAdicional);
     }
 
     /**

@@ -67,28 +67,32 @@
 									</tr>
 								</thead>
 								<tbody>
+									@foreach($gastosAdicionales as $gastoAdicional)
 									<tr>
-										<td><a href="{{ route('gastos-adicionales.show', 1) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>5</td>
-										<td>3 jul 2020</td>
-										<td>Otro</td>
-										<td>Compra bujías</td>
-										<td>Renault Fluence (MKA 451)</td>
-										<td>$1.000</td>
-										<td>Tarjeta de crédito</td>
-										<td>Repuestos José</td>
+										<td><a href="{{ route('gastos-adicionales.show', $gastoAdicional->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+										<td>{{ $gastoAdicional->id }}</td>
+										<td>{{ $gastoAdicional->fecha->isoFormat('D MMM Y') }}</td>
+										<td>
+											@if($gastoAdicional->tipo == 'seguro_vehiculo')
+											Seguro de vehículo
+											@elseif($gastoAdicional->tipo == 'impuesto_automotor')
+											Impuesto automotor
+											@elseif($gastoAdicional->tipo == 'otro')
+											Otro
+											@endif
+										</td>
+										<td>{{ Str::limit($gastoAdicional->detalle, 40, '...') }}</td>
+										<td>{{ $gastoAdicional->vehiculo ? $gastoAdicional->vehiculo->marcaModeloYDominio() : '-' }}</td>
+										<td>{{ App\Lib\Strings::formatearMoneda($gastoAdicional->monto, 2) }}</td>
+										<td>{{ __('medios_pago.'.$gastoAdicional->medio_pago) }}</td>
+										<td>{{ $gastoAdicional->proveedor ? $gastoAdicional->proveedor->nombre : '-' }}</td>
 									</tr>
-									<tr>
-										<td><a href="" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>4</td>
-										<td>16 jun 2020</td>
-										<td>Pago de seguro</td>
-										<td>-</td>
-										<td>Renault Fluence (MKA 451)</td>
-										<td>$5.500</td>
-										<td>Tarjeta de crédito</td>
-										<td>Provincia Seguros</td>
-									</tr>
+									@endforeach
+
+									@if($gastosAdicionales->count() == 0)
+									<tr><td colspan="9" style="text-align: center;">No se registraron gastos adicionales.</td></tr>
+									@endif
+
 								</tbody>
 							</table>
 

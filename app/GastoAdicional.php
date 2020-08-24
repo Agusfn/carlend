@@ -6,6 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class GastoAdicional extends Model
 {
+
+
+    /**
+     * Tipos de gastos.
+     */
+    const TIPO_PAGO_SEGURO_VEHICULO = "seguro_vehiculo";
+    const TIPO_PAGO_IMPUESTO_VEHICULO = "impuesto_automotor";
+    const TIPO_OTRO = "otro";
+
+
+    /**
+     * Medios de pago
+     */
+    const MEDIO_PAGO_EFECTIVO = "efectivo";
+    const MEDIO_PAGO_TARJETA = "tarjeta_credito";
+    const MEDIO_PAGO_TRANSFERENCIA = "transferencia";
+
+
     /**
      * The table associated with the model.
      *
@@ -28,6 +46,27 @@ class GastoAdicional extends Model
     protected $dates = [
         'fecha',
     ];
+
+
+    /**
+     * Obtener vehiculo relacionado a este gasto.
+     * @return App\Vehiculo
+     */
+    public function vehiculo()
+    {
+        return $this->belongsTo("App\Vehiculo", "id_vehiculo");
+    }   
+
+
+    /**
+     * Obtener proveedor relacionado a este gasto.
+     * @return App\Proveedor
+     */
+    public function proveedor()
+    {
+        return $this->belongsTo("App\Proveedor", "id_proveedor");
+    }    
+
 
     
 }
