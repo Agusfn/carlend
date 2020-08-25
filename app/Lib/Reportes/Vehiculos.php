@@ -109,7 +109,7 @@ class Vehiculos
 		{
 			$nombreVehiculo = $trabajoVehiculo->vehiculo->marcaYModelo();
 
-			$tipoGasto = Balances::obtenerTipoGastoDeTipoTrabajoVehicular($trabajoVehiculo->tipo);
+			$tipoGasto = UtilidadesReportes::obtenerTipoGastoDeTipoTrabajoVehicular($trabajoVehiculo->tipo);
 
 			if(isset($gastosVehiculos[$nombreVehiculo][$tipoGasto])) {
 				$gastosVehiculos[$nombreVehiculo][$tipoGasto] += $trabajoVehiculo->costo_total;
@@ -126,7 +126,7 @@ class Vehiculos
 
 			$nombreVehiculo = $gastoAdicional->vehiculo->marcaYModelo();
 
-			$tipoGasto = Balances::obtenerTipoGastoDeTipoGastoAdicional($gastoAdicional->tipo);
+			$tipoGasto = UtilidadesReportes::obtenerTipoGastoDeTipoGastoAdicional($gastoAdicional->tipo);
 
 			if(isset($gastosVehiculos[$nombreVehiculo][$tipoGasto])) {
 				$gastosVehiculos[$nombreVehiculo][$tipoGasto] += $gastoAdicional->monto;
@@ -174,7 +174,7 @@ class Vehiculos
 
 			foreach($periodo as $fecha)
 			{
-				if($fecha->year == $anio && $fecha->month == $mes) {
+				if($fecha->year == $anio && $fecha->month == $mes && !$fecha->isFuture()) {
 					$diasAlquiladosVehiculos[$nombreVehiculo] ++;
 				}
 			}

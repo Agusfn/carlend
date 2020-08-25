@@ -5,7 +5,6 @@ namespace App\Lib\Reportes;
 use App\MovimientoAlquiler;
 use App\TrabajoVehiculo;
 use App\GastoAdicional;
-use Carbon\Carbon;
 
 class Balances
 {
@@ -44,7 +43,7 @@ class Balances
 
 		$ingresoTotal = 0;
 		$gastoTotal = 0;
-		$ingresosDiarios = $gastosDiarios = self::arrayNumericoDeDiasDelMes($mes, $anio);
+		$ingresosDiarios = $gastosDiarios = UtilidadesReportes::arrayNumericoDeDiasDelMes($mes, $anio);
 
 		foreach($movimientosAlquiler as $movimientoAlquiler)
 		{
@@ -75,27 +74,6 @@ class Balances
 
 
 	/**
-	 * Crear un array del 1 al n con ceros, siendo n la cantidad de días del mes del año indicado.
-	 * @param  [type] $mes  [description]
-	 * @param  [type] $anio [description]
-	 * @return [type]       [description]
-	 */
-	private static function arrayNumericoDeDiasDelMes($mes, $anio)
-	{
-		$cantidadDias = Carbon::createFromDate($anio, $mes)->daysInMonth;
-
-		$array = [];
-
-		for($i = 1; $i <= $cantidadDias; $i++) {
-			$array[$i] = 0;
-		}
-
-		return $array;
-	}
-
-
-
-	/**
 	 * Clasificar gastos según tipo (un TIPO simplificado y combinado usado únicamente para los reportes) y según proveedor.
 	 * @return [type] [description]
 	 */
@@ -106,13 +84,13 @@ class Balances
 
 		foreach($trabajosVehiculos as $trabajoVehiculo) 
 		{
-			$tipoGasto = self::obtenerTipoGastoDeTipoTrabajoVehicular($trabajoVehiculo->tipo);
+			$tipoGasto = UtilidadesReportes::obtenerTipoGastoDeTipoTrabajoVehicular($trabajoVehiculo->tipo);
 			$gastosPorTipo[$tipoGasto] = isset($gastosPorTipo[$tipoGasto]) ? ($gastosPorTipo[$tipoGasto] + $trabajoVehiculo->costo_total) : (float)$trabajoVehiculo->costo_total;
 		}
 
 		foreach($gastosAdicionales as $gastoAdicional)
 		{
-			$tipoGasto = self::obtenerTipoGastoDeTipoGastoAdicional($gastoAdicional->tipo);
+			$tipoGasto = sUtilidadesReporteself::obtenerTipoGastoDeTipoGastoAdicional($gastoAdicional->tipo);
 			$gastosPorTipo[$tipoGasto] = isset($gastosPorTipo[$tipoGasto]) ? ($gastosPorTipo[$tipoGasto] + $gastoAdicional->monto) : (float)$gastoAdicional->monto;
 		}
 
@@ -167,43 +145,6 @@ class Balances
 		return $gastosPorProveedor;
 	}
 
-
-	/**
-	 * Obtener el tipo de gasto usado para el reporte, a partir del tipo de trabajo vehicular.
-	 * @param  string $tipoTrabajoVehicular
-	 * @return string                       
-	 */
-	public static function obtenerTipoGastoDeTipoTrabajoVehicular($tipoTrabajoVehicular)
-	{
-		if($tipoTrabajoVehicular == TrabajoVehiculo::SERVICE) {
-			return "services";
-		}
-		else if($tipoTrabajoVehicular == TrabajoVehiculo::REPARACION) {
-			return "reparaciones";
-		}
-		else {
-			return "otros_trabajos";
-		}
-	}
-
-
-	/**
-	 * Obtener el tipo de gasto usado para el reporte, a partir del tipo de gasto adicional.
-	 * @param  string $tipoGastoAdicional 
-	 * @return string                     
-	 */
-	public static function obtenerTipoGastoDeTipoGastoAdicional($tipoGastoAdicional)
-	{
-		if($tipoGastoAdicional == GastoAdicional::TIPO_PAGO_SEGURO_VEHICULO) {
-			return "seguros";
-		}
-		else if($tipoGastoAdicional == GastoAdicional::TIPO_PAGO_IMPUESTO_VEHICULO) {
-			return "impuestos_automotor";
-		}
-		else {
-			return "otros_gastos";
-		}
-	}
 
 
 }
