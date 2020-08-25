@@ -67,6 +67,15 @@ class GastoAdicional extends Model
         return $this->belongsTo("App\Proveedor", "id_proveedor");
     }    
 
-
+    /**
+     * Filtrar gasto adicional por mes y año
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeEnMesYAnio($query, $mes, $anio)
+    {
+        return $query->whereMonth("fecha", $mes)->whereYear("fecha", $anio);
+    }
     
 }

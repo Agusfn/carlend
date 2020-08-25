@@ -125,6 +125,28 @@ class TrabajoVehiculo extends Model
     }
 
 
+    /**
+     * Filtrar trabajo pagado en mes y año
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePagadoEnMesYAnio($query, $mes, $anio)
+    {
+        return $query->whereMonth("fecha_pagado", $mes)->whereYear("fecha_pagado", $anio);
+    }
+
+    /**
+     * Filtrar trabajos con costo (no gratuitos)
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeConCosto($query)
+    {
+        return $query->where("costo_total", ">", 0);
+    }
+
 
     /**
      * Si el tipo de trabajo es notificable.

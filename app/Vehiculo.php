@@ -53,6 +53,17 @@ class Vehiculo extends Model
     ];
 
 
+    /**
+     * Obtener todos los vehiculos que tienen algún débito automático (seguro o patentes) asociado. 
+     * @return [type] [description]
+     */
+    public static function obtenerConDebitoAutomatico()
+    {
+        return self::whereNotNull("costo_mensual_imp_automotor")
+            ->orWhereNotNull("id_proveedor_seguro")
+            ->get();
+    }
+
 
     /**
      * Obtener alquiler actual del vehículo.
@@ -184,6 +195,16 @@ class Vehiculo extends Model
     public function marcaYModelo()
     {
         return $this->marca." ".$this->modelo;
+    }
+
+
+    /**
+     * Obtener modelo del auto y el dominio. Ej: Gol (MMH 997)
+     * @return string
+     */
+    public function modeloYDominio()
+    {
+        return $this->modelo." (".$this->dominio.")";
     }
 
 

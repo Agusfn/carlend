@@ -82,6 +82,36 @@ class Alquiler extends Model
     }
 
 
+    /**
+     * Filtrar alquileres que hayan tenido al menos un día de alquiler dentro del rango de las fechas dadas.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  string $fechaInicio Y-m-d
+     * @param  string $fechaFin Y-m-d
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeEntreFechas($query, $fechaInicio, $fechaFin)
+    {
+        return $query->where(function($query) use ($fechaInicio, $fechaFin) {
+                $query->where("fecha_inicio", ">=", $fechaInicio)
+                    ->where("fecha_fin", "<=", $fechaFin);
+            })
+            ->orWhere(function($query) use ($fechaInicio, $fechaFin) {
+                $query->where("fecha_inicio", "<", $fechaInicio)
+                    ->where("fecha_fin", ">", $fechaInicio); 
+            })
+            ->orWhere(function($query) use ($fechaInicio, $fechaFin) {
+                $query->where("fecha_inicio", "<", $fechaFin)
+                    ->where("fecha_fin", ">", $fechaFin);
+            })
+            ->orWhere(function($query) use ($fechaInicio, $fechaFin) {
+                $query->where("fecha_inicio", "<", $fechaFin)
+                    ->where("fecha_fin", null);
+            });
+    }
+
+
+
 
     /**
      * Filtramos por alquileres finalizados.

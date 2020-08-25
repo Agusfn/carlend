@@ -47,12 +47,7 @@ trait RegistraKilometraje
             "fecha" => $fecha,
             "kilometros" => $kilometros
         ]);
-
-        // Eliminado este atributo
-        /*$this->kilometraje_prediccion_actual = $kilometros;
-        $this->save();*/
     }
-
 
 
     /**

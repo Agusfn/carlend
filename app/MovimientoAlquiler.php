@@ -49,6 +49,15 @@ class MovimientoAlquiler extends Model
     ];
 
 
+    /**
+     * Obtener alquiler de este movimiento de alquiler.
+     * @return App\Alquiler
+     */
+    public function alquiler()
+    {
+        return $this->belongsTo("App\Alquiler", "id_alquiler");
+    }  
+
 
     /**
      * Ordenamiento de más antiguo a más reciente.
@@ -71,6 +80,32 @@ class MovimientoAlquiler extends Model
     {
         return $query->orderBy("fecha_hora", "DESC")->orderBy("id", "DESC");
     }
+
+
+    /**
+     * Filtrar movimiento de alquiler por tipo pago de chofer.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopePagosDeChofer($query)
+    {
+        return $query->where("tipo", self::TIPO_PAGO_DE_CHOFER);
+    }
+
+
+
+    /**
+     * Filtrar movimiento de alquiler por mes y año
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeEnMesYAnio($query, $mes, $anio)
+    {
+        return $query->whereMonth("fecha_hora", $mes)->whereYear("fecha_hora", $anio);
+    }
+
 
 
     /**

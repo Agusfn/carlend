@@ -58,7 +58,7 @@ class GastosAdicionalesController extends AdminPanelBaseController
     {
         $gastoAdicional = GastoAdicional::with(["vehiculo", "proveedor"])->findOrFail($id);
 
-        return view("gastos-adicionales.show")->with("gastoAdicional", $gastoAdicional);
+        return view("gastos-adicionales.show")->with("gasto", $gastoAdicional);
     }
 
     /**
@@ -70,6 +70,12 @@ class GastosAdicionalesController extends AdminPanelBaseController
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate(["detalle" => "nullable|max:100"]);
+
+        $gastoAdicional = GastoAdicional::findOrFail($id);
+        $gastoAdicional->detalle = $request->detalle;
+        $gastoAdicional->save();
+
+        return redirect()->back()->with("success", true);
     }
 }
