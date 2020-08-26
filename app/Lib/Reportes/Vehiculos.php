@@ -47,29 +47,23 @@ class Vehiculos
 		$ingresosPorVehiculo = [];
 		$gastosPorVehiculo = [];
 
+		$vehiculos = Vehiculo::nombreAsc()->get();
+
+		foreach($vehiculos as $vehiculo) {
+			$ingresosPorVehiculo[$vehiculo->marcaYModelo()] = 0;
+			$gastosPorVehiculo[$vehiculo->marcaYModelo()] = 0;
+		}
+
 		foreach($movimientosAlquiler as $movimientoAlquiler)
 		{
 			$nombreVehiculo = $movimientoAlquiler->alquiler->vehiculo->marcaYModelo();
-
-			if(isset($ingresosPorVehiculo[$nombreVehiculo])) {
-				$ingresosPorVehiculo[$nombreVehiculo] += $movimientoAlquiler->monto;
-			}
-			else {
-				$ingresosPorVehiculo[$nombreVehiculo] = (float)$movimientoAlquiler->monto;
-			}
-
+			$ingresosPorVehiculo[$nombreVehiculo] += $movimientoAlquiler->monto;
 		}
 
 		foreach($trabajosVehiculos as $trabajoVehiculo)
 		{
 			$nombreVehiculo = $trabajoVehiculo->vehiculo->marcaYModelo();
-
-			if(isset($gastosPorVehiculo[$nombreVehiculo])) {
-				$gastosPorVehiculo[$nombreVehiculo] += $trabajoVehiculo->costo_total;
-			}
-			else {
-				$gastosPorVehiculo[$nombreVehiculo] = (float)$trabajoVehiculo->costo_total;
-			}
+			$gastosPorVehiculo[$nombreVehiculo] += $trabajoVehiculo->costo_total;
 		}
 
 		foreach($gastosAdicionales as $gastoAdicional)
@@ -78,15 +72,8 @@ class Vehiculos
 				continue;
 
 			$nombreVehiculo = $gastoAdicional->vehiculo->marcaYModelo();
-
-			if(isset($gastosPorVehiculo[$nombreVehiculo])) {
-				$gastosPorVehiculo[$nombreVehiculo] += $gastoAdicional->monto;
-			}
-			else {
-				$gastosPorVehiculo[$nombreVehiculo] = (float)$gastoAdicional->monto;
-			}
+			$gastosPorVehiculo[$nombreVehiculo] += $gastoAdicional->monto;
 		}
-
 
 		return [
 			"ingresos_por_vehiculo" => $ingresosPorVehiculo,

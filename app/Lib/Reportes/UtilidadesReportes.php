@@ -59,7 +59,7 @@ class UtilidadesReportes
 			$fechaIterada->addMonth(1);
 		}
 
-		return $mesesDisponibles;
+		return array_reverse($mesesDisponibles);
 	}
 
 
@@ -71,13 +71,16 @@ class UtilidadesReportes
 	public static function obtenerTipoGastoDeTipoTrabajoVehicular($tipoTrabajoVehicular)
 	{
 		if($tipoTrabajoVehicular == TrabajoVehiculo::SERVICE) {
-			return "services";
+			return "Service";
+		}
+		else if($tipoTrabajoVehicular == TrabajoVehiculo::CAMBIO_CORREA_DISTR) {
+			return "Correa distribución";
 		}
 		else if($tipoTrabajoVehicular == TrabajoVehiculo::REPARACION) {
-			return "reparaciones";
+			return "Reparaciones";
 		}
 		else {
-			return "otros_trabajos";
+			return "Otros trabajos";
 		}
 	}
 
@@ -91,13 +94,13 @@ class UtilidadesReportes
 	public static function obtenerTipoGastoDeTipoGastoAdicional($tipoGastoAdicional)
 	{
 		if($tipoGastoAdicional == GastoAdicional::TIPO_PAGO_SEGURO_VEHICULO) {
-			return "seguros";
+			return "Seguros";
 		}
 		else if($tipoGastoAdicional == GastoAdicional::TIPO_PAGO_IMPUESTO_VEHICULO) {
-			return "impuestos_automotor";
+			return "Impuesto automotor";
 		}
 		else {
-			return "otros_gastos";
+			return "Otros gastos";
 		}
 	}
 
@@ -108,7 +111,7 @@ class UtilidadesReportes
 	 * @param  [type] $anio [description]
 	 * @return [type]       [description]
 	 */
-	private static function arrayNumericoDeDiasDelMes($mes, $anio)
+	public static function arrayNumericoDeDiasDelMes($mes, $anio)
 	{
 		$cantidadDias = Carbon::createFromDate($anio, $mes)->daysInMonth;
 

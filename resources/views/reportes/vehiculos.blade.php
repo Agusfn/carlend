@@ -4,7 +4,13 @@
 
 
 @section('custom-css')
-	<link rel="stylesheet" href="../assets/vendor/chartist/css/chartist-custom.css">
+	<link rel="stylesheet" href="{{ asset('assets/vendor/chartist/css/chartist-custom.css') }}">
+
+    <style type="text/css">
+        #balance-chart .ct-series-b .ct-bar {
+            stroke: #bf4646;
+        }
+    </style>
 @endsection
 
 
@@ -15,8 +21,10 @@
 					<div class="row" style="margin-bottom: 15px">
 						<div class="col-sm-3">
 							<h4 style="margin-top: 0">Período</h4>
-							<select class="form-control">
-								<option>Junio 2020</option>
+							<select class="form-control" id="selector-mes-reportes">
+								@foreach($mesesDeDatos as $fecha)
+								<option value="{{ $fecha->format('Y-m') }}" @if($mesReportado == $fecha->format('Y-m')) selected @endif>{{ $fecha->isoFormat('MMMM Y') }}</option>
+								@endforeach
 							</select>
 						</div>
 					</div>	
@@ -102,17 +110,17 @@
 
 
 @section('custom-js')
-	<script src="../assets/vendor/chartist/js/chartist.min.js"></script>
+	<script src="{{ asset('assets/vendor/chartist/js/chartist.min.js') }}"></script>
 	<script>
 	$(function() {
 		var data, options;
 
 		// gréfico de ingresos y gastos de cada vehiculo
 		data = {
-			labels: ['Renault Fluence', 'Chevrolet Onix'],
+			labels: {!! json_encode(array_keys($datos['resumen_balances_vehiculos']['ingresos_por_vehiculo'])) !!},
 			series: [
-			    [22500, 15000],
-			    [9000, 5500]
+			    {!! json_encode(array_values($datos['resumen_balances_vehiculos']['ingresos_por_vehiculo'])) !!},
+			    {!! json_encode(array_values($datos['resumen_balances_vehiculos']['gastos_por_vehiculo'])) !!}
 			]
 		};
 
@@ -133,9 +141,9 @@
 
 		// grafico de tiempo de alquiler de cada vehiculo
 		data = {
-			labels: ['Renault Fluence', 'Chevrolet Onix'],
+			labels: {!! json_encode(array_keys($datos['detalle_dias_alquilados'])) !!},
 			series: [
-				[19, 9]
+				{!! json_encode(array_values($datos['detalle_dias_alquilados'])) !!}
 			]
 		};
 
@@ -157,9 +165,9 @@
 
 		// grafico de kilometros recorridos
 		data = {
-			labels: ['Renault Fluence', 'Chevrolet Onix'],
+			labels: {!! json_encode(array_keys($datos['detalle_kms_recorridos'])) !!},
 			series: [
-				[6384, 4500]
+				{!! json_encode(array_values($datos['detalle_kms_recorridos'])) !!}
 			]
 		};
 

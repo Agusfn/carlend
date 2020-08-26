@@ -4,7 +4,7 @@
 
 
 @section('custom-css')
-	<link rel="stylesheet" href="../assets/vendor/chartist/css/chartist-custom.css">
+	<link rel="stylesheet" href="{{ asset('assets/vendor/chartist/css/chartist-custom.css') }}">
 @endsection
 
 
@@ -15,8 +15,10 @@
 					<div class="row" style="margin-bottom: 15px">
 						<div class="col-sm-3">
 							<h4 style="margin-top: 0">Período</h4>
-							<select class="form-control">
-								<option>Junio 2020</option>
+							<select class="form-control" id="selector-mes-reportes">
+								@foreach($mesesDeDatos as $fecha)
+								<option value="{{ $fecha->format('Y-m') }}" @if($mesReportado == $fecha->format('Y-m')) selected @endif>{{ $fecha->isoFormat('MMMM Y') }}</option>
+								@endforeach
 							</select>
 						</div>
 					</div>	
@@ -63,16 +65,16 @@
 
 
 @section('custom-js')
-	<script src="../assets/vendor/chartist/js/chartist.min.js"></script>
+	<script src="{{ asset('assets/vendor/chartist/js/chartist.min.js') }}"></script>
 	<script>
 	$(function() {
 		var data, options;
 
 		// gráfico de días de alquiler
 		data = {
-			labels: ['Juan Pérez', 'Ignacio Gutierrez'],
+			labels: {!! json_encode(array_keys($datos['detalle_dias_alquilados'])) !!},
 			series: [
-			    [15, 6]
+			    {!! json_encode(array_values($datos['detalle_dias_alquilados'])) !!}
 			]
 		};
 
@@ -94,9 +96,9 @@
 
 		// grafico de total de pagos realizados
 		data = {
-			labels: ['Juan Pérez', 'Ignacio Gutierrez'],
+			labels: {!! json_encode(array_keys($datos['detalle_pagos_de_choferes'])) !!},
 			series: [
-				[35000, 12000]
+				{!! json_encode(array_values($datos['detalle_pagos_de_choferes'])) !!}
 			]
 		};
 

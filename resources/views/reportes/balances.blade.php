@@ -4,7 +4,13 @@
 
 
 @section('custom-css')
-	<link rel="stylesheet" href="../assets/vendor/chartist/css/chartist-custom.css">
+	<link rel="stylesheet" href="{{ asset('assets/vendor/chartist/css/chartist-custom.css') }}">
+
+    <style type="text/css">
+        #balance-chart .ct-series-b .ct-area {
+            fill: #df5252;
+        }
+    </style>
 @endsection
 
 
@@ -15,8 +21,10 @@
 					<div class="row" style="margin-bottom: 15px">
 						<div class="col-sm-3">
 							<h4 style="margin-top: 0">Período</h4>
-							<select class="form-control">
-								<option>Junio 2020</option>
+							<select class="form-control" id="selector-mes-reportes">
+								@foreach($mesesDeDatos as $fecha)
+								<option value="{{ $fecha->format('Y-m') }}" @if($mesReportado == $fecha->format('Y-m')) selected @endif>{{ $fecha->isoFormat('MMMM Y') }}</option>
+								@endforeach
 							</select>
 						</div>
 					</div>	
@@ -35,7 +43,7 @@
 										<div class="col-xs-6">
 											<div class="metric">
 												<p>
-													<span class="number">$25.000</span>
+													<span class="number">{{ App\Lib\Strings::formatearMoneda($datos['resumen_balances']['ingreso_total'], 2) }}</span>
 													<span class="title">Ingresos</span>
 												</p>
 											</div>
@@ -43,7 +51,7 @@
 										<div class="col-xs-6">
 											<div class="metric">
 												<p>
-													<span class="number">$12.000</span>
+													<span class="number">{{ App\Lib\Strings::formatearMoneda($datos['resumen_balances']['gasto_total'], 2) }}</span>
 													<span class="title">Gastos</span>
 												</p>
 											</div>
@@ -88,17 +96,17 @@
 
 
 @section('custom-js')
-	<script src="../assets/vendor/chartist/js/chartist.min.js"></script>
+	<script src="{{ asset('assets/vendor/chartist/js/chartist.min.js') }}"></script>
 	<script>
 	$(function() {
 		var data, options;
 
 		// gráfico de balances
 		data = {
-			labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+			labels: {!! json_encode(array_keys($datos['resumen_balances']['ingresos_diarios'])) !!},
 			series: [
-				[2741, 2933, 2416, 2360, 2677, 2219, 2457, 2436, 2549, 2520, 2290, 2737, 2234, 2051, 2147, 2354, 2581, 2795, 2547, 2530, 2653, 2262, 2062, 2248, 2723, 2668, 2970, 2836, 2719],
-				[1305, 1155, 1947, 1001, 1349, 1540, 1469, 1420, 1352, 1065, 1116, 1098, 1999, 1485, 1949, 1458, 1512, 1024, 1361, 1365, 1883, 1955, 1624, 1800, 1547, 1796, 1719, 1058, 1294],
+				{!! json_encode(array_values($datos['resumen_balances']['ingresos_diarios'])) !!},
+				{!! json_encode(array_values($datos['resumen_balances']['gastos_diarios'])) !!},
 			]
 		};
 
@@ -125,9 +133,9 @@
 
 		// gráfico de gastos según tipo
 		data = {
-			labels: ['Service', 'Reparación', 'Otro trabajo', 'Seguros', 'Patentes', 'Otros gastos'],
+			labels: {!! json_encode(array_keys($datos['gastos_segun_tipo'])) !!},
 			series: [
-				[4000, 3000, 1200, 3500, 2000, 1000]
+				{!! json_encode(array_values($datos['gastos_segun_tipo'])) !!}
 			]
 		};
 
@@ -149,9 +157,9 @@
 		// gráfico de gastos según proveedor
 
 		data = {
-			labels: ['Mariano mecánico', 'Repuestos José', 'Provincia Seguros', 'Jumax', 'Otros'],
+			labels: {!! json_encode(array_keys($datos['gastos_segun_proveedor'])) !!},
 			series: [
-				[6384, 6342, 5437, 2764, 3958]
+				{!! json_encode(array_values($datos['gastos_segun_proveedor'])) !!}
 			]
 		};
 

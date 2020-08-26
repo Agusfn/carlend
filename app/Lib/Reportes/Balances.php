@@ -90,7 +90,7 @@ class Balances
 
 		foreach($gastosAdicionales as $gastoAdicional)
 		{
-			$tipoGasto = sUtilidadesReporteself::obtenerTipoGastoDeTipoGastoAdicional($gastoAdicional->tipo);
+			$tipoGasto = UtilidadesReportes::obtenerTipoGastoDeTipoGastoAdicional($gastoAdicional->tipo);
 			$gastosPorTipo[$tipoGasto] = isset($gastosPorTipo[$tipoGasto]) ? ($gastosPorTipo[$tipoGasto] + $gastoAdicional->monto) : (float)$gastoAdicional->monto;
 		}
 
@@ -121,7 +121,7 @@ class Balances
 				
 			}
 			else {
-				$gastosPorProveedor["otros"] = isset($gastosPorProveedor["otros"]) ? $gastosPorProveedor["otros"] + $trabajoVehiculo->costo_total : (float)$trabajoVehiculo->costo_total;
+				$gastosPorProveedor["Otros"] = isset($gastosPorProveedor["Otros"]) ? $gastosPorProveedor["Otros"] + $trabajoVehiculo->costo_total : (float)$trabajoVehiculo->costo_total;
 			}
 		}
 
@@ -138,7 +138,7 @@ class Balances
 				
 			}
 			else {
-				$gastosPorProveedor["otros"] = isset($gastosPorProveedor["otros"]) ? $gastosPorProveedor["otros"] + $gastoAdicional->monto : (float)$gastoAdicional->monto;
+				$gastosPorProveedor["Otros"] = isset($gastosPorProveedor["Otros"]) ? $gastosPorProveedor["Otros"] + $gastoAdicional->monto : (float)$gastoAdicional->monto;
 			}
 		}
 
