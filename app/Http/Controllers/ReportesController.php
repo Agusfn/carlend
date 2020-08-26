@@ -30,7 +30,7 @@ class ReportesController extends AdminPanelBaseController
         if($request->has("mes") && strtotime($request->mes))
             $this->fechaMesReporte = Carbon::create($request->mes);
         else
-            $this->fechaMesReporte = $mesesPosibles[sizeof($mesesPosibles) - 1];
+            $this->fechaMesReporte = $mesesPosibles[0];
 
         View::share([
             "mesesDeDatos" => $mesesPosibles,

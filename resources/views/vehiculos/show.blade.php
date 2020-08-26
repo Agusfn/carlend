@@ -95,7 +95,7 @@
 									<div class="row">
 										<div class="col-sm-6">
 											<div class="form-group">
-												<label>Monto diario:</label> {{ App\Lib\Strings::formatearMoneda($vehiculo->alquilerActual->precio_diario, 2) }}
+												<label>Monto diario:</label> {{ Strings::formatearMoneda($vehiculo->alquilerActual->precio_diario, 2) }}
 											</div>
 										</div>
 										<div class="col-sm-6">
@@ -137,10 +137,10 @@
 												<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM') }}</td>
 												<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM') : '-' }}</td>
 												<td>{{ $alquiler->chofer->nombre_y_apellido }}</td>
-												<td>{{ App\Lib\Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
+												<td>{{ Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
 												<td>
 													<span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
-														{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
+														{{ Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
 													</span>
 												</td>
 											</tr>
@@ -182,7 +182,7 @@
 												<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM') }}</td>
 												<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
 												<td>{{ $trabajo->proveedor ? $trabajo->proveedor->nombre : '-' }}</td>
-												<td>{{ App\Lib\Strings::formatearMoneda($trabajo->costo, 0) }}</td>
+												<td>{{ Strings::formatearMoneda($trabajo->costo, 0) }}</td>
 											</tr>
 											@endforeach
 
@@ -212,10 +212,10 @@
 									@if($vehiculo->puedeEstimarKilometraje())
 									<div class="row" style="margin-bottom: 20px">
 										<div class="col-sm-6">
-											<strong>Kilometraje estimado actual:</strong> {{ App\Lib\Strings::formatearEntero($vehiculo->kilometrajeEstimadoActual()) }}
+											<strong>Kilometraje estimado actual:</strong> {{ Strings::formatearEntero($vehiculo->kilometrajeEstimadoActual()) }}
 										</div>
 										<div class="col-sm-6">
-											<strong>Uso actual estimado:</strong> {{ App\Lib\Strings::formatearEntero($vehiculo->usoKmsMensualEstimado()) }} KMs/mes
+											<strong>Uso actual estimado:</strong> {{ Strings::formatearEntero($vehiculo->usoKmsMensualEstimado()) }} KMs/mes
 										</div>
 									</div>
 
@@ -260,25 +260,19 @@
 												</td>
 												<td>
 													@if($tareaPendiente->esDeTrabajoVehicular())
-
 														{{ __('tipos_trabajos.'.$tareaPendiente->tipo_trabajo_vehicular) }}
-
-													@else
-
-														@if($tareaPendiente->tipo == App\TareaPendiente::TIPO_RENOV_VTV)
+													@elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_RENOV_VTV)
 														Renovación de VTV
-														@elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_VERIF_GNC)
+													@elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_VERIF_GNC)
 														Verificación de GNC
-														@elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_RENOV_SEGURO)
+													@elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_RENOV_SEGURO)
 														Renovación de póliza de seguro
-														@endif
-
 													@endif
 												</td>
 
 												<td><span class="underline-dash" data-toggle="tooltip" data-placement="top" title="{{ $tareaPendiente->fecha_a_realizar->isoFormat('D MMM') }}">{{ $tareaPendiente->fecha_a_realizar->diffForHumans() }}</span></td>
 
-												<td>{{ $tareaPendiente->kilometraje_estimado ? App\Lib\Strings::formatearEntero($tareaPendiente->kilometraje_estimado) : '' }}</td>
+												<td>{{ $tareaPendiente->kilometraje_estimado ? Strings::formatearEntero($tareaPendiente->kilometraje_estimado) : '' }}</td>
 											</tr>
 											@endforeach
 

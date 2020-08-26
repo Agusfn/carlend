@@ -71,7 +71,7 @@
 
 									<div class="row" style="margin-bottom: 30px">
 										<div class="col-md-6">
-											<label>Precio diario:</label> {{ App\Lib\Strings::formatearMoneda($alquiler->precio_diario, 2) }}
+											<label>Precio diario:</label> {{ Strings::formatearMoneda($alquiler->precio_diario, 2) }}
 										</div>
 										<div class="col-md-6">
 											<label>Descuento semanal:</label> @if($alquiler->descuento_semanal) Sí @else No @endif
@@ -81,7 +81,7 @@
 
 									<div class="row" style="margin-bottom: 30px">
 										<div class="col-md-6">
-											<label>Pagos de chofer totales:</label> {{ App\Lib\Strings::formatearMoneda($alquiler->calcularIngresosTotales(), 2) }}
+											<label>Pagos de chofer totales:</label> {{ Strings::formatearMoneda($alquiler->calcularIngresosTotales(), 2) }}
 										</div>
 									</div>
 
@@ -113,7 +113,7 @@
 										<div style="font-size: 19px">
 											<label>Saldo</label> 
 											<span @if($alquiler->saldo_actual < 0) style="color: #B00;" @endif>
-												{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 2) }}
+												{{ Strings::formatearMoneda($alquiler->saldo_actual, 2) }}
 											</span>
 										</div>
 									</div>
@@ -148,10 +148,10 @@
 													@endif
 												</td>
 												<td><span @if($movimiento->monto < 0) style="color: #B00;" @endif>
-													{{ App\Lib\Strings::formatearMoneda($movimiento->monto, 2) }}
+													{{ Strings::formatearMoneda($movimiento->monto, 2) }}
 												</span></td>
 												<td><span @if($movimiento->nuevo_saldo < 0) style="color: #B00;" @endif>
-													{{ App\Lib\Strings::formatearMoneda($movimiento->nuevo_saldo, 2) }}
+													{{ Strings::formatearMoneda($movimiento->nuevo_saldo, 2) }}
 												</span></td>
 												<td>
 													@if($movimiento->esPagoDeChofer())

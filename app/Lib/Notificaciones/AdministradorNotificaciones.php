@@ -6,7 +6,6 @@ use App\Alquiler;
 use App\Vehiculo;
 use App\TareaPendiente;
 use App\TrabajoVehiculo;
-use App\Lib\Strings;
 
 class AdministradorNotificaciones
 {

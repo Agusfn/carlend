@@ -19,7 +19,10 @@ class GastosAdicionalesController extends AdminPanelBaseController
     {
         $gastosAdicionales = GastoAdicional::with(["vehiculo", "proveedor"])->orderBy("fecha", "DESC")->get();
 
-        return view("gastos-adicionales.index")->with("gastosAdicionales", $gastosAdicionales);
+        return view("gastos-adicionales.index")->with([
+            "gastosAdicionales" => $gastosAdicionales,
+            "vehiculosConDebito" => Vehiculo::conAlgunDebitoAutomatico()->get()
+        ]);
     }
 
     /**

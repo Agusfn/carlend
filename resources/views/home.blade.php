@@ -19,8 +19,8 @@
                     <!-- OVERVIEW -->
                     <div class="panel panel-headline">
                         <div class="panel-heading">
-                            <h3 class="panel-title">Resumen semanal</h3>
-                            <p class="panel-subtitle">Período: 29 jun, 2020 - 5 jul, 2020</p>
+                            <h3 class="panel-title">Resumen de {{ Carbon\Carbon::today()->isoFormat('MMMM') }}</h3>
+                            <p class="panel-subtitle">Período: 1 {{ Carbon\Carbon::today()->isoFormat('MMM Y') }} - {{ Carbon\Carbon::today()->isoFormat('D MMM Y') }}</p>
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -28,7 +28,7 @@
                                     <div class="metric">
                                         <span class="icon"><i class="fa fa-handshake-o"></i></span>
                                         <p>
-                                            <span class="number">2</span>
+                                            <span class="number">{{ $cantAlquileresEnCurso }}</span>
                                             <span class="title">Alquileres actuales</span>
                                         </p>
                                     </div>
@@ -37,7 +37,7 @@
                                     <div class="metric">
                                         <span class="icon"><i class="fa fa-wrench"></i></span>
                                         <p>
-                                            <span class="number">1</span>
+                                            <span class="number">{{ $trabajosRealizados }}</span>
                                             <span class="title">Trabajos realizados en vehículos</span>
                                         </p>
                                     </div>
@@ -46,7 +46,7 @@
                                     <div class="metric">
                                         <span class="icon"><i class="fa fa-usd"></i></span>
                                         <p>
-                                            <span class="number">$3.520</span>
+                                            <span class="number">{{ Strings::formatearMoneda($montoPendientePago, 0) }}</span>
                                             <span class="title">Pendiente de pago de choferes</span>
                                         </p>
                                     </div>
@@ -61,11 +61,11 @@
                                 </div>
                                 <div class="col-md-3">
                                     <div class="weekly-summary text-right">
-                                        <span class="number">$23.000</span>
+                                        <span class="number">{{ Strings::formatearMoneda($reporteBalances['ingreso_total']) }}</span>
                                         <span class="info-label">Ingresos totales</span>
                                     </div>
                                     <div class="weekly-summary text-right">
-                                        <span class="number">$9.000</span>
+                                        <span class="number">{{ Strings::formatearMoneda($reporteBalances['gasto_total']) }}</span>
                                         <span class="info-label">Gastos totales</span>
                                     </div>
                                 </div>
@@ -78,44 +78,52 @@
                             <!-- RECENT PURCHASES -->
                             <div class="panel">
                                 <div class="panel-heading">
-                                    <h3 class="panel-title">Trabajos sobre vehículos próximos estimados</h3>
+                                    <h3 class="panel-title">Próximos trabajos o tareas a realizar</h3>
                                 </div>
                                 <div class="panel-body">
                                     
                                     <table class="table table-striped">
                                         <thead>
                                             <tr>
-                                                <th>Fecha estimada</th>
-                                                <th>Vehículo</th>
-                                                <th>Kms estimados</th>
-                                                <th>Trabajo</th>
+                                                <th></th>
+                                                <th>Descripción tarea</th>
+                                                <th>Fecha a realizar</th>
+                                                <th>Vehículo/Chofer</th>
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach($proximasTareas as $tareaPendiente)
                                             <tr>
-                                                <td>20 jul 2020</td>
-                                                <td>Renault Fluence (MKA 451)</td>
-                                                <td>148.000</td>
-                                                <td>Service</td>
+                                                <td>
+                                                    @if($tareaPendiente->estaVencida())
+                                                    <i class="fa fa-exclamation-triangle" style="color: orange;font-size: 17px;" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Esta tarea está vencida"></i>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($tareaPendiente->esDeTrabajoVehicular())
+                                                        {{ __('tipos_trabajos.'.$tareaPendiente->tipo_trabajo_vehicular) }}
+                                                    @elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_RENOV_VTV)
+                                                        Renovación de VTV
+                                                    @elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_VERIF_GNC)
+                                                        Verificación de GNC
+                                                    @elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_RENOV_SEGURO)
+                                                        Renovación de póliza de seguro
+                                                    @elseif($tareaPendiente->tipo == App\TareaPendiente::TIPO_RENOV_LICENCIA_CHOFER)
+                                                        Renovación de licencia de chofer
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="underline-dash" data-toggle="tooltip" data-placement="top" title="{{ $tareaPendiente->fecha_a_realizar->isoFormat('D MMM') }}">{{ $tareaPendiente->fecha_a_realizar->diffForHumans() }}</span>
+                                                </td>
+                                                <td>
+                                                    @if($tareaPendiente->vehiculo)
+                                                        <a href="{{ route('vehiculos.show', $tareaPendiente->vehiculo->id) }}">{{ $tareaPendiente->vehiculo->marcaModeloYDominio() }}</a>
+                                                    @elseif($tareaPendiente->chofer)
+                                                        <a href="{{ route('choferes.show', $tareaPendiente->chofer->id) }}">{{ $tareaPendiente->chofer->nombre_y_apellido }}</a>
+                                                    @endif
+                                                </td>
                                             </tr>
-                                            <tr>
-                                                <td>15 oct 2020</td>
-                                                <td>Renault Fluence (MKA 451)</td>
-                                                <td>182.500</td>
-                                                <td>Cambio de cubiertas</td>
-                                            </tr>
-                                            <tr>
-                                                <td>5 nov 2020</td>
-                                                <td>Renault Fluence (MKA 451)</td>
-                                                <td>195.000</td>
-                                                <td>Cambio correa de distribución</td>
-                                            </tr>
-                                            <tr>
-                                                <td>15 ene 2021</td>
-                                                <td>Renault Fluence (MKA 451)</td>
-                                                <td>-</td>
-                                                <td>VTV</td>
-                                            </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
 
@@ -145,16 +153,20 @@
                                             </tr>
                                         </thead>
                                         <tbody>
+                                            @foreach($alquileresEnCurso as $alquiler)
                                             <tr>
-                                                <td><a href="detalles.html" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-                                                <td>4</td>
-                                                <td>1 jul 2020</td>
-                                                <td>-</td>
-                                                <td>Juan Pérez</td>
-                                                <td>Renault Fluence (MKA 451)</td>
-                                                <td>$2.000</td>
-                                                <td><span style="color: #B00">-$4.200</td>
+                                                <td><a href="{{ route('alquileres.show', $alquiler->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+                                                <td>{{ $alquiler->id }}</td>
+                                                <td>{{ $alquiler->fecha_inicio->isoFormat('D MMM Y') }}</td>
+                                                <td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM Y') : '-' }}</td>
+                                                <td>{{ $alquiler->chofer->nombre_y_apellido }}</td>
+                                                <td>{{ $alquiler->vehiculo->modeloYDominio() }}</td>
+                                                <td>{{ Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
+                                                <td><span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
+                                                    {{ Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
+                                                </span></td>
                                             </tr>
+                                            @endforeach
                                         </tbody>
                                     </table>
 
@@ -176,10 +188,10 @@
 
         // headline charts
         data = {
-            labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30],
+            labels: {!! json_encode(array_keys($reporteBalances['ingresos_diarios'])) !!},
             series: [
-                [2741, 2933, 2416, 2360, 2677, 2219, 2457, 2436, 2549, 2520, 2290, 2737, 2234, 2051, 2147, 2354, 2581, 2795, 2547, 2530, 2653, 2262, 2062, 2248, 2723, 2668, 2970, 2836, 2719],
-                [1305, 1155, 1947, 1001, 1349, 1540, 1469, 1420, 1352, 1065, 1116, 1098, 1999, 1485, 1949, 1458, 1512, 1024, 1361, 1365, 1883, 1955, 1624, 1800, 1547, 1796, 1719, 1058, 1294],
+                {!! json_encode(array_values($reporteBalances['ingresos_diarios'])) !!},
+                {!! json_encode(array_values($reporteBalances['gastos_diarios'])) !!},
             ]
         };
 

@@ -84,7 +84,7 @@
 											<div class="col-xs-6">
 												<div class="form-group">
 													<label>Monto ($)</label><br/>
-													{{ App\Lib\Strings::formatearMoneda($gasto->monto,2) }}
+													{{ Strings::formatearMoneda($gasto->monto,2) }}
 												</div>
 											</div>
 											<div class="col-xs-6">

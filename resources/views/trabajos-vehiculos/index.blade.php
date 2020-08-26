@@ -92,7 +92,7 @@
 										<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
 										<td>{{ Str::limit($trabajo->observaciones, 25, '...') }}</td>
 										<td>{{ $trabajo->proveedor ? $trabajo->proveedor->nombre : '-' }}</td>
-										<td>{{ $trabajo->costo_total > 0 ? App\Lib\Strings::formatearMoneda($trabajo->costo_total, 0) : '-' }}</td>
+										<td>{{ $trabajo->costo_total > 0 ? Strings::formatearMoneda($trabajo->costo_total, 0) : '-' }}</td>
 										<td>{{ $trabajo->costo_total > 0 ? __('medios_pago.'.$trabajo->medio_pago) : '-' }}</td>
 										<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM Y') }}</td>
 									</tr>

@@ -166,6 +166,18 @@ class TareaPendiente extends Model
     }
 
 
+    /**
+     * Crear query scope para filtrar por tareas relacionadas a vencimientos con fecha, de vehiculo. (vtv, gnc y seguro)
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFechaARealizarAsc($query)
+    {
+        return $query->orderBy("fecha_a_realizar", "ASC");
+    }
+
 
     /**
      * Si esta tarea es de un vehiculo.

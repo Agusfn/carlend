@@ -42,31 +42,39 @@
 									<div id="balance-chart" class="ct-chart"></div>
 									
 
-									<h4>Renault Fluence (MKA 451)</h4>
 
-									<div style="font-size: 16px;"><strong>Ingresos:</strong> $22.500</div>
-									<div style="margin-top: 10px">
-										<div style="font-size: 16px;margin-bottom: 5px"><strong>Gastos:</strong> $15.000</div>
+									@foreach($datos['resumen_balances_vehiculos']['ingresos_por_vehiculo'] as $nombreVehiculo => $ingreso)
 
-										<div style="font-size: 14px">Service: $2.500</div>
-										<div style="font-size: 14px">Reparacion: $3.500</div>
-										<div style="font-size: 14px">Seguro: $6.000</div>
-										<div style="font-size: 14px">Patente: $2.000</div>
-										<div style="font-size: 14px">Otro gasto: $1.000</div>
+									<h4>{{ $nombreVehiculo }}</h4>
+
+									<div style="font-size: 16px;"><strong>Ingresos:</strong> {{ Strings::formatearMoneda($ingreso, 2) }}</div>
+									<div style="font-size: 16px;margin: 10px 0 5px">
+										<strong>Gastos:</strong> {{ Strings::formatearMoneda($datos['resumen_balances_vehiculos']['gastos_por_vehiculo'][$nombreVehiculo], 2) }}&nbsp;&nbsp;&nbsp;
+										<a data-toggle="collapse" href="#collapse-vehiculo-{{ $loop->iteration }}" role="button" aria-expanded="false" aria-controls="collapse-vehiculo-{{ $loop->iteration }}" style="font-size: 13px">Detalles</a>
 									</div>
 
-									<h4 style="margin-top: 30px">Chevrolet Onix (NBX 159)</h4>
-
-									<div style="font-size: 16px;"><strong>Ingresos:</strong> $9.0000</div>
-									<div style="margin-top: 10px">
-										<div style="font-size: 16px;margin-bottom: 5px"><strong>Gastos:</strong> $5.500</div>
-
-										<div style="font-size: 14px">Service: $1.500</div>
-										<div style="font-size: 14px">Reparacion: $1.500</div>
-										<div style="font-size: 14px">Seguro: $1.500</div>
-										<div style="font-size: 14px">Patente: $1.000</div>
-										<div style="font-size: 14px">Otro gasto: $ -</div>
+									@if(isset($datos['detalle_gastos_vehiculos'][$nombreVehiculo]))
+									<div class="collapse" id="collapse-vehiculo-{{ $loop->iteration }}">
+										<table class="table table-condensed">
+											<tbody>
+												
+												@foreach($datos['detalle_gastos_vehiculos'][$nombreVehiculo] as $tipoGasto => $monto)
+												<tr>
+													<td>{{ $tipoGasto }}</td>
+													<td>{{ Strings::formatearMoneda($monto, 2) }}</td>
+												</tr>
+												@endforeach
+												
+											</tbody>
+										</table>
 									</div>
+									@endif
+
+									<div style="margin-bottom: 15px; height: 1px"></div>
+
+									@endforeach
+
+
 
 								</div>
 							</div>
@@ -87,9 +95,9 @@
 								</div>
 							</div>
 
-							<div class="panel panel-headline">
+							<div class="panel">
 								<div class="panel-heading">
-									<h3 class="panel-title">Kilómetros recorridos</h3>
+									<h3 class="panel-title">Kilómetros recorridos (estimado)</h3>
 								</div>
 
 								<div class="panel-body">

@@ -38,6 +38,15 @@ class Alquiler extends Model
     ];
 
 
+    /**
+     * Obtener la sumatoria de saldo faltante en los alquileres con saldo negativo (el numero devuelto es positivo)
+     * @return float
+     */
+    public static function sumaPendienteDePago()
+    {
+        return -1 * self::enCurso()->where("saldo_actual", "<", 0)->sum("saldo_actual");
+    }
+
 
     /**
      * Obtener chofer de este alquiler.

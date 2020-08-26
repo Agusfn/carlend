@@ -65,7 +65,7 @@
 											</div>
 											<div class="col-sm-4">
 												<div class="form-group">
-													<label>Costo total ($)</label>: {{ $trabajo->costo_total > 0 ? App\Lib\Strings::formatearMoneda($trabajo->costo_total, 2) : '-' }}
+													<label>Costo total ($)</label>: {{ $trabajo->costo_total > 0 ? Strings::formatearMoneda($trabajo->costo_total, 2) : '-' }}
 												</div>
 											</div>
 											<div class="col-sm-4">

@@ -53,16 +53,7 @@ class Vehiculo extends Model
     ];
 
 
-    /**
-     * Obtener todos los vehiculos que tienen algún débito automático (seguro o patentes) asociado. 
-     * @return [type] [description]
-     */
-    public static function obtenerConDebitoAutomatico()
-    {
-        return self::whereNotNull("costo_mensual_imp_automotor")
-            ->orWhereNotNull("id_proveedor_seguro")
-            ->get();
-    }
+
 
 
     /**
@@ -146,6 +137,17 @@ class Vehiculo extends Model
     public function scopeDisponibles($query)
     {
         return $query->where("id_alquiler_actual", null);
+    }
+
+    /**
+     * Obtener todos los vehiculos que tienen algún débito automático (seguro o patentes) asociado. 
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeConAlgunDebitoAutomatico($query)
+    {
+        return $query->whereNotNull("costo_mensual_imp_automotor")
+            ->orWhereNotNull("costo_mensual_seguro");
     }
 
 

@@ -80,7 +80,7 @@
 										<td>@if($vehiculo->proveedorSeguro) {{ $vehiculo->proveedorSeguro->nombre }} @else - @endif</td>
 										<td>
 											@if($vehiculo->puedeEstimarKilometraje())
-											{{ App\Lib\Strings::formatearEntero($vehiculo->estimarKilometraje(Carbon\Carbon::today())) }}
+											{{ Strings::formatearEntero($vehiculo->estimarKilometraje(Carbon\Carbon::today())) }}
 											@else
 											-
 											@endif

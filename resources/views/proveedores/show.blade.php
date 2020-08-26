@@ -112,7 +112,7 @@
 												<td>{{ $trabajo->fecha_pagado->isoFormat('D MMM') }}</td>
 												<td>{{ $trabajo->vehiculo->marcaYModelo() }}</td>
 												<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
-												<td>{{ $trabajo->costo_total > 0 ? App\Lib\Strings::formatearMoneda($trabajo->costo_total, 0) : '-' }}</td>
+												<td>{{ $trabajo->costo_total > 0 ? Strings::formatearMoneda($trabajo->costo_total, 0) : '-' }}</td>
 												<td>{{ $trabajo->costo_total > 0 ? __('medios_pago.'.$trabajo->medio_pago) : '-' }}</td>
 												<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM') }}</td>
 											</tr>

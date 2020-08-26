@@ -130,9 +130,9 @@
 												<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM') }}</td>
 												<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM') : '-' }}</td>
 												<td>{{ $alquiler->vehiculo->marcaYModelo() }}</td>
-												<td>{{ App\Lib\Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
+												<td>{{ Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
 												<td><span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
-												{{ App\Lib\Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
+												{{ Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
 												</span></td>
 											</tr>
 											@endforeach

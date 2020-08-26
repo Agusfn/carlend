@@ -83,7 +83,7 @@
 										</td>
 										<td>{{ Str::limit($gastoAdicional->detalle, 40, '...') }}</td>
 										<td>{{ $gastoAdicional->vehiculo ? $gastoAdicional->vehiculo->marcaModeloYDominio() : '-' }}</td>
-										<td>{{ App\Lib\Strings::formatearMoneda($gastoAdicional->monto, 2) }}</td>
+										<td>{{ Strings::formatearMoneda($gastoAdicional->monto, 2) }}</td>
 										<td>{{ __('medios_pago.'.$gastoAdicional->medio_pago) }}</td>
 										<td>{{ $gastoAdicional->proveedor ? $gastoAdicional->proveedor->nombre : '-' }}</td>
 									</tr>
@@ -99,21 +99,63 @@
 						</div>
 					</div>
 
-					<div class="panel">
-						<div class="panel-heading">
-							<h3 class="panel-title">Gastos con débito automático</h3>
-							<div class="right">
-								<button type="button" class="btn-toggle-collapse compact"><i class="lnr lnr-chevron-up"></i></button>
+					<div class="row">
+						<div class="col-md-6">
+
+							<div class="panel">
+								<div class="panel-heading">
+									<h3 class="panel-title">Gastos con débito automático</h3>
+									<div class="right">
+										<button type="button" class="btn-toggle-collapse compact"><i class="lnr lnr-chevron-up"></i></button>
+									</div>
+								</div>
+								<div class="panel-body">
+
+									<h5>Gastos que se registran automáticamente todos los meses (con tarjeta de crédito)</h5>
+
+									<table class="table">
+										<thead>
+											<tr>
+												<th>Día del mes débito</th>
+												<th>Vehiculo</th>
+												<th>Tipo de gasto</th>
+												<th>Monto</th>
+											</tr>
+										</thead>
+										<tbody>
+											@foreach($vehiculosConDebito as $vehiculo)
+
+												@if($vehiculo->tieneDebitoAutomPatentes())
+												<tr>
+													<td>{{ $vehiculo->dia_del_mes_debito_imp_automotor }}</td>
+													<td>{{ $vehiculo->marcaModeloYDominio() }}</td>
+													<td>Impuesto automotor</td>
+													<td>{{ Strings::formatearMoneda($vehiculo->costo_mensual_imp_automotor, 2) }}</td>
+												</tr>
+												@endif
+
+												@if($vehiculo->tieneDebitoAutomSeguro())
+												<tr>
+													<td>{{ $vehiculo->dia_del_mes_debito_seguro }}</td>
+													<td>{{ $vehiculo->marcaModeloYDominio() }}</td>
+													<td>Seguro</td>
+													<td>{{ Strings::formatearMoneda($vehiculo->costo_mensual_seguro, 2) }}</td>
+												</tr>
+												@endif
+
+											@endforeach
+
+										</tbody>
+									</table>
+
+									
+								</div>
 							</div>
-						</div>
-						<div class="panel-body">
-							<div class="alert alert-info">
-								Actualmente hay 1 gasto que se registra automáticamente cada mes, con tarjeta de crédito:
-								<ul>
-									<li>El pago de Provincia Seguros por $5.500 del Renault Fluence (MKA 451), el día 16 de cada mes.</li>
-								</ul>
-							</div>
+
 						</div>
 					</div>
+
+
+
 @endsection
 

@@ -43,7 +43,7 @@
 										<div class="col-xs-6">
 											<div class="metric">
 												<p>
-													<span class="number">{{ App\Lib\Strings::formatearMoneda($datos['resumen_balances']['ingreso_total'], 2) }}</span>
+													<span class="number">{{ Strings::formatearMoneda($datos['resumen_balances']['ingreso_total'], 2) }}</span>
 													<span class="title">Ingresos</span>
 												</p>
 											</div>
@@ -51,7 +51,7 @@
 										<div class="col-xs-6">
 											<div class="metric">
 												<p>
-													<span class="number">{{ App\Lib\Strings::formatearMoneda($datos['resumen_balances']['gasto_total'], 2) }}</span>
+													<span class="number">{{ Strings::formatearMoneda($datos['resumen_balances']['gasto_total'], 2) }}</span>
 													<span class="title">Gastos</span>
 												</p>
 											</div>

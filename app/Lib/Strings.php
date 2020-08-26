@@ -26,7 +26,7 @@ class Strings
      * @param int $decimales
      * @return string
      */
-	public static function formatearMoneda($numero, $decimales)
+	public static function formatearMoneda($numero, $decimales = 0)
 	{
 		return "$".number_format($numero, $decimales, ",", ".");
 	}

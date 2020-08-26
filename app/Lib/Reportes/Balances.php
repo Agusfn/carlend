@@ -11,8 +11,10 @@ class Balances
 
 
 	/**
-	 * Obtener reporte con total ingresos y gastos, 
-	 * @return [type] [description]
+	 * Obtener reporte con total ingresos y gastos, gastos clasificados por tipo, y gastos clasificados por proveedor.
+	 * @param  int $mes  
+	 * @param  int $anio 
+	 * @return array
 	 */
 	public static function generarReporte($mes, $anio)
 	{
@@ -30,6 +32,26 @@ class Balances
 			"gastos_segun_proveedor" => self::gastosSegunProveedor($trabajosVehiculos, $gastosAdicionales)
 		];
 	}
+
+
+	/**
+	 * Detalles de balances mensuales.
+	 * @param  int $mes  
+	 * @param  int $anio 
+	 * @return array
+	 */
+	public static function reporteSoloBalanceMensual($mes, $anio)
+	{
+		// Ingresos
+		$movimientosAlquiler = MovimientoAlquiler::pagosDeChofer()->enMesYAnio($mes, $anio)->get();
+
+		// Gastos
+		$trabajosVehiculos = TrabajoVehiculo::with("proveedor")->validos()->conCosto()->pagadoEnMesYAnio($mes, $anio)->get();
+		$gastosAdicionales = GastoAdicional::with("proveedor")->enMesYAnio($mes, $anio)->get();
+
+		return self::resumenBalancesMensual($movimientosAlquiler, $trabajosVehiculos, $gastosAdicionales, $mes, $anio);
+	}
+
 
 
 	/**
