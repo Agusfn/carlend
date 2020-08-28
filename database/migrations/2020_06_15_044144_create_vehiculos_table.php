@@ -35,7 +35,7 @@ class CreateVehiculosTable extends Migration
             $table->date('fecha_vto_oblea_gnc')->nullable();
             $table->float('b1_prediccion_km', 13, 10)->nullable();
             $table->float('b0_prediccion_km', 10, 2)->nullable();
-            $table->boolean('en_fecha_registro_kms')->default(false);
+            $table->boolean('en_fecha_registro_kms')->default(false); // indica si se debe ingresar kilometraje el dia de hoy (si está en fecha y si adeuda)
             $table->timestamps();
             $table->softDeletes();
 

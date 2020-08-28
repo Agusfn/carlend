@@ -76,7 +76,7 @@
 										</div>
 	
 										<div class="form-group @error('comentario') has-error @enderror">
-											<label>Comentarios</label>
+											<label>Comentarios (opcional)</label>
 											<input type="text" class="form-control" name="comentario" value="{{ old('comentario') }}">
 											@error('comentario')
 												<label class="control-label">{{ $message }}</label>

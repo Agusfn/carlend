@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use App\Proveedor;
+use App\Http\Filters\FiltrosProveedores;
+
 
 class ProveedoresController extends AdminPanelBaseController
 {
@@ -13,11 +15,14 @@ class ProveedoresController extends AdminPanelBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FiltrosProveedores $filtros)
     {
-        $proveedores = Proveedor::all();
+        $proveedores = Proveedor::filter($filtros)->paginate(15);
 
-        return view("proveedores.index")->with("proveedores", $proveedores);
+        return view("proveedores.index")->with([
+            "proveedores" => $proveedores,
+            "categoriasProveedores" => Proveedor::$nombresCategorias
+        ]);
     }
 
     /**
@@ -66,7 +71,7 @@ class ProveedoresController extends AdminPanelBaseController
         $ultimosTrabajos = $proveedor->trabajosVehiculos()
             ->validos()
             ->with("vehiculo")
-            ->fechaDesc()
+            ->fechaDePagoDesc()
             ->limit(8)->get();
 
         return view("proveedores.show")->with([

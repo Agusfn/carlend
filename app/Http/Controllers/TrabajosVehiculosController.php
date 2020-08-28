@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 use App\TrabajoVehiculo;
 use App\Proveedor;
 use App\Vehiculo;
 use App\Http\Requests\CrearTrabajoVehiculo;
-use Carbon\Carbon;
+use App\Http\Filters\FiltrosTrabajosVehiculos;
+
 
 
 class TrabajosVehiculosController extends AdminPanelBaseController
@@ -18,14 +20,20 @@ class TrabajosVehiculosController extends AdminPanelBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FiltrosTrabajosVehiculos $filtros)
     {
+        
         $trabajos = TrabajoVehiculo::validos()
             ->with(["vehiculo", "proveedor"])
-            ->fechaDesc()
-            ->get();
+            ->filter($filtros)
+            ->paginate(15);
         
-        return view("trabajos-vehiculos.index")->with("trabajosVehiculos", $trabajos);
+        return view("trabajos-vehiculos.index")->with([
+            "tiposTrabajos" => TrabajoVehiculo::$tiposTrabajos,
+            "vehiculos" => Vehiculo::nombreAsc()->get(),
+            "trabajosVehiculos" => $trabajos,
+        ]);
+        
     }
 
     /**

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Requests\CrearChofer;
+use App\Http\Filters\FiltrosChoferes;
 use Carbon\Carbon;
 use App\Chofer;
 
@@ -14,9 +15,9 @@ class ChoferesController extends AdminPanelBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FiltrosChoferes $filtros)
     {
-        $choferes = Chofer::with("alquilerActual.vehiculo")->get();
+        $choferes = Chofer::with("alquilerActual.vehiculo")->filter($filtros)->paginate(15);
 
         return view("choferes.index")->with(["choferes" => $choferes]);
     }

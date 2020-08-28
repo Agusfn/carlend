@@ -3,11 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Filters\Filterable;
 use App\MovimientoAlquiler;
 use Carbon\Carbon;
 
 class Alquiler extends Model
 {
+
+    use Filterable;
 
     const ESTADO_EN_CURSO = "en_curso";
     const ESTADO_FINALIZADO = "finalizado";
@@ -220,7 +223,7 @@ class Alquiler extends Model
      * @param  float $monto monto a cobrar (debe ser un valor positivo)   
      * @return null             
      */
-    public function restarCobroDeCuenta($monto)
+    public function debitarCobroDeAlquiler($monto)
     {
         
         $nuevoSaldo = $this->calcularSaldoActual() - $monto;

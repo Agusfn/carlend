@@ -21,11 +21,11 @@
 							<div class="clearfix" style="margin-bottom: 10px">
 								<div style="float: right;">
 									Ordenar por
-									<select class="form-control">
-										<option>Creado recientemente</option>
-										<option>Modificado recientemente</option>
-										<option>Nombre y apellido (A-Z)</option>
-										<option>Nombre y apellido (Z-A)</option>
+									<select class="form-control filter-select" name="orden" autocomplete="off">
+										<option value="fecha_desc" {{ request()->orden == "fecha_desc" ? "selected" : "" }}>Creado recientemente</option>
+										<option value="modif_desc" {{ request()->orden == "modif_desc" ? "selected" : "" }}>Modificado recientemente</option>
+										<option value="nombre_asc" {{ request()->orden == "nombre_asc" ? "selected" : "" }}>Nombre y apellido (A-Z)</option>
+										<option value="nombre_desc" {{ request()->orden == "nombre_desc" ? "selected" : "" }}>Nombre y apellido (Z-A)</option>
 									</select>
 								</div>
 							</div>
@@ -76,6 +76,9 @@
 								</tbody>
 							</table>
 
+							<div style="text-align: center;">
+								{{ $choferes->appends(request()->input())->links() }}
+							</div>
 						</div>
 					</div>
 @endsection

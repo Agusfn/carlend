@@ -22,15 +22,12 @@
 							<div class="clearfix" style="margin-bottom: 10px">
 								<div style="float: right;">
 									Ordenar por
-									<select class="form-control">
-										<option>Creado recientemente</option>
-										<option>Modificado recientemente</option>
-										<option>Patente (A-Z)</option>
-										<option>Chofer (A-Z)</option>
-										<option>Marca (A-Z)</option>
-										<option>Año (- a +)</option>
-										<option>KMs (- a +)</option>
-										<option>KMs (+ a -)</option>
+									<select class="form-control filter-select" name="orden" autocomplete="off">
+										<option value="fecha_desc" {{ request()->orden == "fecha_desc" ? "selected" : "" }}>Creado recientemente</option>
+										<option value="modif_desc" {{ request()->orden == "modif_desc" ? "selected" : "" }}>Modificado recientemente</option>
+										<option value="dominio_asc" {{ request()->orden == "dominio_asc" ? "selected" : "" }}>Patente (A-Z)</option>
+										<option value="marca_modelo_asc" {{ request()->orden == "marca_modelo_asc" ? "selected" : "" }}>Marca y modelo (A-Z)</option>
+										<option value="anio_asc" {{ request()->orden == "anio_asc" ? "selected" : "" }}>Año (menor a mayor)</option>
 									</select>
 								</div>
 							</div>
@@ -95,6 +92,10 @@
 
 								</tbody>
 							</table>
+							
+							<div style="text-align: center;">
+								{{ $vehiculos->appends(request()->input())->links() }}
+							</div>
 
 						</div>
 					</div>

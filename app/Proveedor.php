@@ -4,11 +4,13 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Filters\Filterable;
+
 
 class Proveedor extends Model
 {
 
-    use SoftDeletes;
+    use SoftDeletes, Filterable;
        
 
     const CATEGORIA_CASA_REPUESTOS = "repuestos";

@@ -8,6 +8,8 @@ use App\Alquiler;
 use App\Chofer;
 use App\Vehiculo;
 use Carbon\Carbon;
+use App\Http\Filters\FiltrosAlquileres;
+
 
 class AlquileresController extends AdminPanelBaseController
 {
@@ -16,11 +18,12 @@ class AlquileresController extends AdminPanelBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FiltrosAlquileres $filtros)
     {
-        $alquileres = Alquiler::with(["chofer", "vehiculo"])->orderByDesc("id")->get();
+        $alquileres = Alquiler::with(["chofer", "vehiculo"])->filter($filtros)->paginate(15);
 
         return view("alquileres.index")->with([
+            "vehiculos" => Vehiculo::nombreAsc()->get(),
             "alquileres" => $alquileres
         ]);
 

@@ -3,10 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Filters\Filterable;
+
 
 class TrabajoVehiculo extends Model
 {
     
+    use Filterable;
+
     // Tipos de trabajo
     const SERVICE = "service";
     const CAMBIO_BUJIAS = "cambio_bujias";
@@ -119,10 +123,24 @@ class TrabajoVehiculo extends Model
      * @param  mixed  $type
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function scopeFechaDesc($query)
+    public function scopeFechaDePagoDesc($query)
     {
         return $query->orderBy("fecha_pagado", "DESC")->orderBy("id", "DESC");
     }
+
+
+    /**
+     * Ordenar por fecha realizado de más reciente a más antigua
+     * 
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @param  mixed  $type
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeFechaRealizadoDesc($query)
+    {
+        return $query->orderBy("fecha_realizado", "DESC")->orderBy("id", "DESC");
+    }
+
 
 
     /**

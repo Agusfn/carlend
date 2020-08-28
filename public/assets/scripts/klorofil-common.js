@@ -212,11 +212,16 @@ $(document).ready(function() {
 	$('[data-toggle="tooltip"]').tooltip();
 
 
+	// Selector de mes a mostrar reportes
 	$("#selector-mes-reportes").change(function() {
 		window.location.href = UpdateQueryString("mes", $(this).val(), window.location.href);
 	});
 
-
+	// Aplicar filtros a param url en tablas de entidades
+	$(".filter-select").change(function() {
+		var newUrl = UpdateQueryString("page", null, window.location.href);
+		window.location.href = UpdateQueryString($(this).attr("name"), $(this).val(), newUrl);
+	});
 
  
 

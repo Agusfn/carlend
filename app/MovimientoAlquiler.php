@@ -3,10 +3,14 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Filters\Filterable;
+
 
 class MovimientoAlquiler extends Model
 {
-        
+    
+    use Filterable;
+
     /**
      * Tipos de movimiento.
      */

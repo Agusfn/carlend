@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\GastoAdicional;
 use App\Vehiculo;
 use App\Proveedor;
+use App\Http\Filters\FiltrosGastosAdicionales;
 
 class GastosAdicionalesController extends AdminPanelBaseController
 {
@@ -15,9 +16,9 @@ class GastosAdicionalesController extends AdminPanelBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FiltrosGastosAdicionales $filtros)
     {
-        $gastosAdicionales = GastoAdicional::with(["vehiculo", "proveedor"])->orderBy("fecha", "DESC")->get();
+        $gastosAdicionales = GastoAdicional::with(["vehiculo", "proveedor"])->filter($filtros)->paginate(15);
 
         return view("gastos-adicionales.index")->with([
             "gastosAdicionales" => $gastosAdicionales,

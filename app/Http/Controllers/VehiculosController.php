@@ -9,6 +9,7 @@ use App\Proveedor;
 use Carbon\Carbon;
 use App\Http\Requests\CrearVehiculo;
 use App\Http\Requests\EditarVehiculo;
+use App\Http\Filters\FiltrosVehiculos;
 
 
 class VehiculosController extends AdminPanelBaseController
@@ -18,9 +19,9 @@ class VehiculosController extends AdminPanelBaseController
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(FiltrosVehiculos $filtros)
     {
-        $vehiculos = Vehiculo::with(["alquilerActual.chofer", "proveedorSeguro"])->get();
+        $vehiculos = Vehiculo::with(["alquilerActual.chofer", "proveedorSeguro"])->filter($filtros)->paginate(15);
 
         return view("vehiculos.index")->with("vehiculos", $vehiculos);
     }
@@ -94,7 +95,7 @@ class VehiculosController extends AdminPanelBaseController
         return view("vehiculos.show")->with([
             "vehiculo" => $vehiculo,
             "ultimosAlquileres" => $vehiculo->alquileres()->finalizados()->with("chofer")->fechaDesc()->limit(5)->get(),
-            "ultimosTrabajos" => $vehiculo->trabajos()->validos()->with("proveedor")->fechaDesc()->limit(5)->get(),
+            "ultimosTrabajos" => $vehiculo->trabajos()->validos()->with("proveedor")->fechaDePagoDesc()->limit(5)->get(),
 
             "puedeRegistrarKms" => $vehiculo->puedeRegistrarKilometraje(),
             "datosKilometraje" => $vehiculo->estimacionKmsAnualParaGrafico(),

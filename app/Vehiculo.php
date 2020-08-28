@@ -2,15 +2,18 @@
 
 namespace App;
 
-use App\TrabajoVehiculo;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use App\ActualizacionKmVehiculo;
 use App\Lib\Vehiculos\RegistraKilometraje;
+use App\ActualizacionKmVehiculo;
+use App\TrabajoVehiculo;
+use App\Http\Filters\Filterable;
+
 
 class Vehiculo extends Model
 {
-    use SoftDeletes, RegistraKilometraje;
+    use SoftDeletes, RegistraKilometraje, Filterable;
     
 
 

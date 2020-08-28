@@ -21,46 +21,43 @@
 							<div class="clearfix" style="margin-bottom: 10px">
 								<div style="float: right;">
 									Ordenar por
-									<select class="form-control">
-										<option>Pagado recientemente</option>
-										<option>Realizado recientemente</option>
-										<option>Patente vehiculo (A-Z)</option>
-										<option>Costo (- a +)</option>
-										<option>Costo (+ a -)</option>
+									<select class="form-control filter-select" name="orden" autocomplete="off">
+										<option value="fecha_pago_desc" {{ request()->orden == "fecha_pago_desc" ? "selected" : "" }}>Pagado recientemente</option>
+										<option value="fecha_realizado_desc" {{ request()->orden == "fecha_realizado_desc" ? "selected" : "" }}>Realizado recientemente</option>
+										<option value="costo_asc" {{ request()->orden == "costo_asc" ? "selected" : "" }}>Costo (menor a mayor)</option>
+										<option value="costo_desc" {{ request()->orden == "costo_desc" ? "selected" : "" }}>Costo (mayor a menor)</option>
 									</select>
 								</div>
 
 								<div style="float: right; margin-right: 40px">
 									Filtrar medio de pago
-									<select class="form-control">
-										<option>Todos</option>
-										<option>Efectivo</option>
-										<option>Tarjeta de crédito</option>
-										<option>Transf./depósito</option>
+									<select class="form-control filter-select" name="medio_pago" autocomplete="off">
+										<option value="todos" {{ request()->medio_pago == "todos" ? "selected" : "" }}>Todos</option>
+										<option value="efectivo" {{ request()->medio_pago == "efectivo" ? "selected" : "" }}>Efectivo</option>
+										<option value="tarjeta_credito" {{ request()->medio_pago == "tarjeta_credito" ? "selected" : "" }}>Tarjeta de crédito</option>
+										<option value="transferencia" {{ request()->medio_pago == "transferencia" ? "selected" : "" }}>Transf./depósito</option>
 									</select>
 								</div>
 
 								<div style="float: right; margin-right: 40px">
 									Filtrar tipo de trabajo
-									<select class="form-control">
-										<option>Todos</option>
-										<option>Cambio aceite y filtro</option>
-										<option>Cambio de bateria</option>
-										<option>Cambio de frenos</option>
-										<option>Cambio correa distrib.</option>
-										<option>Cambio correa altern.</option>
-										<option>Cambio de cubiertas</option>
-										<option>Reparación</option>
-										<option>Otro</option>
+									<select class="form-control filter-select" name="tipo_trabajo" autocomplete="off">
+										<option value="todos">Todos</option>
+										@foreach($tiposTrabajos as $tipoTrabajo)
+										<option value="{{ $tipoTrabajo }}" {{ request()->tipo_trabajo == $tipoTrabajo ? "selected" : "" }}>
+											{{ __('tipos_trabajos.'.$tipoTrabajo) }}
+										</option>
+										@endforeach
 									</select>
 								</div>
 
 								<div style="float: right; margin-right: 40px">
 									Filtrar por vehículo
-									<select class="form-control">
-										<option>Todos</option>
-										<option>Fluence (MKA 451)</option>
-										<option>Onix (NBX 159)</option>
+									<select class="form-control filter-select" name="vehiculo" autocomplete="off">
+										<option value="todos">Todos</option>
+										@foreach($vehiculos as $vehiculo)
+										<option value="{{ $vehiculo->id }}" {{ request()->vehiculo == $vehiculo->id ? "selected" : "" }}>{{ $vehiculo->modeloYDominio() }}</option>
+										@endforeach
 									</select>
 								</div>
 							</div>
@@ -105,6 +102,10 @@
 
 								</tbody>
 							</table>
+							
+							<div style="text-align: center;">
+								{{ $trabajosVehiculos->appends(request()->input())->links() }}
+							</div>
 
 						</div>
 					</div>

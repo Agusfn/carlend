@@ -21,32 +21,33 @@
 							<div class="clearfix" style="margin-bottom: 10px">
 								<div style="float: right;">
 									Ordenar por
-									<select class="form-control">
-										<option>Iniciado recientemente</option>
-										<option>Nombre de chofer (A-Z)</option>
-										<option>Nombre de vehiculo (A-Z)</option>
-										<option>Monto diario (- a +)</option>
-										<option>Monto diario (+ a -)</option>
-										<option>Saldo (- a +)</option>
-										<option>Saldo (+ a -)</option>
+									<select class="form-control filter-select" name="orden" autocomplete="off">
+										<option value="fecha_inicio_desc" {{ request()->orden == "fecha_inicio_desc" ? "selected" : "" }}>Iniciado recientemente</option>
+										<option value="nombre_chofer_asc" {{ request()->orden == "nombre_chofer_asc" ? "selected" : "" }}>Nombre de chofer (A-Z)</option>
+										<option value="nombre_vehiculo_asc" {{ request()->orden == "nombre_vehiculo_asc" ? "selected" : "" }}>Nombre de vehiculo (A-Z)</option>
+										<option value="monto_diario_asc" {{ request()->orden == "monto_diario_asc" ? "selected" : "" }}>Monto diario (menor a mayor)</option>
+										<option value="monto_diario_desc" {{ request()->orden == "monto_diario_desc" ? "selected" : "" }}>Monto diario (mayor a menor)</option>
+										<option value="saldo_asc" {{ request()->orden == "saldo_asc" ? "selected" : "" }}>Saldo (menor a mayor)</option>
+										<option value="saldo_desc" {{ request()->orden == "saldo_desc" ? "selected" : "" }}>Saldo (mayor a menor)</option>
 									</select>
 								</div>
 
 								<div style="float: right; margin-right: 40px">
 									Filtrar por estado
-									<select class="form-control">
-										<option>Todos</option>
-										<option>Activo</option>
-										<option>Finalizado</option>
+									<select class="form-control filter-select" name="estado" autocomplete="off">
+										<option value="todos" {{ request()->estado == "todos" ? "selected" : "" }}>Todos</option>
+										<option value="en_curso" {{ request()->estado == "en_curso" ? "selected" : "" }}>Activo</option>
+										<option value="finalizado" {{ request()->estado == "finalizado" ? "selected" : "" }}>Finalizado</option>
 									</select>
 								</div>
 
 								<div style="float: right; margin-right: 40px">
 									Filtrar por vehículo
-									<select class="form-control">
-										<option>Todos</option>
-										<option>Fluence (MKA 451)</option>
-										<option>Onix (NBX 159)</option>
+									<select class="form-control filter-select" name="vehiculo" autocomplete="off">
+										<option value="todos">Todos</option>
+										@foreach($vehiculos as $vehiculo)
+										<option value="{{ $vehiculo->id }}" {{ request()->vehiculo == $vehiculo->id ? "selected" : "" }}>{{ $vehiculo->modeloYDominio() }}</option>
+										@endforeach
 									</select>
 								</div>
 
@@ -102,6 +103,10 @@
 
 								</tbody>
 							</table>
+
+							<div style="text-align: center;">
+								{{ $alquileres->appends(request()->input())->links() }}
+							</div>
 
 						</div>
 					</div>

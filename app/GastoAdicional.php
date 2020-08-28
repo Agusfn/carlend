@@ -3,10 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Filters\Filterable;
+
 
 class GastoAdicional extends Model
 {
 
+    use Filterable;
 
     /**
      * Tipos de gastos.
@@ -77,5 +80,18 @@ class GastoAdicional extends Model
     {
         return $query->whereMonth("fecha", $mes)->whereYear("fecha", $anio);
     }
+
+
+    /**
+     * Ordenar por más reciente a más antiguo.
+     *
+     * @param  \Illuminate\Database\Eloquent\Builder  $query
+     * @return \Illuminate\Database\Eloquent\Builder
+     */
+    public function scopeOrdenReciente($query)
+    {
+        return $query->orderBy("fecha", "DESC")->orderBy("id", "DESC");
+    }
+
     
 }

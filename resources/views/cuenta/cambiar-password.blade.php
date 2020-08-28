@@ -8,6 +8,13 @@
 
 					<h3 class="page-title"><a href="{{ route('cuenta.detalles') }}">Mi cuenta</a> / Cambiar contraseña</h3>
 
+					@if(session('success'))
+					<div class="alert alert-success alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						Los datos se actualizaron correctamente.
+					</div>
+					@endif
+
 					<div class="row">
 						<div class="col-lg-6">
 
@@ -17,34 +24,44 @@
 								</div>
 								<div class="panel-body">
 
-									<form action="" method="POST">
+									<form action="{{ route('cuenta.cambiar-password') }}" method="POST">
+										@csrf
 
-										<div class="form-group">
-											<div class="row">
+										<div class="form-group @error('password_actual') has-error @enderror">
+											<div class="row" style="margin-bottom: 15px">
 												<div class="col-sm-6">Contraseña actual</div>
 												<div class="col-sm-6">
-													<input type="password" class="form-control" name="current_password" style="margin-bottom: 15px">
+													<input type="password" class="form-control" name="password_actual" value="{{ old('password_actual') }}">
+													@error('password_actual')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
 												</div>
 											</div>
 		                                </div>
 
 
-										<div class="form-group">
-											<div class="row">
+										<div class="form-group @error('password') has-error @enderror">
+											<div class="row" style="margin-bottom: 15px">
 												<div class="col-sm-6">Contraseña nueva</div>
 												<div class="col-sm-6">
-													<input type="password" class="form-control" name="new_password" style="margin-bottom: 15px">
+													<input type="password" class="form-control" name="password" value="{{ old('password') }}">
+													@error('password')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
 												</div>
 											</div>
 		                                </div>
 
 
 
-										<div class="form-group">
-											<div class="row">
+										<div class="form-group @error('password_confirmation') has-error @enderror">
+											<div class="row" style="margin-bottom: 15px">
 												<div class="col-sm-6">Repetir contraseña nueva</div>
 												<div class="col-sm-6">
-													<input type="password" class="form-control" name="new_password_confirmation" style="margin-bottom: 15px">
+													<input type="password" class="form-control" name="password_confirmation" value="{{ old('password_confirmation') }}">
+													@error('password_confirmation')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
 												</div>
 											</div>
 		                                </div>

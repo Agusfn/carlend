@@ -21,33 +21,33 @@
 							<div class="clearfix" style="margin-bottom: 10px">
 								<div style="float: right;">
 									Ordenar por
-									<select class="form-control">
-										<option>Realizado recientemente</option>
-										<option>Nombre de vehiculo (A-Z)</option>
-										<option>Monto (- a +)</option>
-										<option>Monto (+ a -)</option>
-										<option>Nombre de proveedor (A-Z)</option>
-										<option>Nombre de proveedor (Z-A)</option>
+									<select class="form-control filter-select" name="orden" autocomplete="off">
+										<option value="fecha_desc" {{ request()->orden == "fecha_desc" ? "selected" : "" }}>Realizado recientemente</option>
+										<option value="nombre_veh_asc" {{ request()->orden == "nombre_veh_asc" ? "selected" : "" }}>Nombre de vehiculo (A-Z)</option>
+										<option value="monto_asc" {{ request()->orden == "monto_asc" ? "selected" : "" }}>Monto (menor a mayor)</option>
+										<option value="monto_desc" {{ request()->orden == "monto_desc" ? "selected" : "" }}>Monto (mayor a menor)</option>
+										<option value="nombre_prov_asc" {{ request()->orden == "nombre_prov_asc" ? "selected" : "" }}>Nombre de proveedor (A-Z)</option>
+										<option value="nombre_prov_desc" {{ request()->orden == "nombre_prov_desc" ? "selected" : "" }}>Nombre de proveedor (Z-A)</option>
 									</select>
 								</div>
 
 								<div style="float: right; margin-right: 40px">
 									Filtrar medio de pago
-									<select class="form-control">
-										<option>Todos</option>
-										<option>Efectivo</option>
-										<option>Tarjeta de crédito</option>
-										<option>Transf./depósito</option>
+									<select class="form-control filter-select" name="medio_pago" autocomplete="off">
+										<option value="todos" {{ request()->medio_pago == "todos" ? "selected" : "" }}>Todos</option>
+										<option value="efectivo" {{ request()->medio_pago == "efectivo" ? "selected" : "" }}>Efectivo</option>
+										<option value="tarjeta_credito" {{ request()->medio_pago == "tarjeta_credito" ? "selected" : "" }}>Tarjeta de crédito</option>
+										<option value="transferencia" {{ request()->medio_pago == "transferencia" ? "selected" : "" }}>Transf./depósito</option>
 									</select>
 								</div>
 
 								<div style="float: right; margin-right: 40px">
 									Filtrar por tipo de gasto
-									<select class="form-control">
-										<option>Todos</option>
-										<option>Pago seguro</option>
-										<option>Pago patentes</option>
-										<option>Otro</option>
+									<select class="form-control filter-select" name="tipo_gasto" autocomplete="off">
+										<option value="todos" {{ request()->tipo_gasto == "todos" ? "selected" : "" }}>Todos</option>
+										<option value="seguro_vehiculo" {{ request()->tipo_gasto == "seguro_vehiculo" ? "selected" : "" }}>Seguro de vehículo</option>
+										<option value="impuesto_automotor" {{ request()->tipo_gasto == "impuesto_automotor" ? "selected" : "" }}>Impuesto automotor</option>
+										<option value="otro" {{ request()->tipo_gasto == "otro" ? "selected" : "" }}>Otro</option>
 									</select>
 								</div>
 							</div>
@@ -95,6 +95,10 @@
 
 								</tbody>
 							</table>
+
+							<div style="text-align: center;">
+								{{ $gastosAdicionales->appends(request()->input())->links() }}
+							</div>
 
 						</div>
 					</div>

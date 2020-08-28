@@ -24,7 +24,12 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
+        $schedule->command("alquileres:terminar-programados")->dailyAt("00:00");
+        $schedule->command("alquileres:cobrar")->dailyAt("00:00");
+
+        $schedule->command("vehiculos:actualizar-flag-kms")->dailyAt("00:00");
+        $schedule->command("notificaciones:enviar")->dailyAt("00:00");
+        $schedule->command("gastos-adicionales:registrar-debitos")->dailyAt("00:00");
     }
 
     /**

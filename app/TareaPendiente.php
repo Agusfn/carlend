@@ -247,4 +247,15 @@ class TareaPendiente extends Model
     }
 
 
+    /**
+     * Marcar tarea como notificada.
+     * @return null
+     */
+    public function marcarNotificada()
+    {
+        $this->notificado = true;
+        $this->save();
+    }
+
+
 }

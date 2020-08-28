@@ -8,6 +8,13 @@
 
 					<h3 class="page-title">Mi cuenta</h3>
 
+					@if(session('success'))
+					<div class="alert alert-success alert-dismissible" role="alert">
+						<button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						Los datos se actualizaron correctamente.
+					</div>
+					@endif
+
 					<div class="row">
 						<div class="col-lg-6">
 
@@ -17,13 +24,17 @@
 								</div>
 								<div class="panel-body">
 
-									<form action="" method="POST">
+									<form action="{{ route('cuenta.detalles') }}" method="POST">
+										@csrf
 
-										<div class="form-group">
+										<div class="form-group @error('name') has-error @enderror">
 											<div class="row">
 												<div class="col-sm-6">Nombre de usuario</div>
 												<div class="col-sm-6">
-													<input type="text" class="form-control" name="name" value="Samuel">
+													<input type="text" class="form-control" name="name" value="{{ Auth::user()->name }}">
+													@error('name')
+														<label class="control-label">{{ $message }}</label>
+													@enderror
 												</div>
 											</div>
 		                                </div>
@@ -31,7 +42,7 @@
 										<div class="form-group">
 											<div class="row">
 												<div class="col-sm-6">E-mail</div>
-												<div class="col-sm-6">mi-email@gmail.com</div>
+												<div class="col-sm-6">{{ Auth::user()->email }}</div>
 											</div>
 		                                </div>
 

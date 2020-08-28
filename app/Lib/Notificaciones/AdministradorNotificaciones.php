@@ -65,7 +65,7 @@ class AdministradorNotificaciones
 	 * @param  App\TareaPendiente $tareaPendiente
 	 * @return string
 	 */
-	private static function obtenerTextoNotificacionTareaPendiente($tareaPendiente)
+	public static function obtenerTextoNotificacionTareaPendiente($tareaPendiente)
 	{
 		$mensaje = "";
 
@@ -163,7 +163,7 @@ class AdministradorNotificaciones
 				"fa fa-usd",
 				"#000",
 				route("alquileres.show", $alquiler->id),
-				"El alquiler del ".$alquiler->vehiculo->marcaYModelo()." tiene un saldo negativo de ".Strings::formatearMoneda($alquiler->saldo_actual, 0)
+				"El alquiler del ".$alquiler->vehiculo->marcaYModelo()." tiene un saldo negativo de ".\Strings::formatearMoneda($alquiler->saldo_actual, 0)
 			);
 
 		}

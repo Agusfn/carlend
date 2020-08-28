@@ -14,6 +14,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 
+Route::get('mailable', function () {
+    $tareaPendiente = App\TareaPendiente::find(13);
+
+    return new App\Mail\NotificacionTareaPendiente($tareaPendiente);
+});
+
 // Auth
 Route::get("login", "Auth\LoginController@showLoginForm")->name("login");
 Route::post("login", "Auth\LoginController@login");

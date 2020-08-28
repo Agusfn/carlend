@@ -4,11 +4,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Http\Filters\Filterable;
 use App\TareaPendiente;
 
 class Chofer extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, Filterable;
     
     /**
      * The table associated with the model.
