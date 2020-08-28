@@ -237,6 +237,15 @@ class Vehiculo extends Model
     }
 
 
+    /**
+     * Si el vehículo actualmente está en alquiler.
+     * @return bool
+     */
+    public function estaSiendoAlquilado()
+    {
+        return $this->id_alquiler_actual ? true : false;
+    }
+
 
     /**
      * Crear los trabajos iniciales (que necesitan de una reposicion periódica y tienen notificaciones) de este vehiculo.

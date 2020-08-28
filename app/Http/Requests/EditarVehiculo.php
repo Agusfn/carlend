@@ -57,12 +57,12 @@ class EditarVehiculo extends FormRequest
             "fecha_vto_vtv" => "nullable|date_format:d/m/Y|after:today",
             "fecha_vto_oblea_gnc" => "nullable|date_format:d/m/Y|after:today",
 
-            "costo_mensual_imp_automotor" => "required_with:debito_patentes",
-            "dia_del_mes_debito_imp_automotor" => "required_with:debito_patentes",
+            "costo_mensual_imp_automotor" => "required_with:debito_patentes|numeric|gt:0",
+            "dia_del_mes_debito_imp_automotor" => "required_with:debito_patentes|integer|min:1|max:28",
 
-            "id_proveedor_seguro" => "required_with:debito_seguro|exists:proveedores,id",
+            "id_proveedor_seguro" => "required_with:debito_seguro|integer|exists:proveedores,id",
             "fecha_vto_poliza_seguro" => "required_with:debito_seguro|date_format:d/m/Y",
-            "costo_mensual_seguro" => "required_with:debito_seguro",
+            "costo_mensual_seguro" => "required_with:debito_seguro|numeric|gt:0",
             "dia_del_mes_debito_seguro" => "required_with:debito_seguro|integer|min:1|max:28"
         ];
     }

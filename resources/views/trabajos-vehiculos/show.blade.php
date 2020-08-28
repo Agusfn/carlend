@@ -34,7 +34,12 @@
 											<label>ID de trabajo</label>: #{{ $trabajo->id }}
 										</div>
 										<div class="form-group">
-											<label>Vehículo</label>: <a href="{{ route('vehiculos.show', $trabajo->vehiculo->id) }}">{{ $trabajo->vehiculo->marcaModeloYDominio() }}</a>
+											<label>Vehículo</label>: 
+											@if(!$trabajo->vehiculo->trashed())
+											<a href="{{ route('vehiculos.show', $trabajo->vehiculo->id) }}">{{ $trabajo->vehiculo->marcaModeloYDominio() }}</a>
+											@else
+											{{ $trabajo->vehiculo->marcaModeloYDominio() }}
+											@endif
 										</div>
 										<div class="form-group">
 											<label>Tipo de trabajo</label>: {{ __('tipos_trabajos.'.$trabajo->tipo) }}
@@ -51,7 +56,11 @@
 										<div class="form-group">
 											<label>Proveedor</label>: 
 											@if($trabajo->proveedor)
-											<a href="{{ route('proveedores.show', $trabajo->proveedor->id) }}">{{ $trabajo->proveedor->nombre }}</a>
+												@if(!$trabajo->proveedor->trashed())
+												<a href="{{ route('proveedores.show', $trabajo->proveedor->id) }}">{{ $trabajo->proveedor->nombre }}</a>
+												@else
+												{{ $trabajo->proveedor->nombre }}
+												@endif
 											@else
 											-
 											@endif

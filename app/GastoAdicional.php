@@ -52,22 +52,22 @@ class GastoAdicional extends Model
 
 
     /**
-     * Obtener vehiculo relacionado a este gasto.
+     * Obtener vehiculo relacionado a este gasto. (incluir elementos eliminados)
      * @return App\Vehiculo
      */
     public function vehiculo()
     {
-        return $this->belongsTo("App\Vehiculo", "id_vehiculo");
+        return $this->belongsTo("App\Vehiculo", "id_vehiculo")->withTrashed();
     }   
 
 
     /**
-     * Obtener proveedor relacionado a este gasto.
+     * Obtener proveedor relacionado a este gasto. (incluyendo eliminados)
      * @return App\Proveedor
      */
     public function proveedor()
     {
-        return $this->belongsTo("App\Proveedor", "id_proveedor");
+        return $this->belongsTo("App\Proveedor", "id_proveedor")->withTrashed();
     }    
 
     /**

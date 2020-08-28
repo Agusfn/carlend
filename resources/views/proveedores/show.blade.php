@@ -10,7 +10,7 @@
 					<div class="panel panel-headline">
 						<div class="panel-body">
 							<div class="btn-group">
-								<button class="btn btn-danger" onclick="if(confirm('¿Confirma eliminar el proveedor?')) $('#delete-form').submit();"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar proveedor</button>
+								<button class="btn btn-danger" onclick="if(confirm('¿Confirma eliminar el proveedor? No se puede deshacer.')) $('#delete-form').submit();"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar proveedor</button>
 							</div>
 							<form action="{{ route('proveedores.destroy', $proveedor->id) }}" method="POST" id="delete-form" style="display: none">
 								@method('DELETE')

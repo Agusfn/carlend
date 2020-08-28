@@ -10,6 +10,11 @@ use App\TrabajoVehiculo;
 class AdministradorNotificaciones
 {
 	
+	/**
+	 * Monto mínimo que puede tener un alquiler antes de mostrar notificación de advertencia.
+	 */
+	const MONTO_ALQUILER_A_NOTIFICAR = -5000;
+
 
 	/**
 	 * Obtener notificaciones para mostrar en listado de notificaciones en la navbar.
@@ -154,7 +159,10 @@ class AdministradorNotificaciones
 	{
 		$notificaciones = [];
 
-		$alquileres = Alquiler::with("vehiculo")->enCurso()->where("saldo_actual", "<", -5000)->get();
+		$alquileres = Alquiler::with("vehiculo")
+			->enCurso()
+			->where("saldo_actual", "<", self::MONTO_ALQUILER_A_NOTIFICAR)
+			->get();
 
 
 		foreach ($alquileres as $alquiler) {

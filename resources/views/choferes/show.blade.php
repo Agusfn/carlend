@@ -10,10 +10,11 @@
 
 					<h3 class="page-title"><a href="{{ route('choferes.index') }}">Choferes</a> / {{ $chofer->nombre_y_apellido }}</h3>
 
+					@if(!$chofer->estaAlquilando())
 					<div class="panel panel-headline">
 						<div class="panel-body">
 							<div class="btn-group">
-								<button class="btn btn-danger" onclick="if(confirm('¿Confirma eliminar chofer?')) $('#delete-form').submit();"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar chofer</button>
+								<button class="btn btn-danger" onclick="if(confirm('¿Confirma eliminar chofer? No se puede deshacer.')) $('#delete-form').submit();"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar chofer</button>
 							</div>
 							<form action="{{ route('choferes.destroy', $chofer->id) }}" method="POST" id="delete-form" style="display: none">
 								@method('DELETE')
@@ -21,6 +22,7 @@
 							</form>
 						</div>
 					</div>
+					@endif
 
 					@if(session('success'))
 					<div class="alert alert-success alert-dismissible" role="alert">

@@ -17,6 +17,12 @@ class Alquiler extends Model
 
 
     /**
+     * Días luego del fin del alquiler en donde se pueden seguir registrando movimientos.
+     */
+    const DIAS_PARA_REGISTRAR_MOVIMIENTOS = 7;
+
+
+    /**
      * The table associated with the model.
      *
      * @var string
@@ -52,22 +58,24 @@ class Alquiler extends Model
 
 
     /**
-     * Obtener chofer de este alquiler.
+     * Obtener chofer de este alquiler (incluyendo choferes eliminados)
      * @return App\Chofer|null
      */
     public function chofer()
     {
-        return $this->belongsTo("App\Chofer", "id_chofer");
-    }    
+        return $this->belongsTo("App\Chofer", "id_chofer")->withTrashed();
+    }
+
+
 
 
     /**
-     * Obtener vehiculo de este alquiler.
+     * Obtener vehiculo de este alquiler. (incluir elementos eliminados)
      * @return App\Vehiculo|null
      */
     public function vehiculo()
     {
-        return $this->belongsTo("App\Vehiculo", "id_vehiculo");
+        return $this->belongsTo("App\Vehiculo", "id_vehiculo")->withTrashed();
     }    
 
 
@@ -177,7 +185,9 @@ class Alquiler extends Model
      */
     public function puedeRegistrarMovimientos()
     {
-        if($this->estaEnCurso() || $this->fecha_fin->copy()->addDays(7)->isFuture()) {
+        if($this->estaEnCurso() || 
+            $this->fecha_fin->copy()->addDays(self::DIAS_PARA_REGISTRAR_MOVIMIENTOS)->isFuture()) 
+        {
             return true;
         }
         else {

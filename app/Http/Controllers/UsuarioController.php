@@ -28,7 +28,9 @@ class UsuarioController extends AdminPanelBaseController
      */
     public function modificar(Request $request)
     {
-        $request->validate(["name" => "required|string|min:3|max:50|alpha_dash"]);
+        $request->validate([
+            "name" => "required|string|min:3|max:50|alpha_dash"
+        ]);
 
         $user = Auth::user();
 

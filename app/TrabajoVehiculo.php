@@ -84,22 +84,22 @@ class TrabajoVehiculo extends Model
 
 
     /**
-     * Obtener vehiculo relacionado a este trabajo.
+     * Obtener vehiculo relacionado a este trabajo. (incluir elementos eliminados)
      * @return App\Vehiculo
      */
     public function vehiculo()
     {
-        return $this->belongsTo("App\Vehiculo", "id_vehiculo");
+        return $this->belongsTo("App\Vehiculo", "id_vehiculo")->withTrashed();
     }   
 
 
     /**
-     * Obtener proveedor relacionado a este trabajo.
+     * Obtener proveedor relacionado a este trabajo. (incluyendo eliminados)
      * @return App\Proveedor
      */
     public function proveedor()
     {
-        return $this->belongsTo("App\Proveedor", "id_proveedor");
+        return $this->belongsTo("App\Proveedor", "id_proveedor")->withTrashed();
     }    
 
 

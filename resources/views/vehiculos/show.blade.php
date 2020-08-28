@@ -30,9 +30,17 @@
 								@if($puedeRegistrarKms)
 								<a href="{{ route('vehiculos.registrar-kilometraje', $vehiculo->id) }}" class="btn btn-default" style="margin-left: 15px"><i class="fa fa-tachometer" aria-hidden="true"></i> Registrar kilometraje</a>
 								@endif
-								
-								<button class="btn btn-danger" style="margin-left: 15px"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar vehículo</button>
+									
+								@if(!$vehiculo->estaSiendoAlquilado())
+								<div class="btn-group" style="margin-left: 15px">
+									<button class="btn btn-danger" onclick="if(confirm('¿Confirma eliminar el vehículo? No se puede deshacer.')) $('#delete-form').submit();"><i class="fa fa-trash-o" aria-hidden="true"></i> Eliminar vehículo</button>
+								</div>
 
+								<form action="{{ route('vehiculos.destroy', $vehiculo->id) }}" method="POST" id="delete-form" style="display: none">
+									@method('DELETE')
+									@csrf
+								</form>
+								@endif
 							</div>
 						</div>
 					</div>

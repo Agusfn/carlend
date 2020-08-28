@@ -47,7 +47,7 @@ class CrearAlquiler extends FormRequest
             "id_chofer" => "required|integer",
             "id_vehiculo" => "required|integer",
             "precio_diario" => "required|numeric|min:0",
-            "notas" => "nullable|max:200"
+            "notas" => "nullable|string|max:200"
         ];
     }
 

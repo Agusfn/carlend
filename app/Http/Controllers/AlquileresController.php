@@ -152,7 +152,13 @@ class AlquileresController extends AdminPanelBaseController
     {
         $alquiler = Alquiler::findOrFail($id);
 
-        return view("alquileres.registrar-pago")->with("alquiler", $alquiler);
+        if($alquiler->puedeRegistrarMovimientos()) {
+            return view("alquileres.registrar-pago")->with("alquiler", $alquiler);
+        }
+        else {
+            return redirect()->route("alquileres.show", $alquiler->id);
+        }
+        
     }
 
 
@@ -170,21 +176,24 @@ class AlquileresController extends AdminPanelBaseController
             "tipo" => "required|in:pago_de_chofer,descuento",
             "monto" => "required|numeric|min:0",
             "medio_pago" => "required_if:tipo,pago_de_chofer|in:efectivo,transferencia,mercadopago",
-            "comentario" => "nullable|max:191"
+            "comentario" => "nullable|string|max:191"
         ]);
 
         $alquiler = Alquiler::findOrFail($id);
 
-        $fecha = Carbon::createFromFormat("d/m/Y", $request->fecha);
+        if($alquiler->puedeRegistrarMovimientos()) 
+        {
+            $fecha = Carbon::createFromFormat("d/m/Y", $request->fecha);
 
-        $alquiler->agregarMovimientoRetroactivo(
-            $fecha->isToday() ? Carbon::now() : $fecha,
-            $request->tipo,
-            $request->monto,
-            $request->medio_pago,
-            $request->comentario
-        );
-
+            $alquiler->agregarMovimientoRetroactivo(
+                $fecha->isToday() ? Carbon::now() : $fecha,
+                $request->tipo,
+                $request->monto,
+                $request->medio_pago,
+                $request->comentario
+            );
+        }
+        
         return redirect()->route("alquileres.show", $alquiler->id);
     }
 

@@ -155,7 +155,15 @@ class VehiculosController extends AdminPanelBaseController
      */
     public function destroy($id)
     {
-        //
+        $vehiculo = Vehiculo::findOrFail($id);
+
+        if(!$vehiculo->estaSiendoAlquilado()) 
+        {
+            $vehiculo->tareasPendientes()->delete();
+            $vehiculo->delete();
+        }
+
+        return redirect()->route("vehiculos.index");
     }
 
 

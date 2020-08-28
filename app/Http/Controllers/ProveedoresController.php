@@ -44,9 +44,9 @@ class ProveedoresController extends AdminPanelBaseController
     public function store(Request $request)
     {
         $request->validate([
-            "nombre" => "required",
-            "direccion" => "",
-            "telefono" => "",
+            "nombre" => "required|string|max:60",
+            "direccion" => "nullable|string|max:120",
+            "telefono" => "nullable|string|max:40",
             "categoria" => [
                 "required",
                 Rule::in(array_keys(Proveedor::$nombresCategorias))
@@ -90,9 +90,9 @@ class ProveedoresController extends AdminPanelBaseController
     public function update(Request $request, $id)
     {
         $request->validate([
-            "nombre" => "required",
-            "direccion" => "",
-            "telefono" => "",
+            "nombre" => "required|string|max:60",
+            "direccion" => "nullable|string|max:120",
+            "telefono" => "nullable|string|max:40",
             "categoria" => [
                 "required",
                 Rule::in(array_keys(Proveedor::$nombresCategorias))

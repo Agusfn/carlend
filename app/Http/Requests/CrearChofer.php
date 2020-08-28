@@ -41,12 +41,12 @@ class CrearChofer extends FormRequest
     public function rules()
     {
         return [
-            "nombre_y_apellido" => "required|max:100",
-            "telefono" => "nullable|max:40",
-            "direccion" => "nullable|max:50",
-            "dni" => "nullable|max:30",
+            "nombre_y_apellido" => "required|string|max:100",
+            "telefono" => "nullable|string|max:40",
+            "direccion" => "nullable|string|max:50",
+            "dni" => "nullable|string|max:30",
             "fecha_vto_licencia" => "nullable|date_format:d/m/Y",
-            "notas" => "nullable|max:200"
+            "notas" => "nullable|string|max:200"
         ];
     }
 

@@ -10,7 +10,7 @@
 
 
 @section('content')
-					<h3 class="page-title"><a href="{{ route('alquileres.index') }}">Alquileres</a> / <a href="{{ route('alquileres.show', $alquiler->id) }}">Alquiler #4</a> / Registrar pago o movimiento</h3>
+					<h3 class="page-title"><a href="{{ route('alquileres.index') }}">Alquileres</a> / <a href="{{ route('alquileres.show', $alquiler->id) }}">Alquiler #{{ $alquiler->id }}</a> / Registrar pago o movimiento</h3>
 
 
 					<div class="row">

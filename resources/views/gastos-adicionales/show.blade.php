@@ -74,7 +74,11 @@
 										<div class="form-group">
 											<label>Vehículo asociado al gasto</label><br/>
 											@if($gasto->vehiculo)
-											<a href="{{ route('vehiculos.show', $gasto->vehiculo->id) }}">{{ $gasto->vehiculo->marcaModeloYDominio() }}</a>
+												@if(!$gasto->vehiculo->trashed())
+												<a href="{{ route('vehiculos.show', $gasto->vehiculo->id) }}">{{ $gasto->vehiculo->marcaModeloYDominio() }}</a>
+												@else
+												{{ $gasto->vehiculo->marcaModeloYDominio() }}
+												@endif
 											@else
 											-
 											@endif
@@ -104,7 +108,11 @@
 										<div class="form-group">
 											<label>Proveedor asociado al gasto</label><br/>
 											@if($gasto->proveedor)
-											<a href="{{ route('proveedores.show', $gasto->proveedor->id) }}">{{ $gasto->proveedor->nombre }}</a>
+												@if(!$gasto->proveedor->trashed())
+												<a href="{{ route('proveedores.show', $gasto->proveedor->id) }}">{{ $gasto->proveedor->nombre }}</a>
+												@else
+												{{ $gasto->proveedor->nombre }}
+												@endif
 											@else
 											-
 											@endif

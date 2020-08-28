@@ -91,6 +91,16 @@ class Chofer extends Model
 
 
     /**
+     * Si el chofer está alcuilando un vehiculo actualmente o no.
+     * @return bool
+     */
+    public function estaAlquilando()
+    {
+        return $this->id_alquiler_actual ? true : false;
+    }
+
+
+    /**
      * Registrar las tareas pendientes (notificaciones) del vencimiento de la licencia del chofer. Sólo cuando se da de alta el chofer.
      * @return null
      */

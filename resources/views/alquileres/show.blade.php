@@ -62,10 +62,20 @@
 
 									<div class="row" style="margin-bottom: 30px">
 										<div class="col-md-6">
-											<label>Chofer:</label> <a href="{{ route('choferes.show', $alquiler->chofer->id) }}">{{ $alquiler->chofer->nombre_y_apellido }}</a>
+											<label>Chofer:</label> 
+											@if(!$alquiler->chofer->trashed())
+											<a href="{{ route('choferes.show', $alquiler->chofer->id) }}">{{ $alquiler->chofer->nombre_y_apellido }}</a>
+											@else
+											{{ $alquiler->chofer->nombre_y_apellido }}
+											@endif
 										</div>
 										<div class="col-md-6">
-											<label>Vehículo:</label> <a href="{{ route('vehiculos.show', $alquiler->vehiculo->id) }}">{{ $alquiler->vehiculo->marcaModeloYDominio() }}</a>
+											<label>Vehículo:</label>
+											@if(!$alquiler->vehiculo->trashed())
+											<a href="{{ route('vehiculos.show', $alquiler->vehiculo->id) }}">{{ $alquiler->vehiculo->marcaModeloYDominio() }}</a>
+											@else
+											{{ $alquiler->vehiculo->marcaModeloYDominio() }}
+											@endif
 										</div>
 									</div>
 

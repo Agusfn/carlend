@@ -96,7 +96,11 @@ class ChoferesController extends AdminPanelBaseController
     {
         $chofer = Chofer::findOrFail($id);
 
-        $chofer->delete(); // soft delete
+        if(!$chofer->estaAlquilando()) 
+        {
+            $chofer->tareasPendientes()->delete();
+            $chofer->delete(); // soft delete
+        }
 
         return redirect()->route('choferes.index');
     }
