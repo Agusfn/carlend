@@ -25,7 +25,7 @@ class Notificaciones
 		foreach($tareasANotificar as $tareaPendiente)
 		{
 			Mail::to($emailDestino)->send(new NotificacionTareaPendiente($tareaPendiente));
-			$tareaPendiente->marcarNotificado();
+			$tareaPendiente->marcarNotificada();
 		}
 
 
