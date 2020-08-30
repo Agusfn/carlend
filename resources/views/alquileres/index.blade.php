@@ -22,7 +22,7 @@
 								<div style="float: right;">
 									Ordenar por
 									<select class="form-control filter-select" name="orden" autocomplete="off">
-										<option value="fecha_inicio_desc" {{ request()->orden == "fecha_inicio_desc" ? "selected" : "" }}>Iniciado recientemente</option>
+										<option value="fecha_inicio_desc" {{ request()->orden == "fecha_inicio_desc" ? "selected" : "" }}>Más reciente</option>
 										<option value="nombre_chofer_asc" {{ request()->orden == "nombre_chofer_asc" ? "selected" : "" }}>Nombre de chofer (A-Z)</option>
 										<option value="nombre_vehiculo_asc" {{ request()->orden == "nombre_vehiculo_asc" ? "selected" : "" }}>Nombre de vehiculo (A-Z)</option>
 										<option value="monto_diario_asc" {{ request()->orden == "monto_diario_asc" ? "selected" : "" }}>Monto diario (menor a mayor)</option>

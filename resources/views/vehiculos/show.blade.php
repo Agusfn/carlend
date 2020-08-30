@@ -190,7 +190,7 @@
 												<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM') }}</td>
 												<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
 												<td>{{ $trabajo->proveedor ? $trabajo->proveedor->nombre : '-' }}</td>
-												<td>{{ Strings::formatearMoneda($trabajo->costo, 0) }}</td>
+												<td>{{ Strings::formatearMoneda($trabajo->costo_total, 0) }}</td>
 											</tr>
 											@endforeach
 

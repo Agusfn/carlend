@@ -13,7 +13,7 @@
 								<div class="btn-group">
 									
 									@if($alquiler->puedeRegistrarMovimientos())
-									<a href="{{ route('alquileres.registrar-pago', 1) }}" class="btn btn-primary"><span class="glyphicon glyphicon-usd"></span> Registrar pago o dto.</a>
+									<a href="{{ route('alquileres.registrar-pago', $alquiler->id) }}" class="btn btn-primary"><span class="glyphicon glyphicon-usd"></span> Registrar pago o dto.</a>
 									@endif
 
 									@if($alquiler->estaEnCurso())
