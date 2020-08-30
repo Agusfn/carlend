@@ -99,6 +99,9 @@ class UtilidadesReportes
 		else if($tipoGastoAdicional == GastoAdicional::TIPO_PAGO_IMPUESTO_VEHICULO) {
 			return "Impuesto automotor";
 		}
+		else if($tipoGastoAdicional == GastoAdicional::TIPO_COMPRA_REPUESTO) {
+			return "Repuestos";
+		}		
 		else {
 			return "Otros gastos";
 		}

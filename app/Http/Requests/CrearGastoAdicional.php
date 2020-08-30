@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use App\GastoAdicional;
 use Carbon\Carbon;
 
 class CrearGastoAdicional extends FormRequest
@@ -40,7 +42,11 @@ class CrearGastoAdicional extends FormRequest
     {
         return [
             "fecha" => "required|date_format:d/m/Y|after_or_equal:-31day|before_or_equal:today",
-            "tipo" => "required|in:seguro_vehiculo,impuesto_automotor,otro",
+            "tipo" => [
+                "required",
+                "string",
+                Rule::in(GastoAdicional::$tipos)
+            ],
             "detalle" => "nullable|max:60",
             "id_vehiculo" => "nullable|integer|exists:vehiculos,id",
             "monto" => "required|numeric|gt:0",

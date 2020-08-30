@@ -43,9 +43,11 @@
 													<label>Tipo de gasto</label>
 													<select class="form-control" name="tipo">
 														<option value="">Seleccionar</option>
-														<option value="seguro_vehiculo" @if(old('tipo') == 'seguro_vehiculo') selected @endif>Pago de seguro</option>
-														<option value="impuesto_automotor" @if(old('tipo') == 'impuesto_automotor') selected @endif>Impuesto automotor</option>
-														<option value="otro" @if(old('tipo') == 'otro') selected @endif>Otro</option>
+														@foreach($tiposGastos as $tipoGasto)
+														<option value="{{ $tipoGasto }}" @if(old('tipo') == $tipoGasto) selected @endif>
+															{{ __('tipos_gastos_adicionales.'.$tipoGasto) }}
+														</option>
+														@endforeach
 													</select>
 													@error('tipo')
 														<label class="control-label">{{ $message }}</label>

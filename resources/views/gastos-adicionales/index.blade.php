@@ -59,9 +59,9 @@
 										<th>ID #</th>
 										<th>Fecha</th>
 										<th>Tipo de gasto</th>
+										<th>Monto</th>
 										<th>Detalle</th>
 										<th>Vehículo</th>
-										<th>Monto</th>
 										<th>Medio de pago</th>
 										<th>Proveedor</th>
 									</tr>
@@ -72,18 +72,10 @@
 										<td><a href="{{ route('gastos-adicionales.show', $gastoAdicional->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
 										<td>{{ $gastoAdicional->id }}</td>
 										<td>{{ $gastoAdicional->fecha->isoFormat('D MMM Y') }}</td>
-										<td>
-											@if($gastoAdicional->tipo == 'seguro_vehiculo')
-											Seguro de vehículo
-											@elseif($gastoAdicional->tipo == 'impuesto_automotor')
-											Impuesto automotor
-											@elseif($gastoAdicional->tipo == 'otro')
-											Otro
-											@endif
-										</td>
+										<td>{{ __('tipos_gastos_adicionales.'.$gastoAdicional->tipo) }}</td>
+										<td>{{ Strings::formatearMoneda($gastoAdicional->monto, 2) }}</td>
 										<td>{{ Str::limit($gastoAdicional->detalle, 40, '...') }}</td>
 										<td>{{ $gastoAdicional->vehiculo ? $gastoAdicional->vehiculo->marcaModeloYDominio() : '-' }}</td>
-										<td>{{ Strings::formatearMoneda($gastoAdicional->monto, 2) }}</td>
 										<td>{{ __('medios_pago.'.$gastoAdicional->medio_pago) }}</td>
 										<td>{{ $gastoAdicional->proveedor ? $gastoAdicional->proveedor->nombre : '-' }}</td>
 									</tr>

@@ -37,8 +37,7 @@
 									<tr>
 										<th></th>
 										<th>Patente</th>
-										<th>Marca</th>
-										<th>Modelo</th>
+										<th>Marca y modelo</th>
 										<th>Estado</th>
 										<th>Chofer</th>
 										<th>Año</th>
@@ -57,8 +56,7 @@
 											@endif
 										</td>
 										<td>{{ $vehiculo->dominio }}</td>
-										<td>{{ $vehiculo->marca }}</td>
-										<td>{{ $vehiculo->modelo }}</td>
+										<td>{{ $vehiculo->marca.' '.$vehiculo->modelo }}</td>
 										<td>
 											@if($vehiculo->alquilerActual)
 											<span class="label label-success" style="font-size: 14px">Alquilado</span>

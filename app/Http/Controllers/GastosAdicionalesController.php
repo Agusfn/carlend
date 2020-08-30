@@ -34,6 +34,7 @@ class GastosAdicionalesController extends AdminPanelBaseController
     public function create()
     {
         return view("gastos-adicionales.create")->with([
+            "tiposGastos" => GastoAdicional::$tipos,
             "vehiculos" => Vehiculo::nombreAsc()->get(),
             "proveedores" => Proveedor::all()
         ]);

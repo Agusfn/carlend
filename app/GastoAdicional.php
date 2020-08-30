@@ -16,6 +16,7 @@ class GastoAdicional extends Model
      */
     const TIPO_PAGO_SEGURO_VEHICULO = "seguro_vehiculo";
     const TIPO_PAGO_IMPUESTO_VEHICULO = "impuesto_automotor";
+    const TIPO_COMPRA_REPUESTO = "compra_repuesto";
     const TIPO_OTRO = "otro";
 
 
@@ -25,6 +26,19 @@ class GastoAdicional extends Model
     const MEDIO_PAGO_EFECTIVO = "efectivo";
     const MEDIO_PAGO_TARJETA = "tarjeta_credito";
     const MEDIO_PAGO_TRANSFERENCIA = "transferencia";
+
+
+
+    /**
+     * Tipos de gastos adicionales posibles.
+     * @var array
+     */
+    public static $tipos = [
+        self::TIPO_PAGO_SEGURO_VEHICULO,
+        self::TIPO_PAGO_IMPUESTO_VEHICULO,
+        self::TIPO_COMPRA_REPUESTO,
+        self::TIPO_OTRO
+    ];
 
 
     /**
