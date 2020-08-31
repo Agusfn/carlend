@@ -133,60 +133,62 @@
 
 									<h4>Movimientos</h4>
 
-									<table class="table">
-										<thead>
-											<tr>
-												<th>Fecha</th>
-												<th>Concepto</th>
-												<th>Monto</th>
-												<th>Saldo</th>
-												<th>Medio de pago</th>
-												<th>Coment.</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($movimientosSaldo as $movimiento)
-											<tr>
-												<td>{{ $movimiento->fecha_hora->isoFormat('D MMM Y') }}</td>
-												<td>
-													@if($movimiento->esCobroDeAlquiler())
-													Cobro de alquiler
-													@elseif($movimiento->esPagoDeChofer())
-													Pago de chofer
-													@elseif($movimiento->esDescuento())
-													Descuento
-													@endif
-												</td>
-												<td><span @if($movimiento->monto < 0) style="color: #B00;" @endif>
-													{{ Strings::formatearMoneda($movimiento->monto, 2) }}
-												</span></td>
-												<td><span @if($movimiento->nuevo_saldo < 0) style="color: #B00;" @endif>
-													{{ Strings::formatearMoneda($movimiento->nuevo_saldo, 2) }}
-												</span></td>
-												<td>
-													@if($movimiento->esPagoDeChofer())
-														@if($movimiento->esPorMercadopago())
-														Mercadopago
-														@elseif($movimiento->esEnEfectivo())
-														Efectivo
-														@elseif($movimiento->esPorTransferencia())
-														Transferencia/depósito
+									<div class="table-responsive">
+										<table class="table">
+											<thead>
+												<tr>
+													<th>Fecha</th>
+													<th>Concepto</th>
+													<th>Monto</th>
+													<th>Saldo</th>
+													<th>Medio de pago</th>
+													<th>Coment.</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach($movimientosSaldo as $movimiento)
+												<tr>
+													<td>{{ $movimiento->fecha_hora->isoFormat('D MMM Y') }}</td>
+													<td>
+														@if($movimiento->esCobroDeAlquiler())
+														Cobro de alquiler
+														@elseif($movimiento->esPagoDeChofer())
+														Pago de chofer
+														@elseif($movimiento->esDescuento())
+														Descuento
 														@endif
-													@endif
-												</td>
-												<td>
-													@if($movimiento->comentario)
-													<span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="{{ $movimiento->comentario }}"></span>
-													@endif
-												</td>
-											</tr>
-											@endforeach
+													</td>
+													<td><span @if($movimiento->monto < 0) style="color: #B00;" @endif>
+														{{ Strings::formatearMoneda($movimiento->monto, 2) }}
+													</span></td>
+													<td><span @if($movimiento->nuevo_saldo < 0) style="color: #B00;" @endif>
+														{{ Strings::formatearMoneda($movimiento->nuevo_saldo, 2) }}
+													</span></td>
+													<td>
+														@if($movimiento->esPagoDeChofer())
+															@if($movimiento->esPorMercadopago())
+															Mercadopago
+															@elseif($movimiento->esEnEfectivo())
+															Efectivo
+															@elseif($movimiento->esPorTransferencia())
+															Transferencia/depósito
+															@endif
+														@endif
+													</td>
+													<td>
+														@if($movimiento->comentario)
+														<span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="{{ $movimiento->comentario }}"></span>
+														@endif
+													</td>
+												</tr>
+												@endforeach
 
-											@if($movimientosSaldo->count() == 0)
-											<tr><td colspan="6" style="text-align: center;">No se encontraron movimientos.</td></tr>
-											@endif
-										</tbody>
-									</table>	
+												@if($movimientosSaldo->count() == 0)
+												<tr><td colspan="6" style="text-align: center;">No se encontraron movimientos.</td></tr>
+												@endif
+											</tbody>
+										</table>	
+									</div>
 
 								</div>
 							</div>

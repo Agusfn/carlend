@@ -53,57 +53,59 @@
 
 							</div>
 
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th></th>
-										<th>ID #</th>
-										<th>Estado</th>
-										<th>Vehículo</th>
-										<th>Fecha inicio</th>
-										<th>Fecha fin</th>
-										<th>Chofer</th>
-										<th>Monto diario</th>
-										<th>Saldo</th>
-										<th>Notas</th>
-									</tr>
-								</thead>
-								<tbody>
-									
-									@foreach($alquileres as $alquiler)
-									<tr>
-										<td><a href="{{ route('alquileres.show', $alquiler->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>{{ $alquiler->id }}</td>
-										<td>
-											@if($alquiler->estaEnCurso())
-											<span class="label label-primary" style="font-size: 14px">En curso</span>
-											@elseif($alquiler->estaFinalizado())
-											<span class="label label-default" style="font-size: 14px">Finalizado</span>
-											@endif
-										</td>
-										<td>{{ $alquiler->vehiculo->marcaModeloYDominio() }}</td>
-										<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM Y') }}</td>
-										<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM Y') : '-' }}</td>
-										<td>{{ $alquiler->chofer->nombre_y_apellido }}</td>
-										<td>{{ Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
-										<td><span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
-											{{ Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
-										</span></td>
-										<td>
-											@if($alquiler->notas)
-											<span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="{{ $alquiler->notas }}"></span>
-											@endif
-										</td>
-									</tr>
-									@endforeach
+							<div class="table-responsive">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th></th>
+											<th>ID #</th>
+											<th>Estado</th>
+											<th>Vehículo</th>
+											<th>Fecha inicio</th>
+											<th>Fecha fin</th>
+											<th>Chofer</th>
+											<th>Monto diario</th>
+											<th>Saldo</th>
+											<th>Notas</th>
+										</tr>
+									</thead>
+									<tbody>
+										
+										@foreach($alquileres as $alquiler)
+										<tr>
+											<td><a href="{{ route('alquileres.show', $alquiler->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+											<td>{{ $alquiler->id }}</td>
+											<td>
+												@if($alquiler->estaEnCurso())
+												<span class="label label-primary" style="font-size: 14px">En curso</span>
+												@elseif($alquiler->estaFinalizado())
+												<span class="label label-default" style="font-size: 14px">Finalizado</span>
+												@endif
+											</td>
+											<td>{{ $alquiler->vehiculo->marcaModeloYDominio() }}</td>
+											<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM Y') }}</td>
+											<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM Y') : '-' }}</td>
+											<td>{{ $alquiler->chofer->nombre_y_apellido }}</td>
+											<td>{{ Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
+											<td><span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
+												{{ Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
+											</span></td>
+											<td>
+												@if($alquiler->notas)
+												<span class="glyphicon glyphicon-comment" style="font-size: 18px" data-toggle="tooltip" data-placement="top" title="{{ $alquiler->notas }}"></span>
+												@endif
+											</td>
+										</tr>
+										@endforeach
 
-									@if($alquileres->count() == 0)
-									<tr><td colspan="10" style="text-align: center;">No se encontraron alquileres.</td></tr>
-									@endif
+										@if($alquileres->count() == 0)
+										<tr><td colspan="10" style="text-align: center;">No se encontraron alquileres.</td></tr>
+										@endif
 
-								</tbody>
-							</table>
-
+									</tbody>
+								</table>
+							</div>
+						
 							<div style="text-align: center;">
 								{{ $alquileres->appends(request()->input())->links() }}
 							</div>

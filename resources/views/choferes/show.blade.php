@@ -104,48 +104,49 @@
 
 								<div class="panel-body">
 
-									<table class="table table-striped">
-										<thead>
-											<tr>
-												<th></th>
-												<th>ID #</th>
-												<th>Estado</th>
-												<th>Fecha inicio</th>
-												<th>Fecha fin</th>
-												<th>Vehículo</th>
-												<th>Monto diario</th>
-												<th>Saldo</th>
-											</tr>
-										</thead>
-										<tbody>
-											@foreach($ultimosAlquileres as $alquiler)
-											<tr>
-												<td><a href="{{ route('alquileres.show', $alquiler->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-												<td>{{ $alquiler->id }}</td>
-												<td>
-												@if($alquiler->estaEnCurso())
-												<span class="label label-primary" style="font-size: 12px">En curso</span>
-												@elseif($alquiler->estaFinalizado())
-												<span class="label label-default" style="font-size: 12px">Finalizado</span>
+									<div class="table-responsive">
+										<table class="table table-striped">
+											<thead>
+												<tr>
+													<th></th>
+													<th>ID #</th>
+													<th>Estado</th>
+													<th>Fecha inicio</th>
+													<th>Fecha fin</th>
+													<th>Vehículo</th>
+													<th>Monto diario</th>
+													<th>Saldo</th>
+												</tr>
+											</thead>
+											<tbody>
+												@foreach($ultimosAlquileres as $alquiler)
+												<tr>
+													<td><a href="{{ route('alquileres.show', $alquiler->id) }}" class="btn btn-primary btn-xs"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+													<td>{{ $alquiler->id }}</td>
+													<td>
+													@if($alquiler->estaEnCurso())
+													<span class="label label-primary" style="font-size: 12px">En curso</span>
+													@elseif($alquiler->estaFinalizado())
+													<span class="label label-default" style="font-size: 12px">Finalizado</span>
+													@endif
+													</td>
+													<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM') }}</td>
+													<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM') : '-' }}</td>
+													<td>{{ $alquiler->vehiculo->marcaYModelo() }}</td>
+													<td>{{ Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
+													<td><span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
+													{{ Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
+													</span></td>
+												</tr>
+												@endforeach
+
+												@if($ultimosAlquileres->count() == 0)
+												<tr><td colspan="8" style="text-align: center;">No se encontraron alquileres.</td></tr>
 												@endif
-												</td>
-												<td>{{ $alquiler->fecha_inicio->isoFormat('D MMM') }}</td>
-												<td>{{ $alquiler->fecha_fin ? $alquiler->fecha_fin->isoFormat('D MMM') : '-' }}</td>
-												<td>{{ $alquiler->vehiculo->marcaYModelo() }}</td>
-												<td>{{ Strings::formatearMoneda($alquiler->precio_diario, 0) }}</td>
-												<td><span style="@if($alquiler->saldo_actual < 0) color: #B00 @endif">
-												{{ Strings::formatearMoneda($alquiler->saldo_actual, 0) }}
-												</span></td>
-											</tr>
-											@endforeach
 
-											@if($ultimosAlquileres->count() == 0)
-											<tr><td colspan="8" style="text-align: center;">No se encontraron alquileres.</td></tr>
-											@endif
-
-										</tbody>
-									</table>
-
+											</tbody>
+										</table>
+									</div>
 								</div>
 							</div>
 						</div>

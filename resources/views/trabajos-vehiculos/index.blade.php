@@ -62,46 +62,50 @@
 								</div>
 							</div>
 
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th></th>
-										<th>Fecha pagado</th>
-										<th>Vehículo</th>
-										<th>Tipo de trabajo</th>
-										<th>Observaciones</th>
-										<th>Proveedor</th>
-										<th>Costo</th>
-										<th>Medio de pago</th>
-										<th>Fecha realizado</th>
-									</tr>
-								</thead>
-								<tbody>
+							<div class="table-responsive">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th></th>
+											<th>Fecha pagado</th>
+											<th>Vehículo</th>
+											<th>Tipo de trabajo</th>
+											
+											<th>Costo</th>
+											<th>Proveedor</th>
+											<th>Observaciones</th>
+											<th>Medio de pago</th>
+											<th>Fecha realizado</th>
+										</tr>
+									</thead>
+									<tbody>
 
-									@foreach($trabajosVehiculos as $trabajo)
+										@foreach($trabajosVehiculos as $trabajo)
 
-									<tr>
-										<td>
-											<a href="{{ route('trabajos-vehiculos.show', $trabajo->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>
-										</td>
-										<td>{{ $trabajo->fecha_pagado->isoFormat('D MMM Y') }}</td>
-										<td>{{ $trabajo->vehiculo->marcaModeloYDominio() }}</td>
-										<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
-										<td>{{ Str::limit($trabajo->observaciones, 25, '...') }}</td>
-										<td>{{ $trabajo->proveedor ? $trabajo->proveedor->nombre : '-' }}</td>
-										<td>{{ $trabajo->costo_total > 0 ? Strings::formatearMoneda($trabajo->costo_total, 0) : '-' }}</td>
-										<td>{{ $trabajo->costo_total > 0 ? __('medios_pago.'.$trabajo->medio_pago) : '-' }}</td>
-										<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM Y') }}</td>
-									</tr>
+										<tr>
+											<td>
+												<a href="{{ route('trabajos-vehiculos.show', $trabajo->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a>
+											</td>
+											<td>{{ $trabajo->fecha_pagado->isoFormat('D MMM Y') }}</td>
+											<td>{{ $trabajo->vehiculo->marcaModeloYDominio() }}</td>
+											<td>{{ __('tipos_trabajos.'.$trabajo->tipo) }}</td>
+											<td>{{ $trabajo->costo_total > 0 ? Strings::formatearMoneda($trabajo->costo_total, 0) : '-' }}</td>
+											<td>{{ $trabajo->proveedor ? $trabajo->proveedor->nombre : '-' }}</td>
+											<td>{{ Str::limit($trabajo->observaciones, 25, '...') }}</td>
+											<td>{{ $trabajo->costo_total > 0 ? __('medios_pago.'.$trabajo->medio_pago) : '-' }}</td>
+											<td>{{ $trabajo->fecha_realizado->isoFormat('D MMM Y') }}</td>
+										</tr>
 
-									@endforeach
+										@endforeach
 
-									@if($trabajosVehiculos->count() == 0)
-									<tr><td colspan="9" style="text-align: center;">No se encontraron trabajos.</td></tr>
-									@endif
+										@if($trabajosVehiculos->count() == 0)
+										<tr><td colspan="9" style="text-align: center;">No se encontraron trabajos.</td></tr>
+										@endif
 
-								</tbody>
-							</table>
+									</tbody>
+								</table>
+							</div>
+
 							
 							<div style="text-align: center;">
 								{{ $trabajosVehiculos->appends(request()->input())->links() }}

@@ -52,42 +52,44 @@
 								</div>
 							</div>
 
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th></th>
-										<th>ID #</th>
-										<th>Fecha</th>
-										<th>Tipo de gasto</th>
-										<th>Monto</th>
-										<th>Detalle</th>
-										<th>Vehículo</th>
-										<th>Medio de pago</th>
-										<th>Proveedor</th>
-									</tr>
-								</thead>
-								<tbody>
-									@foreach($gastosAdicionales as $gastoAdicional)
-									<tr>
-										<td><a href="{{ route('gastos-adicionales.show', $gastoAdicional->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>{{ $gastoAdicional->id }}</td>
-										<td>{{ $gastoAdicional->fecha->isoFormat('D MMM Y') }}</td>
-										<td>{{ __('tipos_gastos_adicionales.'.$gastoAdicional->tipo) }}</td>
-										<td>{{ Strings::formatearMoneda($gastoAdicional->monto, 2) }}</td>
-										<td>{{ Str::limit($gastoAdicional->detalle, 40, '...') }}</td>
-										<td>{{ $gastoAdicional->vehiculo ? $gastoAdicional->vehiculo->marcaModeloYDominio() : '-' }}</td>
-										<td>{{ __('medios_pago.'.$gastoAdicional->medio_pago) }}</td>
-										<td>{{ $gastoAdicional->proveedor ? $gastoAdicional->proveedor->nombre : '-' }}</td>
-									</tr>
-									@endforeach
+							<div class="table-responsive">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th></th>
+											<th>ID #</th>
+											<th>Fecha</th>
+											<th>Tipo de gasto</th>
+											<th>Monto</th>
+											<th>Detalle</th>
+											<th>Vehículo</th>
+											<th>Medio de pago</th>
+											<th>Proveedor</th>
+										</tr>
+									</thead>
+									<tbody>
+										@foreach($gastosAdicionales as $gastoAdicional)
+										<tr>
+											<td><a href="{{ route('gastos-adicionales.show', $gastoAdicional->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+											<td>{{ $gastoAdicional->id }}</td>
+											<td>{{ $gastoAdicional->fecha->isoFormat('D MMM Y') }}</td>
+											<td>{{ __('tipos_gastos_adicionales.'.$gastoAdicional->tipo) }}</td>
+											<td>{{ Strings::formatearMoneda($gastoAdicional->monto, 2) }}</td>
+											<td>{{ Str::limit($gastoAdicional->detalle, 40, '...') }}</td>
+											<td>{{ $gastoAdicional->vehiculo ? $gastoAdicional->vehiculo->marcaModeloYDominio() : '-' }}</td>
+											<td>{{ __('medios_pago.'.$gastoAdicional->medio_pago) }}</td>
+											<td>{{ $gastoAdicional->proveedor ? $gastoAdicional->proveedor->nombre : '-' }}</td>
+										</tr>
+										@endforeach
 
-									@if($gastosAdicionales->count() == 0)
-									<tr><td colspan="9" style="text-align: center;">No se registraron gastos adicionales.</td></tr>
-									@endif
+										@if($gastosAdicionales->count() == 0)
+										<tr><td colspan="9" style="text-align: center;">No se registraron gastos adicionales.</td></tr>
+										@endif
 
-								</tbody>
-							</table>
-
+									</tbody>
+								</table>
+							</div>
+							
 							<div style="text-align: center;">
 								{{ $gastosAdicionales->appends(request()->input())->links() }}
 							</div>

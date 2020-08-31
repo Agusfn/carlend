@@ -41,36 +41,36 @@
 								</div>
 							</div>
 
+							<div class="table-responsive">
+								<table class="table table-striped">
+									<thead>
+										<tr>
+											<th></th>
+											<th>Nombre</th>
+											<th>Dirección</th>
+											<th>Teléfono</th>
+											<th>Categoría/tipo proveedor</th>
+										</tr>
+									</thead>
+									<tbody>
 
-							<table class="table table-striped">
-								<thead>
-									<tr>
-										<th></th>
-										<th>Nombre</th>
-										<th>Dirección</th>
-										<th>Teléfono</th>
-										<th>Categoría/tipo proveedor</th>
-									</tr>
-								</thead>
-								<tbody>
+										@foreach($proveedores as $proveedor)
+										<tr>
+											<td><a href="{{ route('proveedores.show', $proveedor->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
+											<td>{{ $proveedor->nombre }}</td>
+											<td>{{ $proveedor->direccion }}</td>
+											<td>{{ $proveedor->telefono }}</td>
+											<td>{{ $proveedor->nombreCategoria() }}</td>
+										</tr>
+										@endforeach
 
-									@foreach($proveedores as $proveedor)
-									<tr>
-										<td><a href="{{ route('proveedores.show', $proveedor->id) }}" class="btn btn-primary btn-sm"><i class="fa fa-search-plus" aria-hidden="true"></i></a></td>
-										<td>{{ $proveedor->nombre }}</td>
-										<td>{{ $proveedor->direccion }}</td>
-										<td>{{ $proveedor->telefono }}</td>
-										<td>{{ $proveedor->nombreCategoria() }}</td>
-									</tr>
-									@endforeach
+										@if($proveedores->count() == 0)
+										<tr><td colspan="5" style="text-align: center;">No se encontraron proveedores.</td></tr>
+										@endif
 
-									@if($proveedores->count() == 0)
-									<tr><td colspan="5" style="text-align: center;">No se encontraron proveedores.</td></tr>
-									@endif
-
-								</tbody>
-							</table>
-
+									</tbody>
+								</table>
+							</div>
 							<div style="text-align: center;">
 								{{ $proveedores->appends(request()->input())->links() }}
 							</div>
