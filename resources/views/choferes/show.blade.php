@@ -44,7 +44,7 @@
 										@method('PUT')
 										@csrf
 										<div class="form-group @error('nombre_y_apellido') has-error @enderror">
-											<label>Nombre y apellido</label>
+											<label>Nombre y apellido*</label>
 											<input type="text" name="nombre_y_apellido" class="form-control" value="{{ $chofer->nombre_y_apellido }}">
 											@error('nombre_y_apellido')
 												<label class="control-label">{{ $message }}</label>
@@ -85,7 +85,9 @@
 												<label class="control-label">{{ $message }}</label>
 											@enderror
 										</div>
-
+										<div class="form-group">
+											Los campos con (*) son obligatorios.
+										</div>
 										<div style="text-align:right">
 											<button class="btn btn-primary">Guardar</button>
 										</div>

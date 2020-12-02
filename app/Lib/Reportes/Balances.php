@@ -97,7 +97,7 @@ class Balances
 
 	/**
 	 * Clasificar gastos según tipo (un TIPO simplificado y combinado usado únicamente para los reportes) y según proveedor.
-	 * @return [type] [description]
+	 * @return array
 	 */
 	private static function gastosSegunTipo($trabajosVehiculos, $gastosAdicionales)
 	{

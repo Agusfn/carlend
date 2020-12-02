@@ -53,7 +53,7 @@
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group @error('id_chofer') has-error @enderror">
-													<label>Chofer</label>
+													<label>Chofer*</label>
 													
 													<select class="form-control" name="id_chofer">
 														<option value="">Seleccionar</option>
@@ -71,7 +71,7 @@
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group @error('id_vehiculo') has-error @enderror">
-													<label>Vehículo</label>
+													<label>Vehículo*</label>
 													
 													<select class="form-control" name="id_vehiculo">
 														<option value="">Seleccionar</option>
@@ -96,7 +96,7 @@
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group @error('precio_diario') has-error @enderror">
-													<label>Monto diario de alquiler ($)&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="El alquiler tendrá una cuenta corriente desde donde se descontará este monto diariamente, y paralelamente, se deberán registrar los pagos del chofer manualmente."></span></label>
+													<label>Monto diario de alquiler ($)*&nbsp;&nbsp;&nbsp;<span class="glyphicon glyphicon-question-sign" style="color:#45bac6" data-toggle="tooltip" data-placement="top" title="El alquiler tendrá una cuenta corriente desde donde se descontará este monto diariamente, y paralelamente, se deberán registrar los pagos del chofer manualmente."></span></label>
 													
 													<input type="number" name="precio_diario" step="0.01" min="0" class="form-control" value="{{ old('precio_diario') }}">
 													
@@ -122,7 +122,9 @@
 												<label class="control-label">{{ $message }}</label>
 											@enderror
 										</div>
-
+										<div class="form-group">
+											Los campos con (*) son obligatorios.
+										</div>
 										<div style="text-align:right">
 											<button class="btn btn-primary">Registrar alquiler</button>
 										</div>

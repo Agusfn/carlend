@@ -110,9 +110,9 @@ class UtilidadesReportes
 
 	/**
 	 * Crear un array del 1 al n con ceros, siendo n la cantidad de días del mes del año indicado.
-	 * @param  [type] $mes  [description]
-	 * @param  [type] $anio [description]
-	 * @return [type]       [description]
+	 * @param  int $mes
+	 * @param  int $anio
+	 * @return array
 	 */
 	public static function arrayNumericoDeDiasDelMes($mes, $anio)
 	{

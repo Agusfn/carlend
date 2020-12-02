@@ -195,7 +195,7 @@ trait RegistraKilometraje
 
     /**
      * Si hay suficientes registros para calcular una predicción de kilometraje.
-     * @return [type] [description]
+     * @return bool
      */
     public function puedeCalcularPrediccionKms()
     {

@@ -21,7 +21,7 @@
 										@csrf
 
 										<div class="form-group @error('nombre') has-error @enderror">
-											<label>Nombre</label>
+											<label>Nombre*</label>
 											<input type="text" name="nombre" class="form-control" value="{{ old('nombre') }}">
 											@error('nombre')
 												<label class="control-label">{{ $message }}</label>
@@ -43,7 +43,7 @@
 											@enderror
 										</div>
 										<div class="form-group @error('categoria') has-error @enderror">
-											<label>Categoría</label>
+											<label>Categoría*</label>
 											<select class="form-control" name="categoria">
 												<option>Seleccionar</option>
 												@foreach(App\Proveedor::$nombresCategorias as $keyCategoria => $nombreCategoria)
@@ -54,7 +54,9 @@
 												<label class="control-label">{{ $message }}</label>
 											@enderror
 										</div>
-
+										<div class="form-group">
+											Los campos con (*) son obligatorios.
+										</div>
 										<div style="text-align:right">
 											<button class="btn btn-primary">Guardar</button>
 										</div>

@@ -25,7 +25,7 @@
 									<form action="{{ route('trabajos-vehiculos.store') }}" method="POST">
 										@csrf
 										<div class="form-group @error('id_vehiculo') has-error @enderror">
-											<label>Vehículo</label>
+											<label>Vehículo*</label>
 											<select class="form-control" name="id_vehiculo">
 												<option value="">Seleccionar</option>
 												@foreach($vehiculos as $vehiculo)
@@ -37,7 +37,7 @@
 											@enderror
 										</div>
 										<div class="form-group @error('tipo') has-error @enderror">
-											<label>Tipo de trabajo</label>
+											<label>Tipo de trabajo*</label>
 
 											<select class="form-control" name="tipo">
 												<option value="">Seleccionar</option>
@@ -81,7 +81,7 @@
 										<div class="row">
 											<div class="col-sm-4">
 												<div class="form-group @error('fecha_pagado') has-error @enderror">
-													<label>Fecha pagado</label>
+													<label>Fecha pagado*</label>
 													<input type="text" class="form-control" name="fecha_pagado" id="input_fecha_pagado" value="{{ old('fecha_pagado') }}">
 													@error('fecha_pagado')
 														<label class="control-label">{{ $message }}</label>
@@ -90,7 +90,7 @@
 											</div>
 											<div class="col-sm-4">
 												<div class="form-group @error('costo_total') has-error @enderror">
-													<label>Costo total ($)</label>
+													<label>Costo total ($)*</label>
 													<input type="number" step="0.01" min="0" class="form-control" name="costo_total" value="{{ old('costo_total') }}">
 													@error('costo_total')
 														<label class="control-label">{{ $message }}</label>
@@ -99,7 +99,7 @@
 											</div>
 											<div class="col-sm-4">
 												<div class="form-group @error('medio_pago') has-error @enderror">
-													<label>Medio de pago</label>
+													<label>Medio de pago*</label>
 													<select class="form-control" name="medio_pago">
 														<option>Seleccionar</option>
 														<option value="efectivo" @if(old('medio_pago') == 'efectivo') selected @endif>Efectivo</option>
@@ -116,11 +116,7 @@
 										<div class="row">
 											<div class="col-sm-4">
 												<div class="form-group @error('fecha_realizado') has-error @enderror">
-													<label>Fecha realizado el trabajo</label>
-													<!--label class="fancy-checkbox">
-														<input type="checkbox" id="checkbox_inform_job_date_later">
-														<span>Informar más adelante</span>
-													</label-->
+													<label>Fecha realizado el trabajo*</label>
 													<input type="text" class="form-control" name="fecha_realizado" id="input_fecha_realizado" value="{{ old('fecha_realizado') }}">
 													@error('fecha_realizado')
 														<label class="control-label">{{ $message }}</label>
@@ -137,7 +133,9 @@
 												</div>
 											</div>
 										</div>
-
+										<div class="form-group">
+											Los campos con (*) son obligatorios.
+										</div>
 										<div style="text-align:right">
 											<button class="btn btn-primary">Registrar trabajo</button>
 										</div>

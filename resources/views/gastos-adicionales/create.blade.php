@@ -28,7 +28,7 @@
 										<div class="row">
 											<div class="col-xs-6">
 												<div class="form-group @error('fecha') has-error @enderror">
-													<label>Fecha</label>
+													<label>Fecha*</label>
 													<input type="text" class="form-control" id="input_fecha_gasto" name="fecha" value="{{ old('fecha') }}">
 													@error('fecha')
 														<label class="control-label">{{ $message }}</label>
@@ -40,7 +40,7 @@
 										<div class="row">
 											<div class="col-xs-6">
 												<div class="form-group @error('tipo') has-error @enderror">
-													<label>Tipo de gasto</label>
+													<label>Tipo de gasto*</label>
 													<select class="form-control" name="tipo">
 														<option value="">Seleccionar</option>
 														@foreach($tiposGastos as $tipoGasto)
@@ -81,7 +81,7 @@
 										<div class="row">
 											<div class="col-xs-6">
 												<div class="form-group @error('monto') has-error @enderror">
-													<label>Monto ($)</label>
+													<label>Monto ($)*</label>
 													<input type="number" step="0.01" min="0" class="form-control" name="monto" value="{{ old('monto') }}">
 													@error('monto')
 														<label class="control-label">{{ $message }}</label>
@@ -90,7 +90,7 @@
 											</div>
 											<div class="col-xs-6">
 												<div class="form-group @error('medio_pago') has-error @enderror">
-													<label>Medio de pago</label>
+													<label>Medio de pago*</label>
 													<select class="form-control" name="medio_pago">
 														<option value="">Seleccionar</option>
 														<option value="efectivo" @if(old('medio_pago') == 'efectivo') selected @endif>Efectivo</option>
@@ -116,7 +116,9 @@
 												<label class="control-label">{{ $message }}</label>
 											@enderror
 										</div>
-
+										<div class="form-group">
+											Los campos con (*) son obligatorios.
+										</div>
 										<div style="text-align:right">
 											<button class="btn btn-primary">Guardar</button>
 										</div>

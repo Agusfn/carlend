@@ -29,7 +29,7 @@
 										<h4 style="margin-bottom: 20px;">Datos del vehículo</h4>
 
 										<div class="form-group @error('dominio') has-error @enderror">
-											<label>Dominio (patente)</label>
+											<label>Dominio (patente)*</label>
 											<input type="text" class="form-control" name="dominio" value="{{ old('dominio') }}">
 											@error('dominio')
 												<label class="control-label">{{ $message }}</label>
@@ -37,14 +37,14 @@
 										</div>
 
 										<div class="form-group @error('marca') has-error @enderror">
-											<label>Marca</label>
+											<label>Marca*</label>
 											<input type="text" class="form-control" name="marca" value="{{ old('marca') }}">
 											@error('marca')
 												<label class="control-label">{{ $message }}</label>
 											@enderror
 										</div>
 										<div class="form-group @error('modelo') has-error @enderror">
-											<label>Modelo</label>
+											<label>Modelo*</label>
 											<input type="text" class="form-control" name="modelo" value="{{ old('modelo') }}">
 											@error('modelo')
 												<label class="control-label">{{ $message }}</label>
@@ -54,7 +54,7 @@
 										<div class="row">
 											<div class="col-sm-6">
 												<div class="form-group @error('anio') has-error @enderror">
-													<label>Año</label>
+													<label>Año*</label>
 													<input type="number" class="form-control" name="anio" min="1990" max="2025" value="{{ old('anio') }}">
 													@error('anio')
 														<label class="control-label">{{ $message }}</label>
@@ -63,7 +63,7 @@
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group @error('kilometraje_actual') has-error @enderror">
-													<label>Kilometraje actual</label>
+													<label>Kilometraje actual*</label>
 													<input type="number" name="kilometraje_actual" class="form-control" value="{{ old('kilometraje_actual') }}">
 													@error('kilometraje_actual')
 														<label class="control-label">{{ $message }}</label>
@@ -92,7 +92,7 @@
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group @error('kms_ult_service') has-error @enderror">
-													<label>KMs ult. service</label>
+													<label>KMs ult. service*</label>
 													<input type="number" name="kms_ult_service" class="form-control" value="{{ old('kms_ult_service') }}">
 													@error('kms_ult_service')
 														<label class="control-label">{{ $message }}</label>
@@ -113,7 +113,7 @@
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group @error('kms_ult_cambio_bujias') has-error @enderror">
-													<label>KMs ult. cambio bujías</label>
+													<label>KMs ult. cambio bujías*</label>
 													<input type="number" name="kms_ult_cambio_bujias" class="form-control" value="{{ old('kms_ult_cambio_bujias') }}">
 													@error('kms_ult_cambio_bujias')
 														<label class="control-label">{{ $message }}</label>
@@ -134,7 +134,7 @@
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group @error('kms_ult_rotacion_cubiertas') has-error @enderror">
-													<label>KMs ult. rotación</label>
+													<label>KMs ult. rotación*</label>
 													<input type="number" name="kms_ult_rotacion_cubiertas" class="form-control" value="{{ old('kms_ult_rotacion_cubiertas') }}">
 													@error('kms_ult_rotacion_cubiertas')
 														<label class="control-label">{{ $message }}</label>
@@ -155,7 +155,7 @@
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group @error('kms_ult_cambio_cubiertas') has-error @enderror">
-													<label>KMs ult. cambio cubiertas</label>
+													<label>KMs ult. cambio cubiertas*</label>
 													<input type="number" class="form-control" name="kms_ult_cambio_cubiertas" value="{{ old('kms_ult_cambio_cubiertas') }}">
 													@error('kms_ult_cambio_cubiertas')
 														<label class="control-label">{{ $message }}</label>
@@ -176,7 +176,7 @@
 											</div>
 											<div class="col-sm-6">
 												<div class="form-group @error('kms_ult_cambio_correa_distr') has-error @enderror">
-													<label>KMs ult. cambio correa</label>
+													<label>KMs ult. cambio correa*</label>
 													<input type="number" name="kms_ult_cambio_correa_distr" class="form-control" value="{{ old('kms_ult_cambio_correa_distr') }}">
 													@error('kms_ult_cambio_correa_distr')
 														<label class="control-label">{{ $message }}</label>
@@ -305,7 +305,9 @@
 									</div>
 
 								</div>
-
+										<div class="form-group">
+											Los campos con (*) son obligatorios.
+										</div>
 								<div style="text-align:right">
 									<button class="btn btn-primary">Guardar</button>
 								</div>

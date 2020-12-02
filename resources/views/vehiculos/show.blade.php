@@ -168,7 +168,7 @@
 							<div class="panel">
 								<div class="panel-heading">
 									<h3 class="panel-title">Últimos trabajos realizados</h3>
-									<div class="right"><a href="{{ route('trabajos-vehiculos.index') }}" class="btn btn-xs btn-primary" style="margin-left: 20px">Ver todos</a></div>
+									<div class="right"><a href="{{ route('trabajos-vehiculos.index', ['vehiculo' => $vehiculo->id]) }}" class="btn btn-xs btn-primary" style="margin-left: 20px">Ver todos</a></div>
 								</div>
 
 								<div class="panel-body">
@@ -315,7 +315,7 @@
 										<h4 style="margin-bottom: 20px;">Datos del vehículo</h4>
 
 										<div class="form-group @error('dominio') has-error @enderror">
-											<label>Dominio (patente)</label>
+											<label>Dominio (patente)*</label>
 											<input type="text" class="form-control" name="dominio" value="{{ old('dominio') ?: $vehiculo->dominio }}">
 											@error('dominio')
 												<label class="control-label">{{ $message }}</label>
@@ -323,21 +323,21 @@
 										</div>
 
 										<div class="form-group @error('marca') has-error @enderror">
-											<label>Marca</label>
+											<label>Marca*</label>
 											<input type="text" class="form-control" name="marca" value="{{ old('marca') ?: $vehiculo->marca }}">
 											@error('marca')
 												<label class="control-label">{{ $message }}</label>
 											@enderror
 										</div>
 										<div class="form-group @error('modelo') has-error @enderror">
-											<label>Modelo</label>
+											<label>Modelo*</label>
 											<input type="text" class="form-control" name="modelo" value="{{ old('modelo') ?: $vehiculo->modelo }}">
 											@error('modelo')
 												<label class="control-label">{{ $message }}</label>
 											@enderror
 										</div>
 										<div class="form-group @error('anio') has-error @enderror">
-											<label>Año</label>
+											<label>Año*</label>
 											<input type="number" class="form-control" name="anio" min="1990" max="2025" value="{{ old('anio') ?: $vehiculo->anio }}">
 											@error('anio')
 												<label class="control-label">{{ $message }}</label>
@@ -523,7 +523,9 @@
 										</div>
 
 									</div>
-
+										<div class="form-group">
+											Los campos con (*) son obligatorios.
+										</div>
 								</div>
 
 								<div style="text-align:right">

@@ -184,7 +184,8 @@ html.fullscreen-bg #wrapper {
       display: none; } }
   @media screen and (max-width: 640px) {
     .navbar-default #navbar-menu {
-      float: right; } }
+      float: right;
+      margin-top: 11px } }
 
 .navbar-btn {
   float: left;
@@ -287,7 +288,7 @@ html.fullscreen-bg #wrapper {
       text-align: center; }
     .navbar-nav > li > a {
       padding: 15px 20px; }
-      .navbar-nav > li > a span:not(.badge),
+      /*.navbar-nav > li > a span:not(.badge),*/
       .navbar-nav > li > a .icon-submenu {
         display: none; }
     .navbar-nav .open .dropdown-menu {

@@ -47,7 +47,7 @@ class Vehiculos
 		$ingresosPorVehiculo = [];
 		$gastosPorVehiculo = [];
 
-		$vehiculos = Vehiculo::nombreAsc()->get();
+		$vehiculos = Vehiculo::withTrashed()->nombreAsc()->get();
 
 		foreach($vehiculos as $vehiculo) {
 			$ingresosPorVehiculo[$vehiculo->marcaYModelo()] = 0;
@@ -86,7 +86,7 @@ class Vehiculos
 	 * [detalleGastosVehiculos description]
 	 * @param  [type] $trabajosVehiculos [description]
 	 * @param  [type] $gastosAdicionales [description]
-	 * @return [type]                    [description]
+	 * @return array
 	 */
 	private static function detalleGastosVehiculos($trabajosVehiculos, $gastosAdicionales)
 	{
